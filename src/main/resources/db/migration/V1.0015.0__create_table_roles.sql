@@ -1,8 +1,8 @@
-CREATE TABLE transactions
+CREATE TABLE roles
 (
     id serial primary key,
-    total_money float,
-    payment_method int,
+    role_name varchar(50) unique not null,
     ctime timestamp NOT NULL DEFAULT current_timestamp,
+    mtime timestamp NULL,
     note text
 );
