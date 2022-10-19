@@ -6,10 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,9 +19,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -35,8 +36,5 @@ public class Role {
     @Column(name = "note")
     @Type(type = "org.hibernate.type.TextType")
     private String note;
-
-    @OneToMany(mappedBy = "role")
-    private Set<Account> accounts = new LinkedHashSet<>();
 
 }

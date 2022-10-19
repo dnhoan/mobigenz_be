@@ -1,14 +1,16 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,26 +20,24 @@ import java.util.Set;
 @Table(name = "specification_groups")
 public class SpecificationGroup {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name = "specification_group_name", nullable = false, length = 100)
     private String specificationGroupName;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "specification_group_id")
+    private List<Specification> specifications ;
+
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
-
-    @OneToMany(mappedBy = "specificationGroup")
-    private Set<Specification> specifications = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "specificationGroup")
-    private Set<ProductsSpecificationGroup> productsSpecificationGroups = new LinkedHashSet<>();
 
 }

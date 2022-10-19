@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,9 +14,8 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "imei")
-public class Imei {
+public class Imei{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -23,8 +23,8 @@ public class Imei {
     private String imei;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_variant_option_id")
-    private ProductsVariantsOption productVariantOption;
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetail productDetail;
 
     @Column(name = "status")
     private Integer status;

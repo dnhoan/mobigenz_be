@@ -1,14 +1,16 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,9 +18,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "options_values")
-public class OptionsValue {
+public class OptionsValue{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -32,20 +33,23 @@ public class OptionsValue {
     @Column(name = "note")
     private String note;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private Option option;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_value_id")
+    private List<ProductsVariant> productsVariants;
+
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
-
-    @OneToMany(mappedBy = "optionValue")
-    private Set<ProductsVariant> productsVariants = new LinkedHashSet<>();
 
 }

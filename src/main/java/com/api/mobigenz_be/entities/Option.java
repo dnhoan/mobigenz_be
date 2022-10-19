@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,9 +17,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "options")
-public class Option {
+public class Option{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -30,18 +30,16 @@ public class Option {
     private String note;
 
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
 
-    @OneToMany(mappedBy = "option")
-    private Set<OptionsValue> optionsValues = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "option")
-    private Set<ProductsOption> productsOptions = new LinkedHashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id")
+    private List<OptionsValue> optionsValues;
 
 }

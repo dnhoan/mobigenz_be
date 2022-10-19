@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,9 +8,10 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,22 +36,27 @@ public class Product {
     @JoinColumn(name = "product_line_id")
     private ProductLine productLine;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private List<ProductDetail> productDetails;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private List<ProductsOption> productsOptions;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private List<ProductsSpecificationGroup> productsSpecificationGroups ;
+
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
-
-    @OneToMany(mappedBy = "product")
-    private Set<ProductsVariantsOption> productsVariantsOptions = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "product")
-    private Set<ProductsSpecificationGroup> productsSpecificationGroups = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "product")
-    private Set<ProductsOption> productsOptions = new LinkedHashSet<>();
 
 }
