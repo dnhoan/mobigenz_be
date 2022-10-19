@@ -1,22 +1,24 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.utility.nullability.MaybeNull;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "products_variants_options")
-public class ProductsVariantsOption {
+@Table(name = "product_details")
+public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -24,6 +26,9 @@ public class ProductsVariantsOption {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "sku", length = 100)
+    private String sku;
 
     @Column(name = "stock")
     private Integer stock;
@@ -39,15 +44,13 @@ public class ProductsVariantsOption {
     @Column(name = "status")
     private Integer status;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_DETAIL_ID")
+    private List<ProductVariantCombination> productVariantCombinationList;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_variant_id")
-    private ProductsVariant productVariant;
-
-    @OneToMany(mappedBy = "productVariantOption")
-    private Set<Imei> imeis = new LinkedHashSet<>();
 
 }

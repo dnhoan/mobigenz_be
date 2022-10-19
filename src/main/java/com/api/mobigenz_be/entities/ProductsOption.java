@@ -1,13 +1,14 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,21 +16,23 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "products_options")
-public class ProductsOption {
+public class ProductsOption{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_option_id")
+    private List<ProductsVariant> productsVariants;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private Option option;
-
-    @OneToMany(mappedBy = "productOption")
-    private Set<ProductsVariant> productsVariants = new LinkedHashSet<>();
 
 }

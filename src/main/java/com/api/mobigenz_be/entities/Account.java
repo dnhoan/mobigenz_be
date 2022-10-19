@@ -6,9 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,8 +39,5 @@ public class Account {
 
     @Column(name = "status")
     private Integer status;
-
-    @OneToMany(mappedBy = "account")
-    private Set<Customer> customers = new LinkedHashSet<>();
 
 }

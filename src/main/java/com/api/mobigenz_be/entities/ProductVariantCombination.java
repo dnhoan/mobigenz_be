@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,18 +14,19 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table(name = "products_variants")
-public class ProductsVariant  {
+@Table(name = "product_variant_combinations")
+public class ProductVariantCombination {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_value_id")
-    private OptionsValue optionValue;
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetail productDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_option_id")
-    private ProductsOption productOption;
+    @JoinColumn(name = "product_variant_id")
+    private ProductsVariant productVariant;
 
 }

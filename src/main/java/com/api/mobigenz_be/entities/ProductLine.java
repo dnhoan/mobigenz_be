@@ -1,14 +1,17 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,16 +32,18 @@ public class ProductLine {
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_line_id")
+    private List<Product> products;
+
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
-
-    @OneToMany(mappedBy = "productLine")
-    private Set<Product> products = new LinkedHashSet<>();
 
 }

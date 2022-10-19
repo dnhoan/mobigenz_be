@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,9 +17,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "specifications")
-public class Specification {
+public class Specification{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -29,16 +29,17 @@ public class Specification {
     @JoinColumn(name = "specification_group_id")
     private SpecificationGroup specificationGroup;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_specification_group_id")
+    private List<ProductsSpecification> productsSpecifications;
+
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
-
-    @OneToMany(mappedBy = "specification")
-    private Set<ProductsSpecification> productsSpecifications = new LinkedHashSet<>();
 
 }
