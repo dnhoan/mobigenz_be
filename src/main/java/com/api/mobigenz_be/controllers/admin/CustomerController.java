@@ -21,7 +21,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-
     @GetMapping("customers")
     public ResponseEntity<ResponseDTO> getPageCustomers(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
