@@ -4,7 +4,6 @@ import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.entities.Customer;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +22,6 @@ public class CustomerController {
     private CustomerService customerService;
 
 
-
-
     @GetMapping("customers")
     public ResponseEntity<ResponseDTO> getPageCustomers(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
@@ -41,19 +38,6 @@ public class CustomerController {
         );
     }
 
-    @PostMapping("getCustomer")
-    public ResponseEntity<ResponseDTO> getCustomer(@RequestBody Student student) {
-
-        System.out.println("test api " + student.toString());
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customers", "falsdjfkasjdf"))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
 
     @PostMapping("customers")
     public ResponseEntity<ResponseDTO> insertCustomer(@RequestBody Customer customer) {
@@ -114,16 +98,30 @@ public class CustomerController {
         }
     }
 
-
-
-    @PostMapping("/new")
-    public CustomerDTO createNew(@RequestBody CustomerDTO model){
-        return model;
+    @DeleteMapping("customers/{id}")
+    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id") Customer customer) {
+        if (customer != null) {
+            this.customerService.delete(customer);
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .message("Delete success")
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        }
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .message("Customer id not exist")
+                        .status(NO_CONTENT)
+                        .statusCode(NO_CONTENT.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
     }
+}
 
-}
-@Data
-class Student {
-    private int lop;
-    private String name;
-}
+
+
+
