@@ -21,6 +21,7 @@ import java.util.List;
 public class OptionsValue{
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "option_value_name", nullable = false, length = 100)

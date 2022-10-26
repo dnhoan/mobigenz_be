@@ -28,6 +28,7 @@ public class ProductLine {
     @Column(name = "product_line_name", nullable = false, length = 100)
     private String productLineName;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;

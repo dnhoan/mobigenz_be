@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,12 +26,13 @@ public class Specification{
     @Column(name = "specification_name", nullable = false, length = 100)
     private String specificationName;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specification_group_id")
     private SpecificationGroup specificationGroup;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_specification_group_id")
+    @JoinColumn(name = "specification_id")
     private List<ProductsSpecification> productsSpecifications;
 
     @Column(name = "ctime", nullable = false)
