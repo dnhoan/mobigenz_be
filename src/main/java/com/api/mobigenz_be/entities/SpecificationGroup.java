@@ -26,7 +26,6 @@ public class SpecificationGroup {
     @Column(name = "specification_group_name", nullable = false, length = 100)
     private String specificationGroupName;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "specification_group_id")
     private List<Specification> specifications ;

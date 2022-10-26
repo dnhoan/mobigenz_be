@@ -9,6 +9,7 @@ import java.util.List;
 @Service
 public interface ProductService {
 
-    public List<ProductDto> getProducts();
-    public List<Product> getProducts2();
+    List<ProductDto> getProducts();
+    List<Product> getProducts2();
+    ProductDto insertProduct(ProductDto productDto);
 }

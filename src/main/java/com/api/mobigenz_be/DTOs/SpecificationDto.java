@@ -1,10 +1,7 @@
 package com.api.mobigenz_be.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.time.LocalDateTime;
@@ -12,10 +9,15 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SpecificationDto {
+    public SpecificationDto(Integer id, String specificationName) {
+        this.id = id;
+        this.specificationName = specificationName;
+    }
 
     private Integer id;
 

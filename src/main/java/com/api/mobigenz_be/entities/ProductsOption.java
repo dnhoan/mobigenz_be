@@ -1,10 +1,8 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -19,6 +18,7 @@ import java.util.List;
 public class ProductsOption{
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     @JsonIgnore
@@ -29,6 +29,7 @@ public class ProductsOption{
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<ProductsVariant> productsVariants;
 
     @ManyToOne(fetch = FetchType.LAZY)
