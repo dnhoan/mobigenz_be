@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -22,8 +21,9 @@ public class CustomersAddress {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "customer_id")
-    private Double customerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customerId;
 
     @Column(name = "payment_method")
     private Integer paymentMethod;
