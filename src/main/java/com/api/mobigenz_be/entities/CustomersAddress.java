@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +30,7 @@ public class CustomersAddress {
     private Integer paymentMethod;
 
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDate ctime;
 
     @Column(name = "note")
     @Type(type = "org.hibernate.type.TextType")
