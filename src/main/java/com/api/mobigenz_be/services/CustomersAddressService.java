@@ -14,6 +14,8 @@ public interface CustomersAddressService {
 
     Optional<CustomersAddress> findByCustomerId(Integer cid);
 
+    List<CustomersAddress> findByCustomerName(String customerName);
+
     CustomersAddress create(CustomersAddress customersAddress);
 
     CustomersAddress update(CustomersAddress customersAddress);

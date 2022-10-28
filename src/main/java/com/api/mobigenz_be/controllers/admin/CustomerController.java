@@ -11,6 +11,7 @@ import com.api.mobigenz_be.services.CustomerService;
 import static org.springframework.http.HttpStatus.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -115,6 +116,58 @@ public class CustomerController {
                         .message("Customer id not exist")
                         .status(NO_CONTENT)
                         .statusCode(NO_CONTENT.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("searchCustomerByName")
+    public ResponseEntity<ResponseDTO> searchCustomerByName( @RequestParam("customerName") String customerName) {
+        List<CustomerDTO> customerDTOList = this.customerService.searchByName(customerName);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("customer", customerDTOList))
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("searchCustomerByEmail")
+    public ResponseEntity<ResponseDTO> searchCustomerByEmail( @RequestParam("email") String email) {
+        List<CustomerDTO> customerDTOList = this.customerService.searchByEmail(email);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("customer", customerDTOList))
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("searchCustomerByPhoneNumber")
+    public ResponseEntity<ResponseDTO> searchCustomerByPhoneNumber( @RequestParam("phoneNumber") String phoneNumber) {
+        List<CustomerDTO> customerDTOList = this.customerService.searchByPhoneNumber(phoneNumber);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("customer", customerDTOList))
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("searchCustomerByAddress")
+    public ResponseEntity<ResponseDTO> searchCustomerByAddress( @RequestParam("address") String address) {
+        List<CustomerDTO> customerDTOList = this.customerService.searchByAddress(address);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("customer", customerDTOList))
+                        .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );

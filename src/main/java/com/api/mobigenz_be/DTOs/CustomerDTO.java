@@ -20,11 +20,12 @@ public class CustomerDTO {
     private String  phoneNumber;
     private LocalDate birthday;
     private String image;
+    private String email;
     private Integer gender;
     private Integer customerType;
     private AccountDTO account;
     private String citizenIdentifyCart;
-    private Instant ctime;
-    private Instant mtime;
+    private LocalDate ctime;
+    private LocalDate mtime;
     private Integer status;
 }

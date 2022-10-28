@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,6 +15,6 @@ public class CustomersAddressDto {
     private Integer id;
     private CustomerDTO customerId;
     private Integer paymentMethod;
-    private Instant ctime;
+    private LocalDate ctime;
     private String note;
 }

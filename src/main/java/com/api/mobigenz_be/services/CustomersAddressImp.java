@@ -2,8 +2,8 @@ package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.entities.CustomersAddress;
 import com.api.mobigenz_be.repositories.CustomersAddressRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +14,7 @@ public class CustomersAddressImp implements CustomersAddressService{
 
     @Autowired
     private CustomersAddressRepository customersAddressRepository;
+    private Pageable pageable;
 
 //    @Autowired
 //    private ModelMapper modelMapper;
@@ -31,6 +32,16 @@ public class CustomersAddressImp implements CustomersAddressService{
     @Override
     public Optional<CustomersAddress> findByCustomerId(Integer cid) {
         return this.customersAddressRepository.findById(cid);
+    }
+
+    @Override
+    public List<CustomersAddress> findByCustomerName(String customerName) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Customer> page = this.customersAddressRepository.findByCustomerName(customerName, pageable);
+//        List<C> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+//        return customerDTOList;
+
+        return  this.customersAddressRepository.findByCustomerName(customerName);
     }
 
     @Override
