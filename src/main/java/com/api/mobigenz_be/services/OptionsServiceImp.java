@@ -3,6 +3,7 @@ package com.api.mobigenz_be.services;
 import com.api.mobigenz_be.DTOs.OptionDto;
 import com.api.mobigenz_be.DTOs.OptionValueDto;
 import com.api.mobigenz_be.entities.Option;
+import com.api.mobigenz_be.entities.OptionsValue;
 import com.api.mobigenz_be.repositories.OptionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,11 @@ public class OptionsServiceImp implements OptionsService {
     private OptionValueService optionValueService;
 
     @Override
-    public List<Option> getList() {
-        return this.optionsRepository.findAll();
+    public List<OptionDto> getList() {
+        return this.optionsRepository.findAll()
+                .stream()
+                .map(this::optionMapToOptionDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,5 +43,31 @@ public class OptionsServiceImp implements OptionsService {
                             .build();
                 }
         ).collect(Collectors.toList());
+    }
+
+    private OptionDto optionMapToOptionDto(Option option) {
+        List<OptionValueDto> optionValueDtos = option.getOptionsValues()
+                .stream()
+                .map(this::optionValueMapToOptionValueDto)
+                .collect(Collectors.toList());
+        return OptionDto
+                .builder()
+                .id(option.getId())
+                .optionName(option.getOptionName())
+                .mtime(option.getMtime())
+                .ctime(option.getCtime())
+                .status(option.getStatus())
+                .optionValueDtos(optionValueDtos)
+                .build();
+    }
+
+    private OptionValueDto optionValueMapToOptionValueDto(OptionsValue optionsValue) {
+        return OptionValueDto
+                .builder()
+                .id(optionsValue.getId())
+                .optionValueName(optionsValue.getOptionValueName())
+                .optionName(optionsValue.getOptionName())
+                .status(optionsValue.getStatus())
+                .build();
     }
 }

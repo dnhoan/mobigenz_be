@@ -1,10 +1,8 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,9 +10,11 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -38,10 +38,12 @@ public class Product {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private List<ProductDetail> productDetails;
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Set<ProductDetail> productDetails;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private List<ProductsOption> productsOptions;
 
@@ -59,4 +61,15 @@ public class Product {
     @Column(name = "status")
     private Integer status;
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
+                ", description='" + description + '\'' +
+                ", ctime=" + ctime +
+                ", mtime=" + mtime +
+                ", status=" + status +
+                '}';
+    }
 }

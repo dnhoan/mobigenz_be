@@ -23,6 +23,7 @@ public class OptionValueServiceImp implements OptionValueService{
 
     private OptionValueDto optionValueMapToOptionValueDto(OptionsValue optionValue) {
         return OptionValueDto.builder()
+                .id(optionValue.getId())
                 .optionValueName(optionValue.getOptionValueName())
                 .optionName(optionValue.getOptionName())
                 .ctime(optionValue.getCtime())

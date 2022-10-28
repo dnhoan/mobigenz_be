@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)

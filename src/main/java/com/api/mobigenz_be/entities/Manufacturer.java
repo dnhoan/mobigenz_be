@@ -36,7 +36,6 @@ public class Manufacturer {
     @Column(name = "status")
     private Integer status;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "manufacturer_id")
     private List<ProductLine> productLines;

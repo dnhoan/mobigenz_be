@@ -7,6 +7,6 @@ import java.util.List;
 
 
 public interface OptionsService {
-    public List<Option> getList();
+    List<OptionDto> getList();
     List<OptionDto> getOptionsByProductId(Integer product_id);
 }
