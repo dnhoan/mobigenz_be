@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.api.mobigenz_be.repositories.CustomerRepository;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,5 +72,51 @@ public class CustomerService {
         throw new Exception("Not found category by id");
     }
 
+
+//    @Override
+//    public CustomerDTO getByCustomerName(String name) throws Exception {
+//        Optional<Customer> customer = this.customerRepo.findByCustomerName(name);
+//        if (customer.isPresent()) {
+//            return this.modelMapper.map(customer.get(), CustomerDTO.class);
+//        }
+//        throw new Exception("Not found category by id");
+//    }
+
+
+    public List<CustomerDTO> searchByName(String customerName) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.findByCustomerName(customerName, pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
+
+    public List<CustomerDTO> searchByEmail(String email) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.findByEmail(email, pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
+
+    public List<CustomerDTO> searchByPhoneNumber(String phoneNumber) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.findByPhoneNumber(phoneNumber, pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
+
+    public List<CustomerDTO> searchByAddress(String address) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.findByAddress(address, pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
 
 }

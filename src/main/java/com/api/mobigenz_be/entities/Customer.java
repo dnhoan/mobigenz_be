@@ -17,6 +17,10 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "customers")
+//@NamedQueries(
+//	@NamedQuery(name="Customer.findByCustomerName",
+//			query="select c from Customer c where c.customerName=: customer_name")
+//)
 public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +40,9 @@ public class Customer{
     @Type(type = "org.hibernate.type.TextType")
     private String image;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "gender")
     private Integer gender;
 
@@ -50,10 +57,10 @@ public class Customer{
     private String citizenIdentifyCart;
 
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDate ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDate mtime;
 
     @Column(name = "status")
     private Integer status;

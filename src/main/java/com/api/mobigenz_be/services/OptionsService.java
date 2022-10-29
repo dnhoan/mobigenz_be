@@ -5,6 +5,7 @@ import com.api.mobigenz_be.entities.Option;
 
 import java.util.List;
 
+
 public interface OptionsService {
     List<OptionDto> getList();
     List<OptionDto> getOptionsByProductId(Integer product_id);
