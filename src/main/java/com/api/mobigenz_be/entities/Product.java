@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -36,18 +38,20 @@ public class Product {
     @JoinColumn(name = "product_line_id")
     private ProductLine productLine;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<ProductDetail> productDetails;
-
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private List<ProductsOption> productsOptions;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Set<ProductDetail> productDetails;
+
+
     @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private List<ProductsSpecificationGroup> productsSpecificationGroups ;
@@ -60,6 +64,9 @@ public class Product {
 
     @Column(name = "status")
     private Integer status;
+
+    @Column(name = "images")
+    private String images;
 
     @Override
     public String toString() {

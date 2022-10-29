@@ -29,8 +29,7 @@ public class ProductVariantCombination {
     @Column(name = "sku", nullable = false)
     private String sku;
 
-    @Cascade(org.hibernate.annotations.CascadeType.LOCK)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_variant_id")
     private ProductsVariant productVariant;
 

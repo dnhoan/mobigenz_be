@@ -23,6 +23,8 @@ public class SpecificationDto {
 
     private String specificationName;
 
+    private String value;
+
     private LocalDateTime ctime;
 
     private LocalDateTime mtime;

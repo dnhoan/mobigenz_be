@@ -6,10 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
 public interface ProductService {
 
     List<ProductDto> getProducts();
     List<Product> getProducts2();
     ProductDto insertProduct(ProductDto productDto);
+    ProductDto getProductDtoById(Integer id);
 }

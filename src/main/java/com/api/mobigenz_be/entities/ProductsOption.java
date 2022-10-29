@@ -32,7 +32,7 @@ public class ProductsOption{
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<ProductsVariant> productsVariants;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "option_id")
     private Option option;
 

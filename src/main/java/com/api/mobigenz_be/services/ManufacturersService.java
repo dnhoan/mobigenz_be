@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ManufacturersService {
     List<ManufacturerDto> getList();
+    ManufacturerDto getManufacturerByProductLineId(Integer  ProductLineId);
 }

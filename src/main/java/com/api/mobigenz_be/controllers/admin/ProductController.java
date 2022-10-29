@@ -32,12 +32,27 @@ public class ProductController {
     @PostMapping("product")
     public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductDto productDto) {
         ProductDto productDto1 = this.productService.insertProduct(productDto);
+//        ProductDto productDto1 = this.productService.getProductDtoById(product_id);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
                         .data(Map.of("product", productDto1))
                         .status(CREATED)
                         .statusCode(CREATED.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("product/{product_id}")
+    public ResponseEntity<ResponseDTO> getProductById(@PathVariable("product_id") Integer product_id) {
+        ProductDto productDto = this.productService.getProductDtoById(product_id);
+        return ResponseEntity.ok(
+                ResponseDTO
+                        .builder()
+                        .data(Map.of("product", productDto))
+                        .status(OK)
+                        .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );

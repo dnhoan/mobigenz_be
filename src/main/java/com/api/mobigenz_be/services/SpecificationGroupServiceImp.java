@@ -6,6 +6,7 @@ import com.api.mobigenz_be.DTOs.SpecificationGroupDto;
 import com.api.mobigenz_be.entities.ProductsSpecification;
 import com.api.mobigenz_be.entities.Specification;
 import com.api.mobigenz_be.entities.SpecificationGroup;
+import com.api.mobigenz_be.repositories.ProductSpecificationRepository;
 import com.api.mobigenz_be.repositories.SpecificationGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,18 +19,30 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
 
     @Autowired
     private SpecificationGroupRepository specificationGroupRepository;
+    @Autowired
+    private SpecificationService specificationService;
+    @Autowired
+    private ProductSpecificationRepository productSpecificationRepository;
 
     public List<SpecificationGroupDto> getSpecificationGroupByProductId(Integer product_id) {
         return this.specificationGroupRepository.getSpecificationGroupByProductId((product_id))
                 .stream()
-                .map(this::specificationGroupMapToSpecificationGroupDto)
+                .map(specificationGroup ->  this.specificationGroupMapToSpecificationGroupDto(specificationGroup, product_id))
                 .collect(Collectors.toList());
     }
 
-    private SpecificationGroupDto specificationGroupMapToSpecificationGroupDto(SpecificationGroup specificationGroup) {
-        List<SpecificationDto> specificationDtos = specificationGroup.getSpecifications()
+    @Override
+    public List<SpecificationGroupDto> getSpecificationGroup() {
+        return this.specificationGroupRepository.findAll()
                 .stream()
-                .map(this::specificationMapToSpecificationDto)
+                .map(specificationGroup ->  this.specificationGroupMapToSpecificationGroupDto(specificationGroup, null))
+                .collect(Collectors.toList());
+    }
+
+    private SpecificationGroupDto specificationGroupMapToSpecificationGroupDto(SpecificationGroup specificationGroup, Integer product_id) {
+        List<SpecificationDto> specificationDtos = this.specificationService.getSpecificationsBySpecificationGroupId(specificationGroup.getId())
+                .stream()
+                .map(specification -> this.specificationMapToSpecificationDto(specification, product_id))
                 .collect(Collectors.toList());
         return SpecificationGroupDto
                 .builder()
@@ -39,8 +52,9 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
                 .build();
     }
 
-    private SpecificationDto specificationMapToSpecificationDto(Specification specification) {
-        List<ProductSpecificationDto> productSpecificationDtos = specification.getProductsSpecifications()
+    private SpecificationDto specificationMapToSpecificationDto(Specification specification, Integer product_id) {
+        List<ProductSpecificationDto> productSpecificationDtos =
+                this.productSpecificationRepository.findProductsSpecificationBySpecificationIdAndProductId(specification.getId(), product_id)
                 .stream()
                 .map(this::productSpecificationMapToProductSpecificationDto)
                 .collect(Collectors.toList());
