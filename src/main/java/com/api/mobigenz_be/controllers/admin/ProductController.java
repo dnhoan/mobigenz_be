@@ -25,14 +25,18 @@ public class ProductController {
     @GetMapping("products")
     public ResponseEntity<ResponseDTO> getList() {
         return ResponseEntity.ok(
-                ResponseDTO.builder().build()
+                ResponseDTO.builder()
+                        .data(Map.of("products", this.productService.getProducts()))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
         );
     }
 
     @PostMapping("product")
     public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductDto productDto) {
         ProductDto productDto1 = this.productService.insertProduct(productDto);
-//        ProductDto productDto1 = this.productService.getProductDtoById(product_id);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()

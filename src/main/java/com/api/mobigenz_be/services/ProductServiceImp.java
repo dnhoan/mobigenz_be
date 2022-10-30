@@ -45,7 +45,6 @@ public class ProductServiceImp implements ProductService {
     @Transactional
     public ProductDto insertProduct(ProductDto productDto) {
         Product product = this.productRepository.save(this.productDtoMapToProduct(productDto));
-        this.productRepository.flush();
         return this.productMapToProductDto(product);
     }
 
@@ -138,7 +137,8 @@ public class ProductServiceImp implements ProductService {
     }
 
     private ProductsOption optionDtoMapToProductsOption(OptionDto optionDto, List<ProductDetailDto> productDetailDtos) {
-        ProductsOption productsOption = ProductsOption.builder()
+        ProductsOption productsOption = ProductsOption
+                .builder()
                 .option(modelMapper.map(optionDto, Option.class))
                 .build();
         List<ProductsVariant> productsVariants = optionDto.getOptionValueDtos()
