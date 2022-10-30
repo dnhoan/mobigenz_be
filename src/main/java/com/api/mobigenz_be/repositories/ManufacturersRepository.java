@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface ManufacturersRepository extends JpaRepository<Manufacturer, Integer> {
 
-    @Query("select new com.api.mobigenz_be.DTOs.ManufacturerDto(m.id, m.manufacturerName, m.ctime, m.mtime, m.status) " +
+    @Query("select m " +
             "from ProductLine pl join Manufacturer m on pl.manufacturer = m where pl.id = :product_line_id")
-    ManufacturerDto getManufacturerByProductLineId(@Param("product_line_id") Integer product_line_id);
+    Manufacturer getManufacturerByProductLineId(@Param("product_line_id") Integer product_line_id);
 }

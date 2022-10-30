@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,5 +42,10 @@ public class Option{
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private List<OptionsValue> optionsValues;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id")
+    private List<ProductsOption> productsOptions;
 
 }

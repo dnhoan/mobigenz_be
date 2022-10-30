@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface SpecificationGroupRepository extends JpaRepository<SpecificationGroup, Integer> {
 
-    @Query("select sp from SpecificationGroup sp join ProductsSpecificationGroup psg on psg.specificationGroup = sp where psg.product.id = :product_id")
+    @Query("select sp from SpecificationGroup sp join ProductsSpecificationGroup psg on psg.specificationGroup = sp where ( :product_id is null or psg.product.id = :product_id)")
     List<SpecificationGroup> getSpecificationGroupByProductId(@Param("product_id") Integer product_id);
 
 }

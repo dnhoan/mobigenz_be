@@ -25,7 +25,12 @@ public class ProductController {
     @GetMapping("products")
     public ResponseEntity<ResponseDTO> getList() {
         return ResponseEntity.ok(
-                ResponseDTO.builder().build()
+                ResponseDTO.builder()
+                        .data(Map.of("products", this.productService.getProducts()))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
         );
     }
 
@@ -38,6 +43,20 @@ public class ProductController {
                         .data(Map.of("product", productDto1))
                         .status(CREATED)
                         .statusCode(CREATED.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("product/{product_id}")
+    public ResponseEntity<ResponseDTO> getProductById(@PathVariable("product_id") Integer product_id) {
+        ProductDto productDto = this.productService.getProductDtoById(product_id);
+        return ResponseEntity.ok(
+                ResponseDTO
+                        .builder()
+                        .data(Map.of("product", productDto))
+                        .status(OK)
+                        .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );

@@ -25,7 +25,7 @@ public class ProductsVariant  {
     @JoinColumn(name = "option_value_id")
     private OptionsValue optionValue;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_option_id")
     private ProductsOption productOption;
 

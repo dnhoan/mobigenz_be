@@ -36,5 +36,7 @@ public class ProductDto {
 
     private List<OptionDto> optionDtos;
 
+    private List<String> images;
+
     private List<SpecificationGroupDto> specificationGroupDtos;
 }

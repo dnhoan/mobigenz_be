@@ -27,6 +27,12 @@ public class ManufacturersServiceImp implements ManufacturersService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ManufacturerDto getManufacturerByProductLineId(Integer productLineId) {
+        Manufacturer manufacturer = this.manufacturersRepository.getManufacturerByProductLineId(productLineId);
+        return this.manufacturerMapToManufacturerDto(manufacturer);
+    }
+
     private ManufacturerDto manufacturerMapToManufacturerDto(Manufacturer manufacturer) {
         List<ProductLineDto> productLineDtos = manufacturer.getProductLines()
                 .stream()
