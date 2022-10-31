@@ -26,7 +26,7 @@ public class CustomerService {
 
     public PageDTO<CustomerDTO> getAll(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
-        Page<Customer> page = this.customerRepo.findAll(pageable);
+        Page<Customer> page = this.customerRepo.getAllById(pageable);
         List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
         return new PageDTO<CustomerDTO>(
                 page.getTotalPages(),
