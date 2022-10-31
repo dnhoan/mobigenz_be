@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomersAddressImp implements CustomersAddressService{
+public class CustomerAddressServiceImp implements CustomersAddressService{
 
     @Autowired
     private CustomersAddressRepository customersAddressRepository;

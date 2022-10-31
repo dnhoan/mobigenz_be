@@ -85,10 +85,12 @@ public class CustomerController {
     public ResponseEntity<ResponseDTO> updateCustomer(@RequestBody Customer customer) {
         try {
             CustomerDTO customerDTO = this.customerService.update(customer);
+            List<CustomerDTO> customerDTOList = this.customerService.searchById();
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
                             .data(Map.of("customer", customerDTO))
+                            .data(Map.of("customer", customerDTOList))
                             .statusCode(OK.value())
                             .timeStamp(LocalDateTime.now())
                             .build()
@@ -99,16 +101,20 @@ public class CustomerController {
     }
 
     @DeleteMapping("customers/{id}")
-    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id") Customer customer) {
+    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id")
+                                                      Customer customer) {
         if (customer != null) {
             this.customerService.delete(customer);
+            List<CustomerDTO> customerDTOList = this.customerService.searchById();
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .message("Delete success")
                             .status(OK)
+                            .data(Map.of("customer", customerDTOList))
                             .statusCode(OK.value())
                             .timeStamp(LocalDateTime.now())
                             .build()
+
             );
         }
         return ResponseEntity.ok(

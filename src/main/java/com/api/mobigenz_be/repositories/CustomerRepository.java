@@ -29,4 +29,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer >{
             "Join CustomersAddress as ca on ca.customerId = c.id where ca.note=:address")
     Page<Customer> findByAddress(@Param("address") String address, Pageable pageable);
 
+    @Query("select c from Customer c order by c.id")
+    Page<Customer> getAllById(Pageable pageable);
+
 }
