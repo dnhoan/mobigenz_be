@@ -55,6 +55,7 @@ public class CustomerService {
 
     public CustomerDTO update(Customer customer){
         Customer ctm = this.customerRepo.save(customer);
+
         return this.modelMapper.map(customer, CustomerDTO.class);
     }
 
@@ -118,5 +119,31 @@ public class CustomerService {
         List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
         return customerDTOList;
     }
+
+    public List<CustomerDTO> searchById() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.getAllById( pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
+
+//    public PageDTO<CustomerDTO> getAllById(int offset, int limit) {
+//        Pageable pageable = PageRequest.of(offset, limit);
+//        Page<Customer> page = this.customerRepo.getAllById(pageable);
+//        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+//        return new PageDTO<CustomerDTO>(
+//                page.getTotalPages(),
+//                page.getTotalElements(),
+//                page.getNumber(),
+//                page.getSize(),
+//                customerDTOList,
+//                page.isFirst(),
+//                page.isLast(),
+//                page.hasNext(),
+//                page.hasPrevious()
+//        );
+//    }
 
 }
