@@ -65,6 +65,24 @@ public class CustomerService {
         return  this.modelMapper.map(customer, CustomerDTO.class);
     }
 
+    public List<CustomerDTO> searchById() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.getAllById( pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
+
+    public List<CustomerDTO> searchByAll(String search) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Customer> page = this.customerRepo.findByAll(search, pageable);
+
+
+        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        return customerDTOList;
+    }
+
     public CustomerDTO getById(Integer id) throws Exception {
         Optional<Customer> customer = this.customerRepo.findById(id);
         if (customer.isPresent()) {
@@ -72,6 +90,8 @@ public class CustomerService {
         }
         throw new Exception("Not found category by id");
     }
+
+
 
 
 //    @Override
@@ -84,50 +104,43 @@ public class CustomerService {
 //    }
 
 
-    public List<CustomerDTO> searchByName(String customerName) {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.findByCustomerName(customerName, pageable);
+//    public List<CustomerDTO> searchByName(String customerName) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Customer> page = this.customerRepo.findByCustomerName(customerName, pageable);
+//
+//
+//        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+//        return customerDTOList;
+//    }
+//
+//    public List<CustomerDTO> searchByEmail(String email) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Customer> page = this.customerRepo.findByEmail(email, pageable);
+//
+//
+//        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+//        return customerDTOList;
+//    }
+//
+//    public List<CustomerDTO> searchByPhoneNumber(String phoneNumber) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Customer> page = this.customerRepo.findByPhoneNumber(phoneNumber, pageable);
+//
+//
+//        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+//        return customerDTOList;
+//    }
+//
+//    public List<CustomerDTO> searchByAddress(String address) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Customer> page = this.customerRepo.findByAddress(address, pageable);
+//
+//
+//        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+//        return customerDTOList;
+//    }
+//
 
-
-        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
-        return customerDTOList;
-    }
-
-    public List<CustomerDTO> searchByEmail(String email) {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.findByEmail(email, pageable);
-
-
-        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
-        return customerDTOList;
-    }
-
-    public List<CustomerDTO> searchByPhoneNumber(String phoneNumber) {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.findByPhoneNumber(phoneNumber, pageable);
-
-
-        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
-        return customerDTOList;
-    }
-
-    public List<CustomerDTO> searchByAddress(String address) {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.findByAddress(address, pageable);
-
-
-        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
-        return customerDTOList;
-    }
-
-    public List<CustomerDTO> searchById() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.getAllById( pageable);
-
-
-        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
-        return customerDTOList;
-    }
 
 //    public PageDTO<CustomerDTO> getAllById(int offset, int limit) {
 //        Pageable pageable = PageRequest.of(offset, limit);
