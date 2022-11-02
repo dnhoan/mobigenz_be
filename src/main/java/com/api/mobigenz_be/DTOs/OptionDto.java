@@ -17,6 +17,8 @@ import java.util.List;
 public class OptionDto {
     private Integer id;
 
+    private Integer productsOptionsId;
+
     private String optionName;
 
     private String note;

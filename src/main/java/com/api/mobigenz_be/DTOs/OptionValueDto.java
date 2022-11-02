@@ -18,6 +18,8 @@ public class OptionValueDto {
 
     private String optionValueName;
 
+    private Integer productVariantsId;
+
     private String optionName;
 
     private String note;

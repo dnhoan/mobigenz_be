@@ -13,6 +13,10 @@ public class SpecificationServiceImp implements SpecificationService{
     private SpecificationRepository specificationRepository;
 
     @Override
+    public List<Specification> getSpecificationsBySpecificationGroupIdAndProductId(Integer specification_group_id, Integer product_id) {
+        return this.specificationRepository.getSpecificationsBySpecificationGroupIdAndProductId(specification_group_id, product_id);
+    }
+    @Override
     public List<Specification> getSpecificationsBySpecificationGroupId(Integer specification_group_id) {
         return this.specificationRepository.getSpecificationsBySpecificationGroupId(specification_group_id);
     }

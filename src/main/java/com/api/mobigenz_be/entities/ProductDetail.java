@@ -46,7 +46,7 @@ public class ProductDetail {
     private Integer status;
 
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "PRODUCT_DETAIL_ID")
     private List<ProductVariantCombination> productVariantCombinationList = new ArrayList<>();
 

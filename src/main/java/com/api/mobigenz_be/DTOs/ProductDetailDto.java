@@ -16,6 +16,8 @@ import java.util.List;
 public class ProductDetailDto {
     private Integer id;
 
+    private Integer productVariantCombineId;
+
     private Double price;
 
     private Double priceOrigin;
