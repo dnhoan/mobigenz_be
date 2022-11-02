@@ -36,7 +36,7 @@ public class ProductsVariant  {
 //    private List<ProductDetail> productDetails = new ArrayList<>();
 
     @Cascade(org.hibernate.annotations.CascadeType.LOCK)
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "product_variant_id")
     private List<ProductVariantCombination> productVariantCombinations;
 

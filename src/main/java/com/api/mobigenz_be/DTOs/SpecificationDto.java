@@ -21,6 +21,8 @@ public class SpecificationDto {
 
     private Integer id;
 
+    private Integer productSpecificationId;
+
     private String specificationName;
 
     private String value;
@@ -31,5 +33,5 @@ public class SpecificationDto {
 
     private Integer status;
 
-    private List<ProductSpecificationDto> productSpecificationDtos;
+    private ProductSpecificationDto productSpecificationDtos;
 }

@@ -37,13 +37,8 @@ public class ProductServiceImp implements ProductService {
         return products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
     }
 
-    @Override
-    public List<Product> getProducts2() {
-        return null;
-    }
-
     @Transactional
-    public ProductDto insertProduct(ProductDto productDto) {
+    public ProductDto saveProduct(ProductDto productDto) {
         Product product = this.productRepository.save(this.productDtoMapToProduct(productDto));
         return this.productMapToProductDto(product);
     }
@@ -69,22 +64,27 @@ public class ProductServiceImp implements ProductService {
                 .ctime(LocalDateTime.now())
                 .images(String.join(", ", productDto.getImages()))
                 .status(1)
+                .id(productDto.getId())
                 .description(productDto.getDescription())
                 .productName(productDto.getProductName())
                 .build();
 
-        List<ProductsSpecificationGroup> productsSpecificationGroups = productDto.getSpecificationGroupDtos().stream().map(specificationGroupDto -> {
+        List<ProductsSpecificationGroup> productsSpecificationGroups = productDto.getSpecificationGroupDtos()
+                .stream()
+                .map(specificationGroupDto -> {
             ProductsSpecificationGroup productsSpecificationGroup = ProductsSpecificationGroup
                     .builder()
                     .specificationGroup(this.modelMapper.map(specificationGroupDto, SpecificationGroup.class))
                     .product(product)
+                    .id(specificationGroupDto.getProductSpecificationGroupId())
                     .build();
             List<ProductsSpecification> productsSpecifications = specificationGroupDto.getSpecificationDtos().stream().map(specificationDto ->
                     ProductsSpecification
                             .builder()
+                            .id(specificationDto.getProductSpecificationId())
                             .productSpecificationGroup(productsSpecificationGroup)
                             .specification(this.modelMapper.map(specificationDto, Specification.class))
-                            .productSpecificationName(specificationDto.getValue())
+                            .productSpecificationName(specificationDto.getProductSpecificationDtos().getProductSpecificationName())
                             .build()
             ).collect(Collectors.toList());
             productsSpecificationGroup.setProductsSpecifications(productsSpecifications);
@@ -103,6 +103,7 @@ public class ProductServiceImp implements ProductService {
                         productVariantCombinations.add(
                                 ProductVariantCombination
                                         .builder()
+//                                        .id(productDetailDto.getProductVariantCombineId())
                                         .productVariant(productsVariant)
                                         .sku(productDetailDto.getSku())
                                         .build()
@@ -120,6 +121,7 @@ public class ProductServiceImp implements ProductService {
             ).collect(Collectors.toList());
             ProductDetail productDetail = ProductDetail
                     .builder()
+//                    .id(productDetailDto.getId())
                     .productVariantCombinationList(variantCombinations)
                     .price(productDetailDto.getPrice())
                     .sku(productDetailDto.getSku())
@@ -140,11 +142,13 @@ public class ProductServiceImp implements ProductService {
         ProductsOption productsOption = ProductsOption
                 .builder()
                 .option(modelMapper.map(optionDto, Option.class))
+                .id(optionDto.getProductsOptionsId())
                 .build();
         List<ProductsVariant> productsVariants = optionDto.getOptionValueDtos()
                 .stream()
                 .map(optionValueDto -> ProductsVariant
                         .builder()
+                        .id(optionValueDto.getProductVariantsId())
                         .optionValue(this.modelMapper.map(optionValueDto, OptionsValue.class))
                         .productOption(productsOption)
                         .build()
@@ -193,7 +197,6 @@ public class ProductServiceImp implements ProductService {
     }
 
     private ProductVariantCombinationDto productVariantCombinationMapToProductVariantCombinationDto(ProductVariantCombination productVariantCombination) {
-        System.out.println("product variant id " + productVariantCombination.getProductVariant());
         OptionDto optionDto =
                 this.modelMapper.map(
                         productVariantCombination.getProductVariant().getProductOption().getOption(), OptionDto.class
