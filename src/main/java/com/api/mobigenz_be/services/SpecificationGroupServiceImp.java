@@ -35,12 +35,23 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
     public List<SpecificationGroupDto> getSpecificationGroup() {
         return this.specificationGroupRepository.findAll()
                 .stream()
-                .map(specificationGroup ->  this.specificationGroupMapToSpecificationGroupDto(specificationGroup, null))
+                .map(this::specificationGroupMapToSpecificationGroupDto)
                 .collect(Collectors.toList());
     }
-
-    private SpecificationGroupDto specificationGroupMapToSpecificationGroupDto(SpecificationGroup specificationGroup, Integer product_id) {
+    private SpecificationGroupDto specificationGroupMapToSpecificationGroupDto(SpecificationGroup specificationGroup) {
         List<SpecificationDto> specificationDtos = this.specificationService.getSpecificationsBySpecificationGroupId(specificationGroup.getId())
+                .stream()
+                .map(specification -> this.specificationMapToSpecificationDto(specification, null))
+                .collect(Collectors.toList());
+        return SpecificationGroupDto
+                .builder()
+                .id(specificationGroup.getId())
+                .specificationGroupName(specificationGroup.getSpecificationGroupName())
+                .specificationDtos(specificationDtos)
+                .build();
+    }
+    private SpecificationGroupDto specificationGroupMapToSpecificationGroupDto(SpecificationGroup specificationGroup, Integer product_id) {
+        List<SpecificationDto> specificationDtos = this.specificationService.getSpecificationsBySpecificationGroupIdAndProductId(specificationGroup.getId(),product_id)
                 .stream()
                 .map(specification -> this.specificationMapToSpecificationDto(specification, product_id))
                 .collect(Collectors.toList());
@@ -62,7 +73,8 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
                 .builder()
                 .id(specification.getId())
                 .specificationName(specification.getSpecificationName())
-                .productSpecificationDtos(productSpecificationDtos)
+                .value(productSpecificationDtos.size() > 0 ? productSpecificationDtos.get(0).getProductSpecificationName() : "")
+                .productSpecificationDtos(productSpecificationDtos.size() > 0 ? productSpecificationDtos.get(0) : new ProductSpecificationDto())
                 .build();
     }
 

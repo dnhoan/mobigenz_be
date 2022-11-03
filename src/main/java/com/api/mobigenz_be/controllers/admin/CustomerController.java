@@ -127,9 +127,9 @@ public class CustomerController {
         );
     }
 
-    @GetMapping("searchCustomerByName")
-    public ResponseEntity<ResponseDTO> searchCustomerByName( @RequestParam("customerName") String customerName) {
-        List<CustomerDTO> customerDTOList = this.customerService.searchByName(customerName);
+    @GetMapping("searchCustomer")
+    public ResponseEntity<ResponseDTO> searchByAll( @RequestParam("search") String search) {
+        List<CustomerDTO> customerDTOList = this.customerService.searchByAll(search);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .status(OK)
@@ -140,44 +140,57 @@ public class CustomerController {
         );
     }
 
-    @GetMapping("searchCustomerByEmail")
-    public ResponseEntity<ResponseDTO> searchCustomerByEmail( @RequestParam("email") String email) {
-        List<CustomerDTO> customerDTOList = this.customerService.searchByEmail(email);
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customer", customerDTOList))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    @GetMapping("searchCustomerByPhoneNumber")
-    public ResponseEntity<ResponseDTO> searchCustomerByPhoneNumber( @RequestParam("phoneNumber") String phoneNumber) {
-        List<CustomerDTO> customerDTOList = this.customerService.searchByPhoneNumber(phoneNumber);
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customer", customerDTOList))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    @GetMapping("searchCustomerByAddress")
-    public ResponseEntity<ResponseDTO> searchCustomerByAddress( @RequestParam("address") String address) {
-        List<CustomerDTO> customerDTOList = this.customerService.searchByAddress(address);
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customer", customerDTOList))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
+//    @GetMapping("searchCustomerByName")
+//    public ResponseEntity<ResponseDTO> searchCustomerByName( @RequestParam("customerName") String customerName) {
+//        List<CustomerDTO> customerDTOList = this.customerService.searchByName(customerName);
+//        return ResponseEntity.ok(
+//                ResponseDTO.builder()
+//                        .status(OK)
+//                        .data(Map.of("customer", customerDTOList))
+//                        .statusCode(OK.value())
+//                        .timeStamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
+//
+//    @GetMapping("searchCustomerByEmail")
+//    public ResponseEntity<ResponseDTO> searchCustomerByEmail( @RequestParam("email") String email) {
+//        List<CustomerDTO> customerDTOList = this.customerService.searchByEmail(email);
+//        return ResponseEntity.ok(
+//                ResponseDTO.builder()
+//                        .status(OK)
+//                        .data(Map.of("customer", customerDTOList))
+//                        .statusCode(OK.value())
+//                        .timeStamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
+//
+//    @GetMapping("searchCustomerByPhoneNumber")
+//    public ResponseEntity<ResponseDTO> searchCustomerByPhoneNumber( @RequestParam("phoneNumber") String phoneNumber) {
+//        List<CustomerDTO> customerDTOList = this.customerService.searchByPhoneNumber(phoneNumber);
+//        return ResponseEntity.ok(
+//                ResponseDTO.builder()
+//                        .status(OK)
+//                        .data(Map.of("customer", customerDTOList))
+//                        .statusCode(OK.value())
+//                        .timeStamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
+//
+//    @GetMapping("searchCustomerByAddress")
+//    public ResponseEntity<ResponseDTO> searchCustomerByAddress( @RequestParam("address") String address) {
+//        List<CustomerDTO> customerDTOList = this.customerService.searchByAddress(address);
+//        return ResponseEntity.ok(
+//                ResponseDTO.builder()
+//                        .status(OK)
+//                        .data(Map.of("customer", customerDTOList))
+//                        .statusCode(OK.value())
+//                        .timeStamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
 }
 
 

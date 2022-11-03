@@ -28,12 +28,4 @@ public class TestController {
                         .build()
         );
     }
-    @GetMapping("products2")
-    public ResponseEntity<ResponseDTO> getList2() {
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .data(Map.of("products", this.productService.getProducts2()))
-                        .build()
-        );
-    }
 }

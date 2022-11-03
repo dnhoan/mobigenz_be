@@ -18,6 +18,8 @@ public class SpecificationGroupDto {
         this.specificationGroupName = specificationGroupName;
     }
 
+    private Integer productSpecificationGroupId;
+
     private Integer id;
 
     private String specificationGroupName;

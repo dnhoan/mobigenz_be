@@ -36,13 +36,27 @@ public class ProductController {
 
     @PostMapping("product")
     public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductDto productDto) {
-        ProductDto productDto1 = this.productService.insertProduct(productDto);
+        ProductDto productDto1 = this.productService.saveProduct(productDto);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
                         .data(Map.of("product", productDto1))
                         .status(CREATED)
                         .statusCode(CREATED.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PutMapping("product")
+    public ResponseEntity<ResponseDTO> updateProduct(@RequestBody ProductDto productDto) {
+        ProductDto productDto1 = this.productService.saveProduct(productDto);
+        return ResponseEntity.ok(
+                ResponseDTO
+                        .builder()
+                        .data(Map.of("product", productDto1))
+                        .status(OK)
+                        .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );

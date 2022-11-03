@@ -39,12 +39,12 @@ public class Product {
     private ProductLine productLine;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private List<ProductsOption> productsOptions;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "product_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<ProductDetail> productDetails;
@@ -52,7 +52,7 @@ public class Product {
 
     @JsonIgnore
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "product_id")
     private List<ProductsSpecificationGroup> productsSpecificationGroups ;
 
