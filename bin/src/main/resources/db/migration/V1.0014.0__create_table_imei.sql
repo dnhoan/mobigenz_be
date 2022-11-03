@@ -1,9 +1,8 @@
-CREATE TABLE carts_items
+CREATE TABLE imei
 (
     id serial primary key,
-    amount int,
-    cart_id bigint,
+    imei varchar(20) unique not null,
     product_detail_id bigint,
-    constraint fk_carts FOREIGN KEY (cart_id) REFERENCES carts(id),
+    status int,
     constraint fk_product_details FOREIGN KEY (product_detail_id) REFERENCES product_details(id)
 );
