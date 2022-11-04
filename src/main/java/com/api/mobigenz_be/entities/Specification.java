@@ -1,27 +1,23 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Cascade;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "specifications")
 public class Specification{
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "specification_name", nullable = false, length = 100)
