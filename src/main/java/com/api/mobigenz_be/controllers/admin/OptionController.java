@@ -42,7 +42,7 @@ public class OptionController {
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("product", optionDto1))
+                        .data(Map.of("options", optionDto1))
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .timeStamp(LocalDateTime.now())
