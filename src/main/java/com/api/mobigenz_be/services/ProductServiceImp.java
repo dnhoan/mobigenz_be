@@ -65,6 +65,7 @@ public class ProductServiceImp implements ProductService {
                 .images(String.join(", ", productDto.getImages()))
                 .status(1)
                 .id(productDto.getId())
+                .detail(productDto.getDetail())
                 .description(productDto.getDescription())
                 .productName(productDto.getProductName())
                 .build();
@@ -169,6 +170,7 @@ public class ProductServiceImp implements ProductService {
                 .description(product.getDescription())
                 .ctime(product.getCtime())
                 .mtime(product.getMtime())
+                .detail(product.getDetail())
                 .images(Arrays.asList(product.getImages().split(", ")))
                 .manufacturerDto(manufacturerDto)
                 .productLineDto(productLineDto)
