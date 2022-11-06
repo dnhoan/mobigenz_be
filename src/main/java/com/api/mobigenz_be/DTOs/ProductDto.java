@@ -22,6 +22,8 @@ public class ProductDto {
 
     private String description;
 
+    private String detail;
+
     private LocalDateTime ctime;
 
     private LocalDateTime mtime;
