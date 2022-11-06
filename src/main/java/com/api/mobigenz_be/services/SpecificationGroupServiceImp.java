@@ -10,7 +10,10 @@ import com.api.mobigenz_be.repositories.ProductSpecificationRepository;
 import com.api.mobigenz_be.repositories.SpecificationGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,17 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
                 .map(this::specificationGroupMapToSpecificationGroupDto)
                 .collect(Collectors.toList());
     }
+
+
+    @Transactional
+    public SpecificationGroupDto insertSpecificationGroup(SpecificationGroupDto specificationGroupDto){
+        SpecificationGroup specificationGroup = this.specificationGroupRepository.save(specificationGroupDtoMapToSpecification(specificationGroupDto));
+
+        return this.specificationGroupMapToSpecificationGroupDto(specificationGroup);
+
+    }
+
+
     private SpecificationGroupDto specificationGroupMapToSpecificationGroupDto(SpecificationGroup specificationGroup) {
         List<SpecificationDto> specificationDtos = this.specificationService.getSpecificationsBySpecificationGroupId(specificationGroup.getId())
                 .stream()
@@ -85,4 +99,17 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
                 .productSpecificationName(productsSpecification.getProductSpecificationName())
                 .build();
     }
+
+    private SpecificationGroup specificationGroupDtoMapToSpecification(SpecificationGroupDto specificationGroupDto){
+
+        SpecificationGroup specificationGroup = SpecificationGroup
+                .builder()
+                .specificationGroupName(specificationGroupDto.getSpecificationGroupName())
+                .specifications(new ArrayList<>())
+                .ctime(LocalDateTime.now())
+                .build();
+        return specificationGroup;
+    }
+
+
 }

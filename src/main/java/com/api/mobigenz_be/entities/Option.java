@@ -1,10 +1,8 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.apache.tomcat.jni.Time;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,13 +12,15 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "options")
 public class Option{
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "option_name", nullable = false, length = 100)
@@ -30,7 +30,7 @@ public class Option{
     @Column(name = "note")
     private String note;
 
-    @Column(name = "ctime", nullable = false)
+    @Column(name = "ctime")
     private LocalDateTime ctime;
 
     @Column(name = "mtime")
@@ -47,5 +47,7 @@ public class Option{
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private List<ProductsOption> productsOptions;
+
+
 
 }

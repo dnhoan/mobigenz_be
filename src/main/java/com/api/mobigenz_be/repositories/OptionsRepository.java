@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.repositories;
 
+import com.api.mobigenz_be.DTOs.OptionDto;
 import com.api.mobigenz_be.entities.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ public interface OptionsRepository extends JpaRepository<Option, Integer> {
     @Query("select o from Option o join ProductsOption po on o = po.option where po.product.id = :product_id")
     List<Option> getOptionsByProductId(@Param("product_id") Integer product_id);
 
+    @Query("select o from Option o join OptionsValue ov on o = ov.option where ov.id = :optionValue_id")
+    OptionDto getOptionByOptionValueId(@Param("optionValue_id") Integer optionValue_id);
 
 
 }
