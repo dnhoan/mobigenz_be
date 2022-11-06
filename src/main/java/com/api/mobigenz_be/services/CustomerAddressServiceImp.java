@@ -1,13 +1,18 @@
 package com.api.mobigenz_be.services;
 
-import com.api.mobigenz_be.entities.CustomersAddress;
+import com.api.mobigenz_be.DTOs.CustomerDTO;
+import com.api.mobigenz_be.DTOs.CustomersAddressDto;
+import com.api.mobigenz_be.entities.*;
 import com.api.mobigenz_be.repositories.CustomersAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerAddressServiceImp implements CustomersAddressService{
@@ -44,9 +49,12 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
         return  this.customersAddressRepository.findByCustomerName(customerName);
     }
 
-    @Override
+
+
+    @Transactional
     public CustomersAddress create(CustomersAddress customersAddress) {
-        return this.customersAddressRepository.saveAndFlush(customersAddress);
+        customersAddress.setStatus(1);
+        return this.customersAddressRepository.save(customersAddress);
     }
 
     @Override
@@ -55,14 +63,49 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
     }
 
     @Override
-    public void delete(Integer id) {
-        this.customersAddressRepository.deleteById(id);
+    public CustomersAddress delete(CustomersAddress customersAddress) {
+        customersAddress.setStatus(0);
+
+        return this.customersAddressRepository.save(customersAddress);
     }
 
-//    @Override
-//    public CustomersAddress delete2(CustomersAddress customersAddress) {
-//        customersAddress.set
-//        return this.customersAddressRepository.save(customersAddress);
+//    private CustomersAddressDto customersAddressMapToCustomerAddressDto(CustomersAddress customersAddress){
+//        List<CustomerDTO> customerDtos = customersAddress.getCustomerId()
+//                .stream()
+//                .map(this::customerMapToCustomerDto)
+//                .collect(Collectors.toList());
+//    return CustomersAddressDto
+//                .builder()
+//                .id(customersAddress.getId())
+//                .ward(customersAddress.getWard())
+//                .city(customersAddress.getCity())
+//                .district(customersAddress.getDistrict())
+//                .detailAddress(customersAddress.getDetaiAddress())
+//                .status(customersAddress.getStatus())
+//                .build();
+//
+//
+//    }
+
+
+//    private CustomersAddress customersAddressDtoMapToCustomerAddress(CustomersAddressDto customersAddressDto){
+//        CustomersAddress customersAddress = CustomersAddress
+//                .builder()
+//                .ward(customersAddressDto.getWard())
+//                .build();
+//
+//
+//
+//        return customersAddress;
+//    }
+
+//    private CustomerDTO customerMapToCustomerDto(Customer customer) {
+//        return CustomerDTO
+//                .builder()
+//                .id(customer.getId())
+//                .customerName(customer.getCustomerName())
+//                .status(customer.getStatus())
+//                .build();
 //    }
 
 }

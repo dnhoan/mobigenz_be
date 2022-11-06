@@ -18,7 +18,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer >{
 
     @Query("Select c from Customer  c\n" +
             "left Join CustomersAddress as ca on ca.customerId = c.id \n" +
-            "where ca.note=:search \n" +
+            "where ca.detaiAddress=:search \n" +
             "or c.customerName=:search \n" +
             "or c.phoneNumber=:search \n" +
             "or c.email=:search")

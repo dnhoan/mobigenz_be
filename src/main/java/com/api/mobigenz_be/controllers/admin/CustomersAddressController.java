@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -33,8 +34,8 @@ public class CustomersAddressController {
     }
 
     @DeleteMapping("customersAddress/{id}")
-    public void delete(@PathVariable("id") Integer id) {
-        customersAddressService.delete(id);
+    public void delete(@PathVariable("id") CustomersAddress customersAddress ) {
+        this.customersAddressService.delete(customersAddress);
     }
 
 //    @GetMapping("customersAddress/{id}")
@@ -48,8 +49,12 @@ public class CustomersAddressController {
 //    }
 
     @GetMapping("customersAddressByCustomerName")
-    public List<CustomersAddress> getByCustomerId(@RequestParam("customerName") String customerName) {
+    public List<CustomersAddress> getByCustomerName(@RequestParam("customerName") String customerName) {
         return customersAddressService.findByCustomerName(customerName);
     }
 
+    @GetMapping("customersAddressByCustomerId")
+    public Optional<CustomersAddress> getByCustomerId(@RequestParam("customerId") Integer cId) {
+        return customersAddressService.findByCustomerId(cId);
+    }
 }
