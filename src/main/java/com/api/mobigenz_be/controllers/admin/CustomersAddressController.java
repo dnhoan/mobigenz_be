@@ -1,12 +1,19 @@
 package com.api.mobigenz_be.controllers.admin;
 
+import com.api.mobigenz_be.DTOs.OptionValueDto;
+import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.entities.CustomersAddress;
 import com.api.mobigenz_be.services.CustomersAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api")
@@ -54,7 +61,15 @@ public class CustomersAddressController {
     }
 
     @GetMapping("customersAddressByCustomerId")
-    public Optional<CustomersAddress> getByCustomerId(@RequestParam("customerId") Integer cId) {
-        return customersAddressService.findByCustomerId(cId);
+    public ResponseEntity<ResponseDTO> getByCustomerId(@RequestParam("customerId") Integer cId) {
+        List<CustomersAddress> customersAddresses = this.customersAddressService.findByCustomerId(cId);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("customersAddresses", customersAddresses))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
     }
 }
