@@ -13,7 +13,7 @@ public interface CustomersAddressService {
 
     Optional<CustomersAddress> findById(Integer id);
 
-    Optional<CustomersAddress> findByCustomerId(Integer cid);
+    List<CustomersAddress> findByCustomerId(Integer cid);
 
     List<CustomersAddress> findByCustomerName(String customerName);
 

@@ -35,8 +35,8 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
     }
 
     @Override
-    public Optional<CustomersAddress> findByCustomerId(Integer cid) {
-        return this.customersAddressRepository.findById(cid);
+    public List<CustomersAddress> findByCustomerId(Integer cid) {
+        return this.customersAddressRepository.findByCustomerId(cid);
     }
 
     @Override
