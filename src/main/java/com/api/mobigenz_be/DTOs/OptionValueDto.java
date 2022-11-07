@@ -22,6 +22,8 @@ public class OptionValueDto {
 
     private String optionName;
 
+    private OptionDto optionId;
+
     private String note;
 
     private LocalDateTime ctime;

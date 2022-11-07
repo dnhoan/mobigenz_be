@@ -15,8 +15,11 @@ public interface OptionsRepository extends JpaRepository<Option, Integer> {
     @Query("select o from Option o join ProductsOption po on o = po.option where po.product.id = :product_id")
     List<Option> getOptionsByProductId(@Param("product_id") Integer product_id);
 
-    @Query("select o from Option o join OptionsValue ov on o = ov.option where ov.id = :optionValue_id")
+    @Query("select o from Option o join OptionsValue ov on o = ov.optionId where ov.id = :optionValue_id")
     OptionDto getOptionByOptionValueId(@Param("optionValue_id") Integer optionValue_id);
 
+
+    @Query("select o from Option o where o.optionName =:option_name")
+    List<Option> getOptionByOptionName(@Param("option_name") String option_name );
 
 }
