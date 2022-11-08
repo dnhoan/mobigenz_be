@@ -1,8 +1,11 @@
 package com.api.mobigenz_be.controllers.admin;
 
 import com.api.mobigenz_be.DTOs.OptionDto;
+import com.api.mobigenz_be.DTOs.OptionValueDto;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.constants.UrlConstant;
+import com.api.mobigenz_be.entities.OptionsValue;
+import com.api.mobigenz_be.services.OptionValueService;
 import com.api.mobigenz_be.services.OptionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,36 +21,26 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("api/admin")
 @CrossOrigin(UrlConstant.baseUrlFE)
-public class OptionController {
-
+public class OptionValueController {
     @Autowired
-    private OptionsService optionsService;
+    private OptionValueService optionValueService;
 
-    @GetMapping("options")
+    @GetMapping("optionValue")
     public ResponseEntity<ResponseDTO> getList() {
-        List<OptionDto> optionList = this.optionsService.getList();
+        List<OptionValueDto> optionValueList = this.optionValueService.getList();
+        System.out.println(optionValueList);
         return ResponseEntity.ok(
-            ResponseDTO.builder()
-                    .data(Map.of("options", optionList))
-                    .status(OK)
-                    .statusCode(OK.value())
-                    .timeStamp(LocalDateTime.now())
-                    .build()
+                ResponseDTO.builder()
+                        .data(Map.of("optionValue", optionValueList))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
         );
     }
 
-    @PostMapping("options")
-    public ResponseEntity<ResponseDTO> createOption(@RequestBody OptionDto optionDto){
-        OptionDto optionDto1 = this.optionsService.insertOption(optionDto);
-        return ResponseEntity.ok(
-                ResponseDTO
-                        .builder()
-                        .data(Map.of("options", optionDto1))
-                        .status(CREATED)
-                        .statusCode(CREATED.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-
-        );
+    @PostMapping("optionValue")
+    public OptionsValue create(@RequestBody OptionsValue optionsValue){
+        return this.optionValueService.saveOptionValue(optionsValue);
     }
 }

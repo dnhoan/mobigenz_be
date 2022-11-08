@@ -1,18 +1,14 @@
 package com.api.mobigenz_be.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -64,5 +60,6 @@ public class Customer{
 
     @Column(name = "status")
     private Integer status;
+
 
 }

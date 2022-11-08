@@ -1,10 +1,7 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -24,10 +22,10 @@ public class Manufacturer {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "manufacturer_name", nullable = false, length = 100)
+    @Column(name = "manufacturer_name")
     private String manufacturerName;
 
-    @Column(name = "ctime", nullable = false)
+    @Column(name = "ctime")
     private LocalDateTime ctime;
 
     @Column(name = "mtime")

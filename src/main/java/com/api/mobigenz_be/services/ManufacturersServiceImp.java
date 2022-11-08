@@ -3,13 +3,15 @@ package com.api.mobigenz_be.services;
 import com.api.mobigenz_be.DTOs.ManufacturerDto;
 import com.api.mobigenz_be.DTOs.OptionDto;
 import com.api.mobigenz_be.DTOs.ProductLineDto;
-import com.api.mobigenz_be.entities.Manufacturer;
-import com.api.mobigenz_be.entities.Option;
-import com.api.mobigenz_be.entities.ProductLine;
+import com.api.mobigenz_be.entities.*;
 import com.api.mobigenz_be.repositories.ManufacturersRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,9 @@ public class ManufacturersServiceImp implements ManufacturersService {
 
     @Autowired
     private ManufacturersRepository manufacturersRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public List<ManufacturerDto> getList() {
         return this.manufacturersRepository
@@ -53,4 +58,37 @@ public class ManufacturersServiceImp implements ManufacturersService {
                 .productLineName(productLine.getProductLineName())
                 .build();
     }
+
+    @Transactional
+    public ManufacturerDto saveManufacturer(ManufacturerDto manufacturerDto){
+       Manufacturer manufacturer = this.manufacturersRepository.save(manufacturerDtoMapToManufacturer(manufacturerDto));
+       return this.manufacturerMapToManufacturerDto(manufacturer);
+
+
+//        manufacturer.setProductLines(new ArrayList<>());
+//        manufacturer.setCtime(LocalDateTime.now());
+//        manufacturer.getManufacturerName();
+//        System.out.println("balbla");
+//        System.out.println(manufacturer.getManufacturerName());
+//        return this.manufacturersRepository.saveAndFlush(manufacturer);
+//        return this.modelMapper.map(manufacturer, ManufacturerDto.class);
+
+    }
+
+    private Manufacturer manufacturerDtoMapToManufacturer(ManufacturerDto manufacturerDto){
+        Manufacturer manufacturer = Manufacturer
+                .builder()
+                .manufacturerName(manufacturerDto.getManufacturerName())
+                .productLines(new ArrayList<>())
+                .ctime(LocalDateTime.now())
+                .build();
+
+        System.out.println("balbla");
+       System.out.println(manufacturer.getManufacturerName());
+
+        return manufacturer;
+    }
+
+
+
 }

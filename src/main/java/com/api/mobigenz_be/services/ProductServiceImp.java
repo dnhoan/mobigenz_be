@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,6 +64,7 @@ public class ProductServiceImp implements ProductService {
                 .images(String.join(", ", productDto.getImages()))
                 .status(1)
                 .id(productDto.getId())
+                .detail(productDto.getDetail())
                 .description(productDto.getDescription())
                 .productName(productDto.getProductName())
                 .build();
@@ -169,6 +169,7 @@ public class ProductServiceImp implements ProductService {
                 .description(product.getDescription())
                 .ctime(product.getCtime())
                 .mtime(product.getMtime())
+                .detail(product.getDetail())
                 .images(Arrays.asList(product.getImages().split(", ")))
                 .manufacturerDto(manufacturerDto)
                 .productLineDto(productLineDto)

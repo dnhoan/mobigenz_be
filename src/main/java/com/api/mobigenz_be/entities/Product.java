@@ -30,6 +30,9 @@ public class Product {
     @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
 
+    @Column(name="detail")
+    private String detail;
+
     @Column(name = "description")
     @Type(type = "org.hibernate.type.TextType")
     private String description;

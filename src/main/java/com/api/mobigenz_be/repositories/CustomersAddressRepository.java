@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomersAddressRepository extends JpaRepository<CustomersAddress, Integer> {
 
@@ -20,4 +21,8 @@ public interface CustomersAddressRepository extends JpaRepository<CustomersAddre
     @Query("Select ca from CustomersAddress as ca \n" +
             " join Customer as c on ca.customerId= c.id where c.customerName=:customerName")
     List<CustomersAddress> findByCustomerName(@Param("customerName") String customerName);
+
+    @Query("Select ca from CustomersAddress as ca \n" +
+            " join Customer as c on ca.customerId = c.id where c.id = :customerId")
+    List<CustomersAddress> findByCustomerId(@Param("customerId")Integer customerId);
 }
