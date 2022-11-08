@@ -44,12 +44,12 @@ public class Cart {
 	
 	@Column(name = "mtime")
     private LocalDateTime mtime;
-	
+
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
     private Customer customer;
 	
-	@JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "cart_id")

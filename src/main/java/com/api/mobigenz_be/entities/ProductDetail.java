@@ -44,6 +44,9 @@ public class ProductDetail {
 
     @Column(name = "status")
     private Integer status;
+    
+    @Column(name = "product_name", nullable = false, length = 100)
+    private String productName;
 
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)

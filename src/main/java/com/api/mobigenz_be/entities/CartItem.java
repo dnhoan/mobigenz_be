@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,19 +32,15 @@ public class CartItem {
     @Column(name = "id", nullable = false)
     private Integer id;
 	
-	@Column(name = "total_money")
-    private Double totalMoney;
-	
 	@Column(name = "amount")
     private Integer amount;
 	
-	@Column(name = "mtime")
-    private LocalDateTime mtime;
-	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cart_id")
     private Cart cart;
-    
+	
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_detail_id")
     private ProductDetail productDetail;
