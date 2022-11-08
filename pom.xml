@@ -92,7 +92,7 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui test git -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
