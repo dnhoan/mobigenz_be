@@ -1,0 +1,1 @@
+Alter table accounts add column phoneNumber varchar(15)

@@ -1,18 +1,13 @@
 package com.api.mobigenz_be.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "accounts")
 public class Account {
@@ -27,15 +22,18 @@ public class Account {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "phonenumber", nullable = false, length = 15)
+    private String phoneNumber;
+
+    @ManyToOne()
     @JoinColumn(name = "role_id")
-    private Role role;
+    private Role roleid;
 
     @Column(name = "ctime", nullable = false)
-    private Instant ctime;
+    private LocalDateTime ctime;
 
     @Column(name = "mtime")
-    private Instant mtime;
+    private LocalDateTime mtime;
 
     @Column(name = "status")
     private Integer status;
