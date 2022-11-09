@@ -1,10 +1,7 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -15,13 +12,15 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "specification_groups")
 public class SpecificationGroup {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "specification_group_name", nullable = false, length = 100)
@@ -31,7 +30,7 @@ public class SpecificationGroup {
     @JoinColumn(name = "specification_group_id")
     private List<Specification> specifications ;
 
-    @Column(name = "ctime", nullable = false)
+    @Column(name = "ctime")
     private LocalDateTime ctime;
 
     @Column(name = "mtime")

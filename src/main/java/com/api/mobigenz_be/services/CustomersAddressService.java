@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.services;
 
+import com.api.mobigenz_be.DTOs.CustomersAddressDto;
 import com.api.mobigenz_be.entities.CustomersAddress;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface CustomersAddressService {
 
     Optional<CustomersAddress> findById(Integer id);
 
-    Optional<CustomersAddress> findByCustomerId(Integer cid);
+    List<CustomersAddress> findByCustomerId(Integer cid);
 
     List<CustomersAddress> findByCustomerName(String customerName);
 
@@ -20,7 +21,7 @@ public interface CustomersAddressService {
 
     CustomersAddress update(CustomersAddress customersAddress);
 
-    void delete(Integer id);
+    CustomersAddress delete(CustomersAddress customersAddress);
 
     //CustomersAddress delete2(CustomersAddress customersAddress);
 

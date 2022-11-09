@@ -33,6 +33,8 @@ public class ProductDetailDto {
     private String note;
 
     private Integer status;
+    
+    private String productName;
 
     private List<ProductVariantCombinationDto> productVariantCombinationDtos;
 }

@@ -1,10 +1,8 @@
 package com.api.mobigenz_be.entities;
 
+import com.api.mobigenz_be.DTOs.OptionDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +12,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -36,8 +35,8 @@ public class OptionsValue{
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id")
-    private Option option;
+    @JoinColumn(name = "option_id", nullable = false)
+    private Option optionId;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY)
