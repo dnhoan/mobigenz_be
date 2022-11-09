@@ -25,10 +25,10 @@ public class CartController {
 	
 	@GetMapping("carts")
 	public ResponseEntity<ResponseDTO> getCarts() {
-		List<CartDTO> cartDtos = this.cartService.getCartByCustomerId(1);
+		CartDTO cartDto = this.cartService.getCartByCustomerId(1);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("cartDtos", cartDtos))
+                        .data(Map.of("cartDto", cartDto))
                         .status(OK)
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
@@ -38,10 +38,10 @@ public class CartController {
 	
 	@GetMapping("cart/{cus_id}")
 	public ResponseEntity<ResponseDTO> getCartByCustomer(@PathVariable("cus_id") Integer cus_id) {
-		List<CartDTO> cartDtos = this.cartService.getCartByCustomerId(cus_id);
+		CartDTO cartDto = this.cartService.getCartByCustomerId(cus_id);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("cartDtos", cartDtos))
+                        .data(Map.of("cartDto", cartDto))
                         .status(OK)
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())

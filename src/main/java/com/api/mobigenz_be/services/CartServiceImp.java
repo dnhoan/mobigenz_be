@@ -43,7 +43,7 @@ public class CartServiceImp implements CartService {
 	
 	private CartItemDTO cartItemMapToCartItemDto(CartItem cartItem) {
 		// get product detail by cart item id
-		ProductDetailCartDto productDetailCartDto = cartRepository.getProductDetailByCartItemId(cartItem.getId());
+		ProductDetailCartDto productDetailCartDto = this.cartRepository.getProductDetailByCartItemId(cartItem.getId());
 		return CartItemDTO
 				.builder()
 				.id(cartItem.getId())
@@ -53,11 +53,8 @@ public class CartServiceImp implements CartService {
 	}
 
 	@Override
-	public List<CartDTO> getCartByCustomerId(Integer cid) {
-		return this.cartRepository.getCartByCustomerId(cid)
-				.stream()
-				.map(this::cartMapToCartDto)
-				.collect(Collectors.toList());
+	public CartDTO getCartByCustomerId(Integer cid) {
+		return this.cartMapToCartDto(this.cartRepository.getCartByCustomerId(cid));
 	}
 
 	@Override
