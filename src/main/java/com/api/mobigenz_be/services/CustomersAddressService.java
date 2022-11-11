@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.CustomersAddressDto;
+import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.entities.CustomersAddress;
 
 import java.util.List;
@@ -9,19 +10,22 @@ import java.util.Optional;
 public interface CustomersAddressService {
 
 
-    List<CustomersAddress> getAll();
+    PageDTO<CustomersAddressDto> getAll(int offset, int limit);
 
-    Optional<CustomersAddress> findById(Integer id);
 
     List<CustomersAddress> findByCustomerId(Integer cid);
 
     List<CustomersAddress> findByCustomerName(String customerName);
 
-    CustomersAddress create(CustomersAddress customersAddress);
+    CustomersAddressDto createCa(CustomersAddressDto customersAddressDto) ;
 
-    CustomersAddress update(CustomersAddress customersAddress);
+    CustomersAddressDto update(CustomersAddressDto customersAddressDto);
 
     CustomersAddress delete(CustomersAddress customersAddress);
+
+    List<CustomersAddressDto> searchById();
+
+    List<CustomersAddress> getById();
 
     //CustomersAddress delete2(CustomersAddress customersAddress);
 

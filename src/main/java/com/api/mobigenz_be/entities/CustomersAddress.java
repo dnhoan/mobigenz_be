@@ -34,7 +34,7 @@ public class CustomersAddress {
     private String district;
 
     @Column(name = "detail_address", nullable = false)
-    private String detaiAddress;
+    private String detailAddress;
 
     @Column(name = "status")
     private Integer status;
