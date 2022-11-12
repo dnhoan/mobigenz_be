@@ -28,6 +28,12 @@ public class ProductDetail {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "price_sell")
+    private Double priceSell;
+
+    @Column(name = "price_origin")
+    private Double priceOrigin;
+
     @Column(name = "sku", length = 100)
     private String sku;
 
