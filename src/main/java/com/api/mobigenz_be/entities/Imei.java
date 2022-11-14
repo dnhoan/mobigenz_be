@@ -31,6 +31,11 @@ public class Imei{
     @JoinColumn(name = "product_detail_id")
     private ProductDetail productDetail;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_detail_id")
+    private OrderDetail orderDetail;
+
     @Column(name = "status")
     private Integer status;
 

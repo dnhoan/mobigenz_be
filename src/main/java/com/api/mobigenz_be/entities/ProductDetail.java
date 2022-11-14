@@ -60,6 +60,11 @@ public class ProductDetail {
     private List<ProductVariantCombination> productVariantCombinationList = new ArrayList<>();
 
     @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_detail_id")
+    private List<OrderDetail> orderDetails;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
