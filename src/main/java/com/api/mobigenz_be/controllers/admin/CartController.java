@@ -15,6 +15,7 @@ import com.api.mobigenz_be.services.CartItemService;
 import com.api.mobigenz_be.services.CartService;
 import static org.springframework.http.HttpStatus.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class CartController {
 	
 	@GetMapping("carts")
 	public ResponseEntity<ResponseDTO> getCarts() {
-		CartDTO cartDto = this.cartService.getCartByCustomerId(1);
+		CartDTO cartDto = this.cartService.getCartByCustomerId(4);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("cartDto", cartDto))
