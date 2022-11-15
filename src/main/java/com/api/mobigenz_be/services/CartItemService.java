@@ -5,7 +5,7 @@ import com.api.mobigenz_be.DTOs.CartItemDTO;
 import java.util.List;
 
 public interface CartItemService {
-	CartItemDTO createCartItem(CartItemDTO cartItemDTO);
+	CartItemDTO addCartItem(CartItemDTO cartItemDTO, Integer customerId);
 	CartItemDTO updateCartItem(CartItemDTO cartItemDTO);
 	void deleteCartItem(Integer id);
 
