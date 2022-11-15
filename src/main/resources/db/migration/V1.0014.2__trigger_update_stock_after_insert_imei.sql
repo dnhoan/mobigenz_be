@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION updateStockAfterInsertImei()
+    RETURNS trigger AS
+$$
+BEGIN
+    UPDATE PRODUCT_DETAILS product
+    SET STOCK = (SELECT COUNT(IMEI.ID) FROM IMEI WHERE IMEI.STATUS = 1 AND IMEI.PRODUCT_DETAIL_ID =  NEW.product_detail_id  )
+    WHERE product.ID = new.product_detail_id;
+    RETURN NEW;
+END;
+$$
+    LANGUAGE 'plpgsql';
+CREATE TRIGGER UPDATE_STOCK_AFTER_INSERT_IMEI
+    AFTER INSERT
+    ON IMEI
+    FOR EACH ROW
+EXECUTE FUNCTION updateStockAfterInsertImei();

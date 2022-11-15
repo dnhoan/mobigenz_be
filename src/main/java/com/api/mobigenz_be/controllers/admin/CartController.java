@@ -6,7 +6,6 @@ import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.entities.Cart;
-import com.api.mobigenz_be.entities.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,26 +31,15 @@ public class CartController {
 	
 	@GetMapping("carts")
 	public ResponseEntity<ResponseDTO> getCarts() {
+		CartDTO cartDto = this.cartService.getCartByCustomerId(1);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("cartDto", this.cartService.getAll()))
+                        .data(Map.of("cartDto", cartDto))
                         .status(OK)
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );
-	}
-
-	@GetMapping("cartItem")
-	public ResponseEntity<ResponseDTO> getCartItem() {
-		return ResponseEntity.ok(
-				ResponseDTO.builder()
-						.data(Map.of("cartDto", this.cartItemService.getAll()))
-						.status(OK)
-						.statusCode(OK.value())
-						.timeStamp(LocalDateTime.now())
-						.build()
-		);
 	}
 	
 	@GetMapping("cart/{cus_id}")
@@ -82,7 +70,7 @@ public class CartController {
 	
 	@PutMapping("cartItem")
 	public ResponseEntity<ResponseDTO> saveCartItem(@RequestBody CartItemDTO cartItemDTO) {
-		CartItemDTO cartItemInsertDto = this.cartItemService.updateCartItem(cartItemDTO);
+		CartItemDTO cartItemInsertDto = this.cartItemService.createCartItem(cartItemDTO);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("cartItemInsertDto", cartItemInsertDto))
@@ -104,19 +92,4 @@ public class CartController {
                         .build()
         );
 	}
-
-	@PostMapping("carts")
-	public ResponseEntity<ResponseDTO> createCart(@RequestBody CartDTO cartDTO){
-		CartDTO cartDTO1 = this.cartService.create(cartDTO);
-		return ResponseEntity.ok(
-				ResponseDTO
-						.builder()
-						.data(Map.of("cart", cartDTO1))
-						.status(CREATED)
-						.statusCode(CREATED.value())
-						.timeStamp(LocalDateTime.now())
-						.build()
-		);
-	}
-
 }

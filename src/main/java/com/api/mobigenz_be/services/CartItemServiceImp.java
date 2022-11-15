@@ -1,6 +1,5 @@
 package com.api.mobigenz_be.services;
 
-import com.api.mobigenz_be.DTOs.CartDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.api.mobigenz_be.DTOs.CartItemDTO;
@@ -8,27 +7,14 @@ import com.api.mobigenz_be.DTOs.ProductDetailCartDto;
 import com.api.mobigenz_be.entities.CartItem;
 import com.api.mobigenz_be.repositories.CartItemRepository;
 import com.api.mobigenz_be.repositories.CartRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Service
 public class CartItemServiceImp implements CartItemService {
 	@Autowired
 	private CartRepository cartRepository;
 	
 	@Autowired
 	private CartItemRepository cartItemRepository;
-
-	@Override
-	public List<CartItemDTO> getAll() {
-		return this.cartItemRepository.findAll()
-				.stream()
-				.map(this::cartItemMapToCartItemDto)
-				.collect(Collectors.toList());
-	}
-
+	
 	private CartItemDTO cartItemMapToCartItemDto(CartItem cartItem) {
 		ProductDetailCartDto productDetailCartDto = this.cartRepository.getProductDetailByCartItemId(cartItem.getId());
 		return CartItemDTO
