@@ -12,4 +12,5 @@ public interface ProductService {
     List<ProductDto> getProducts();
     ProductDto saveProduct(ProductDto productDto);
     ProductDto getProductDtoById(Integer id);
+
 }

@@ -9,7 +9,7 @@ import com.api.mobigenz_be.entities.Cart;
 public interface CartService {
 	List<CartDTO> getAll();
 	CartDTO getCartByCustomerId(Integer cid);
-	Cart create(Cart cart);
+	CartDTO create(CartDTO cartDTO);
 	Cart update(Cart cart);
 	void delete(Integer id);
 }
