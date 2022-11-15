@@ -20,10 +20,10 @@ import java.util.Optional;
 public class CartItemServiceImp implements CartItemService {
 	@Autowired
 	private CartRepository cartRepository;
-	
+
 	@Autowired
 	private CartItemRepository cartItemRepository;
-	
+
 	private CartItemDTO cartItemMapToCartItemDto(CartItem cartItem) {
 		ProductDetailCartDto productDetailCartDto = this.cartRepository.getProductDetailByCartItemId(cartItem.getId());
 		return CartItemDTO
@@ -33,13 +33,13 @@ public class CartItemServiceImp implements CartItemService {
 				.productDetailCartDto(productDetailCartDto)
 				.build();
 	}
-	
+
 	private CartItem cartItemDtoMapToCartItem(CartItemDTO cartItemDTO) {
 		return CartItem
 				.builder()
 				.id(cartItemDTO.getId())
 				.amount(cartItemDTO.getAmount())
-				.productDetail(this.cartItemRepository.getProductDetailById(cartItemDTO.getProductDetailCartDto().getId()))
+				.productDetail(ProductDetail.builder().id(cartItemDTO.getProductDetailCartDto().getId()).build())
 				.build();
 	}
 
