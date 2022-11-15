@@ -7,9 +7,7 @@ import com.api.mobigenz_be.DTOs.ProductDetailCartDto;
 import com.api.mobigenz_be.entities.CartItem;
 import com.api.mobigenz_be.repositories.CartItemRepository;
 import com.api.mobigenz_be.repositories.CartRepository;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CartItemServiceImp implements CartItemService {
 	@Autowired
 	private CartRepository cartRepository;

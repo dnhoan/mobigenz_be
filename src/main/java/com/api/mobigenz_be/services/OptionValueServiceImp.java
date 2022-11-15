@@ -55,28 +55,25 @@ public class OptionValueServiceImp implements OptionValueService{
     }
 
     private OptionDto optionMapToOptionDto(Option option){
-        List<OptionValueDto> optionValueDtos = option.getOptionsValues()
-                .stream()
-                .map(this::optionValueMapToOptionValueDto)
-                .collect(Collectors.toList());
-        return OptionDto
-                .builder()
+        return OptionDto.builder()
                 .id(option.getId())
                 .optionName(option.getOptionName())
-                .ctime(option.getCtime())
                 .status(option.getStatus())
+                .note(option.getNote())
+                .ctime(option.getCtime())
                 .build();
+
     }
 
 
 
     private OptionValueDto optionValueMapToOptionValueDto(OptionsValue optionValue) {
-       // OptionDto optionDto = this.optionsRepository.getOptionByOptionValueId(optionValue.getId());
+        Option option = this.optionsRepository.getOptionByOptionValueId(optionValue.getId());
         return OptionValueDto.builder()
                 .id(optionValue.getId())
                 .optionValueName(optionValue.getOptionValueName())
                 .optionName(optionValue.getOptionName())
-               // .optionDto(optionDto)
+                .optionId(this.optionMapToOptionDto(option))
                 .ctime(optionValue.getCtime())
                 .mtime(optionValue.getMtime())
                 .note(optionValue.getNote())
@@ -85,40 +82,25 @@ public class OptionValueServiceImp implements OptionValueService{
     }
 
     @Transactional
-    public OptionsValue saveOptionValue(OptionsValue optionsValue){
-//        OptionsValue optionsValue = this.optionValueRepository.save(this.optionValueDtoMapToOptionValue(optionValueDto));
-//        return this.optionValueMapToOptionValueDto(optionsValue);
-//
-//        System.out.println("123455");;
-//
-//        System.out.println(optionsValue.getOptionName());
-//
-//
-//        optionsValue.setOptionId((Option) this.getOptionByOptionName(optionsValue.getOptionName()));
+    public OptionValueDto saveOptionValue(OptionValueDto optionsValueDto){
+        OptionsValue optionsValue = this.optionValueRepository.save(this.optionValueDtoMapToOptionValue(optionsValueDto));
 
-        optionsValue.setCtime(LocalDateTime.now());
-        optionsValue.setProductsVariants(new ArrayList<>());
-        System.out.println("fdvdv");
-        System.out.println(optionsValue.getOptionId());
-        return optionValueRepository.save(optionsValue);
+        return this.optionValueMapToOptionValueDto(optionsValue);
 
     }
 
 
     private OptionsValue optionValueDtoMapToOptionValue(OptionValueDto optionValueDto){
       //  ProductsVariant productsVariant = modelMapper.map(optionValueDto.getProductVariantsId(), ProductsVariant.class);
-//       Option option = modelMapper.map(optionValueDto.getOptionDto(), Option.class);
+       Option option = modelMapper.map(optionValueDto.getOptionId(), Option.class);
         OptionsValue optionsValue = OptionsValue
                 .builder()
                 .ctime(LocalDateTime.now())
                 .status(1)
-                .id(optionValueDto.getId())
                 .optionValueName(optionValueDto.getOptionValueName())
                 .optionName(optionValueDto.getOptionName())
-              //  .option(option)
+                .optionId(option)
                 .build();
-       // optionsValue.setOptionId((Option) getOptionByOptionName(optionValueDto.getOptionName()));
-
 
 
         return optionsValue;

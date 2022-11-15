@@ -2,16 +2,7 @@ package com.api.mobigenz_be.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Cascade;
 
@@ -46,11 +37,11 @@ public class Cart {
     private LocalDateTime mtime;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
     private Customer customer;
 	
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY ,  orphanRemoval = true)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private List<CartItem> cartItems;

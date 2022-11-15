@@ -6,6 +6,6 @@ CREATE TABLE customers_address
     district varchar(100),
     detail_address varchar(100),
     customer_id int,
-    note text,
+    status int,
     constraint fk_customers FOREIGN KEY (customer_id) REFERENCES customers(id)
 );

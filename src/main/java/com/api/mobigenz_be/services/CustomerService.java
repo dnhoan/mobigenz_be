@@ -70,7 +70,8 @@ public class CustomerService {
         Page<Customer> page = this.customerRepo.getAllById( pageable);
 
 
-        List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
+        List<CustomerDTO> customerDTOList = page.stream().map(u ->
+                this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
         return customerDTOList;
     }
 
