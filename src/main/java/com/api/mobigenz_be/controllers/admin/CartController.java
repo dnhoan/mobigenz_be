@@ -55,12 +55,14 @@ public class CartController {
         );
 	}
 	
-	@PostMapping("cartItem")
-	public ResponseEntity<ResponseDTO> addCartItem(@RequestBody CartItemDTO cartItemDTO) {
-		CartItemDTO cartItemInsertDto = this.cartItemService.createCartItem(cartItemDTO);
+	@PostMapping("cartItem/{customer_id}")
+	public ResponseEntity<ResponseDTO> addCartItem(
+			@PathVariable("customer_id") Integer customer_id,
+			@RequestBody CartItemDTO cartItemDTO) {
+		cartItemDTO = this.cartItemService.addCartItem(cartItemDTO, customer_id);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("cartItemInsertDto", cartItemInsertDto))
+                        .data(Map.of("cartItemDto", cartItemDTO))
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .timeStamp(LocalDateTime.now())
@@ -68,18 +70,18 @@ public class CartController {
         );
 	}
 	
-	@PutMapping("cartItem")
-	public ResponseEntity<ResponseDTO> saveCartItem(@RequestBody CartItemDTO cartItemDTO) {
-		CartItemDTO cartItemInsertDto = this.cartItemService.createCartItem(cartItemDTO);
-		return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .data(Map.of("cartItemInsertDto", cartItemInsertDto))
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-	}
+//	@PutMapping("cartItem")
+//	public ResponseEntity<ResponseDTO> saveCartItem(@RequestBody CartItemDTO cartItemDTO) {
+//		CartItemDTO cartItemInsertDto = this.cartItemService.addCartItem(cartItemDTO);
+//		return ResponseEntity.ok(
+//                ResponseDTO.builder()
+//                        .data(Map.of("cartItemInsertDto", cartItemInsertDto))
+//                        .status(OK)
+//                        .statusCode(OK.value())
+//                        .timeStamp(LocalDateTime.now())
+//                        .build()
+//        );
+//	}
 	
 	@DeleteMapping("cartItem/{citem_id}")
 	public ResponseEntity<ResponseDTO> removeCartItem(@PathVariable("citem_id") Integer citem_id) {

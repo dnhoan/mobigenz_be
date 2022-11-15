@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,7 +96,10 @@ public class CartServiceImp implements CartService {
 
 	@Override
 	public CartDTO getCartByCustomerId(Integer cid) {
-		return this.cartMapToCartDto(this.cartRepository.getCartByCustomerId(cid));
+		Optional<Cart> cartOptional = this.cartRepository.getCartByCustomerId(cid);
+		if(cartOptional.isPresent())
+			return this.cartMapToCartDto(cartOptional.get());
+		return new CartDTO();
 	}
 
 	@Transactional
