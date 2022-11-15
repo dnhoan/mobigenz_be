@@ -47,14 +47,14 @@ public class EmployeeServiceImp implements EmployeeService{
 
     @Transactional
     public EmployeeDto update(EmployeeDto employeeDto) {
-        Employee employee = this.employeeRepository.save(employeeDtoMapToEmployee(employeeDto));
+        Employee employee = this.employeeRepository.save(employeeDtoMapToEmployee2(employeeDto));
         return this.employeeMapToEmployeeDto(employee);
     }
 
     @Transactional
     public EmployeeDto delete(EmployeeDto employeeDto) {
         employeeDto.setStatus(0);
-        Employee employee = this.employeeRepository.save(employeeDtoMapToEmployee(employeeDto));
+        Employee employee = this.employeeRepository.save(employeeDtoMapToEmployee2(employeeDto));
         return this.employeeMapToEmployeeDto(employee);
     }
 
