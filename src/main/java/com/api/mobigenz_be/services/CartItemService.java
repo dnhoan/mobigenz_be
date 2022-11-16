@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CartItemService {
 	CartItemDTO addCartItem(CartItemDTO cartItemDTO, Integer customerId);
-	CartItemDTO updateCartItem(CartItemDTO cartItemDTO);
+	CartItemDTO updateCartItem(CartItemDTO cartItemDTO, Integer cart_id);
 	void deleteCartItem(Integer id);
 
 	List<CartItemDTO> getAll();

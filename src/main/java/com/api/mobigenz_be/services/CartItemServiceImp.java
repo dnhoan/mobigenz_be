@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,7 @@ public class CartItemServiceImp implements CartItemService {
 				amount++;
 				cartItem.setAmount(amount);
 			}
+			cartItem.setCart(cartOptional.get());
 		} else {
 			cart = Cart.builder()
 						.customer(Customer.builder().id(customerId).build())
@@ -74,13 +76,22 @@ public class CartItemServiceImp implements CartItemService {
     }
 
 	@Override
-	public CartItemDTO updateCartItem(CartItemDTO cartItemDTO) {
-		CartItem cartItem = this.cartItemRepository.save(cartItemDtoMapToCartItem(cartItemDTO));
+	public CartItemDTO updateCartItem(CartItemDTO cartItemDTO, Integer cart_id) {
+		CartItem cartItem = cartItemDtoMapToCartItem(cartItemDTO);
+		Cart cart = new Cart();
+		cart.setId(cart_id);
+		cartItem.setCart(cart);
+		cartItem = this.cartItemRepository.save(cartItem);
 		return this.cartItemMapToCartItemDto(cartItem);
 	}
 
 	@Override
 	public void deleteCartItem(Integer id) {
 		this.cartItemRepository.deleteById(id);
+	}
+
+	@Override
+	public List<CartItemDTO> getAll() {
+		return null;
 	}
 }

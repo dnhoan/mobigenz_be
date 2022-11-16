@@ -81,6 +81,9 @@ public class Order implements Serializable {
     @Column(name = "order_status")
     private Integer orderStatus;
 
+    @Column(name = "cancel_note")
+    private String cancelNote;
+
     @Column(name = "note")
     @Type(type = "org.hibernate.type.TextType")
     private String note;
