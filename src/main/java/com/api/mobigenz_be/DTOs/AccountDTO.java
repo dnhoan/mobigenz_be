@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -20,5 +19,5 @@ public class AccountDTO {
     private String phoneNumber;
     private Integer status;
     private LocalDateTime ctime;
-    private Set<Role> roles;
+    private Role roleid;
 }

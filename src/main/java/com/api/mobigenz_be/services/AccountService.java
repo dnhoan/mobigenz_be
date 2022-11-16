@@ -19,9 +19,9 @@ public interface AccountService {
 
     Account findById(Integer id);
 
-//    List<Account> findAll();
-
     Account findByEmail(String email);
+
+    List<Account> getAdministrators();
 
     Optional<Account> getAccountLogin(String email, String password);
 

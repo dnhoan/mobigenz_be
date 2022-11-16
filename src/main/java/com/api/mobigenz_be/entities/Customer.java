@@ -1,6 +1,5 @@
 package com.api.mobigenz_be.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -46,8 +45,7 @@ public class Customer{
     @Column(name = "customer_type")
     private Integer customerType;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 

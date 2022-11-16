@@ -9,5 +9,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JWTTokenResponse {
     String jwt;
-    String email;
+    String username;
 }

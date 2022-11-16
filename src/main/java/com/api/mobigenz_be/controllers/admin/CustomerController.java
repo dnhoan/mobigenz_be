@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.api.mobigenz_be.services.CustomerService;
-
 import static org.springframework.http.HttpStatus.*;
 
 import java.time.LocalDateTime;
@@ -33,47 +32,6 @@ public class CustomerController {
                 ResponseDTO.builder()
                         .status(OK)
                         .data(Map.of("customers", items))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    @GetMapping("getCustomerByAccountId")
-    public ResponseEntity<ResponseDTO> getByAccountId(@RequestParam(value = "accountId") Integer accountId) {
-        Customer customer = this.customerService.findByAccountId(accountId);
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customers", customer))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-
-    @GetMapping("customers/customerName")
-    public ResponseEntity<ResponseDTO> getByCustomerName(@RequestParam(value = "customerName") String customerName) {
-         List<Customer> customer = this.customerService.findByCustomerName(customerName);
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customers", customer))
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-
-    @GetMapping("customers/email")
-    public ResponseEntity<ResponseDTO> getByEmail(@RequestParam(value = "email") String email) {
-        Customer customer = this.customerService.findByEmail(email);
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .status(OK)
-                        .data(Map.of("customers", customer))
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
@@ -143,7 +101,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("customers/{id}")
-    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id") String id,
+    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id")
                                                       Customer customer) {
         if (customer != null) {
             this.customerService.delete(customer);
@@ -170,7 +128,7 @@ public class CustomerController {
     }
 
     @GetMapping("searchCustomer")
-    public ResponseEntity<ResponseDTO> searchByAll(@RequestParam("search") String search) {
+    public ResponseEntity<ResponseDTO> searchByAll( @RequestParam("search") String search) {
         List<CustomerDTO> customerDTOList = this.customerService.searchByAll(search);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
