@@ -26,6 +26,12 @@ public class ProductDetail {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "price_sell")
+    private Double priceSell;
+
+    @Column(name = "price_origin")
+    private Double priceOrigin;
+
     @Column(name = "sku", length = 100)
     private String sku;
 
@@ -50,6 +56,11 @@ public class ProductDetail {
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "PRODUCT_DETAIL_ID")
     private List<ProductVariantCombination> productVariantCombinationList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_detail_id")
+    private List<OrderDetail> orderDetails;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

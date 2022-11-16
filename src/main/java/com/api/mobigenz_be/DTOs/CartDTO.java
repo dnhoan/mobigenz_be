@@ -21,6 +21,5 @@ public class CartDTO {
     private Double totalMoney;
     private Integer itemsAmount;
     private LocalDateTime mtime;
-    private Customer customer;
     private List<CartItemDTO> cartItemDtos;
 }

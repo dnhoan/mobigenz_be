@@ -40,7 +40,7 @@ public class OptionValueController {
     }
 
     @PostMapping("optionValue")
-    public OptionsValue create(@RequestBody OptionsValue optionsValue){
-        return this.optionValueService.saveOptionValue(optionsValue);
+    public OptionValueDto create(@RequestBody OptionValueDto optionsValueDto){
+        return this.optionValueService.saveOptionValue(optionsValueDto);
     }
 }

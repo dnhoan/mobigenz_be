@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Integer >{
+public interface CustomerRepository extends JpaRepository<Customer, Integer > {
 
     @Query("select c from Customer c order by c.id")
     Page<Customer> getAllById(Pageable pageable);
 
     @Query("Select c from Customer  c\n" +
             "left Join CustomersAddress as ca on ca.customerId = c.id \n" +
-            "where ca.detaiAddress=:search \n" +
+            "where ca.detailAddress=:search \n" +
             "or c.customerName=:search \n" +
             "or c.phoneNumber=:search \n" +
             "or c.email=:search")
@@ -52,5 +52,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer >{
 
 
 
+   @Query("select c from Customer c join CustomersAddress ca on c = ca.customerId where ca.id =:customer_id ")
+    Customer getCustomerByCustomerAddressId(@Param("customer_id") Integer customer_id);
 
 }

@@ -19,13 +19,9 @@ public class ProductDetailCartDto {
 
     private String sku;
 
-    private Integer stock;
-
     private String image;
-
-    private String note;
-
-    private Integer status;
+    
+    private Integer stock;
     
     private String productName;
 }

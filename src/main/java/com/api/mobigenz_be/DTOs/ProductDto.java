@@ -28,6 +28,8 @@ public class ProductDto {
 
     private LocalDateTime mtime;
 
+    private boolean expand = false;
+
     private ManufacturerDto manufacturerDto;
 
     private ProductLineDto productLineDto;

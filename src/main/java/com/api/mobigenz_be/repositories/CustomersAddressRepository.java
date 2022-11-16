@@ -25,4 +25,11 @@ public interface CustomersAddressRepository extends JpaRepository<CustomersAddre
     @Query("Select ca from CustomersAddress as ca \n" +
             " join Customer as c on ca.customerId = c.id where c.id = :customerId")
     List<CustomersAddress> findByCustomerId(@Param("customerId")Integer customerId);
+
+    @Query("select ca from CustomersAddress  ca order by ca.id")
+    List<CustomersAddress> getAllById();
+
+
+    @Query("select ca from CustomersAddress  ca order by ca.id")
+    Page<CustomersAddress> getAllId(Pageable pageable);
 }
