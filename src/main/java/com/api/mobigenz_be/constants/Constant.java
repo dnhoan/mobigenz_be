@@ -5,8 +5,8 @@ public final class Constant {
     }
 
     public static final class Role {
-        public static final String ADMIN = "Admin";
-        public static final String USER = "User";
+        public static final int Admin = 1;
+        public static final int User = 2;
     }
 
     public static final class OTP {
@@ -24,23 +24,14 @@ public final class Constant {
 
     public static final class Api {
 
-//        public static class Tag {
-//            public static final String AUTHENTICATION = "Authentication";
-//            public static final String DASHBOARD = "Dashboard";
-//            public static final String PROFILE_SETTINGS = "Profile Settings";
-//            public static final String ROLE_MANAGEMENT = "Role Management";
-//            public static final String CALENDAR_MANAGEMENT = "Calendar Management";
-//            public static final String NOTIFICATION = "Notification";
-//        }
-
         public static class Path {
             public static final String PREFIX = "/api";
 
             public static final String PUBLIC = PREFIX + "/public";
             public static final String ADMIN = PREFIX + "/admin";
             public static final String AUTH = PREFIX + "/auth";
-//            public static final String ACCOUNT = PREFIX + "/account";
-//            public static final String ON_BOARDING = PUBLIC + "/on-boarding";
+            public static final String ACCOUNT = ADMIN + "/account";
+            public static final String ON_BOARDING = PUBLIC + "/on-boarding";
 
             public static class Auth {
                 public static final String LOGIN = "/login";
@@ -72,6 +63,7 @@ public final class Constant {
         public static final String INVALID_OTP = "validation.invalidOTP";
         public static final String INVALID_PASSWORD = "validation.invalidPassword";
         public static final String INVALID_USER_NAME = "validation.invalidUserName";
+        public static final String INVALID_EMAIL = "validation.invalidEmail";
         public static final String INVALID_FIRST_NAME = "validation.invalidFirstName";
         public static final String INVALID_LAST_NAME = "validation.invalidLastName";
         public static final String INVALID_COUNTRY_CODE = "validation.invalidCountryCode";

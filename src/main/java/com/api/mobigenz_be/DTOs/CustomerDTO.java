@@ -29,9 +29,7 @@ public class CustomerDTO {
     private Integer gender;
 
     private Integer customerType;
-
-    private AccountDTO account;
-
+    private AccountDTO accountDTO;
     private String citizenIdentifyCart;
 
     private LocalDate ctime;

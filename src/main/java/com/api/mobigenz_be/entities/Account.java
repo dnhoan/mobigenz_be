@@ -1,9 +1,13 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,9 +30,18 @@ public class Account {
     @Column(name = "phonenumber", nullable = false, length = 15)
     private String phoneNumber;
 
-    @ManyToOne()
-    @JoinColumn(name = "role_id")
-    private Role roleid;
+    @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
+    private Customer customer;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "PERMISSION",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "ctime", nullable = false)
     private LocalDateTime ctime;

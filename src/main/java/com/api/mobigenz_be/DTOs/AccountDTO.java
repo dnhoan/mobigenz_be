@@ -4,6 +4,7 @@ import com.api.mobigenz_be.entities.Role;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,5 +18,5 @@ public class AccountDTO {
     private String phoneNumber;
     private Integer status;
     private LocalDateTime ctime;
-    private Role roleid;
+    private Set<Role> roles;
 }

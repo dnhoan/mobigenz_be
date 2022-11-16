@@ -1,7 +1,9 @@
 package com.api.mobigenz_be.services;
 
+import com.api.mobigenz_be.DTOs.AccountDTO;
 import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.DTOs.PageDTO;
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Customer;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,14 @@ import org.springframework.stereotype.Service;
 import com.api.mobigenz_be.repositories.CustomerRepository;
 
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
+
     @Autowired
     private CustomerRepository customerRepo;
 
@@ -41,33 +45,49 @@ public class CustomerService {
         );
     }
 
-    public CustomerDTO create(Customer customer) throws Exception{
-        try {
-            this.customerRepo.saveAndFlush(customer);
-            return this.modelMapper.map(customer, CustomerDTO.class);
-        }catch (Exception exception){
-            throw new Exception("Create Customer False");
-        }
-
-
-
+    public CustomerDTO create(Customer customer) throws SQLException {
+        this.customerRepo.saveAndFlush(customer);
+//            return this.modelMapper.map(customer, CustomerDTO.class);
+        return new CustomerDTO();
     }
 
-    public CustomerDTO update(Customer customer){
+//    public CustomerDTO add(Customer customer) throws Exception {
+//        try {
+//            this.customerRepo.save(customer);
+//            return this.modelMapper.map(customer, CustomerDTO.class);
+//        } catch (Exception exception) {
+//            throw new Exception("Create Customer False");
+//        }
+//    }
+
+
+    public CustomerDTO update(Customer customer) {
         Customer ctm = this.customerRepo.save(customer);
 
         return this.modelMapper.map(customer, CustomerDTO.class);
     }
 
-    public CustomerDTO delete(Customer customer){
+    public List<Customer> findByCustomerName(String customerName){
+        return this.customerRepo.findByCustomerName(customerName);
+
+    }
+
+    public Customer findByEmail(String email){
+        return this.customerRepo.findByEmail(email);
+
+    }
+
+    public CustomerDTO delete(Customer customer) {
         customer.setStatus(0);
         this.customerRepo.save(customer);
-        return  this.modelMapper.map(customer, CustomerDTO.class);
+        return this.modelMapper.map(customer, CustomerDTO.class);
     }
+
+
 
     public List<CustomerDTO> searchById() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.getAllById( pageable);
+        Page<Customer> page = this.customerRepo.getAllById(pageable);
 
 
         List<CustomerDTO> customerDTOList = page.stream().map(u ->
@@ -93,6 +113,9 @@ public class CustomerService {
     }
 
 
+    public Customer findByAccountId(Integer accountId){
+        return this.customerRepo.findByAccountId(accountId);
+    }
 
 
 //    @Override
