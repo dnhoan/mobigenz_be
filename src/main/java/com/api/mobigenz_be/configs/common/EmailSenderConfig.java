@@ -1,30 +1,19 @@
-package com.api.mobigenz_be.services;
+package com.api.mobigenz_be.configs.common;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
 
-@Service
-public class EmailSenderServiceImpl implements EmailSenderService{
-    @Autowired
-    private JavaMailSender mailSender;
-
-    @Override
-    public void sendSimpleEmail(String toEmail, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("levantrang4302@gmail.com");
-        message.setTo(toEmail);
-        message.setText(body);
-        message.setSubject(subject);
-        this.send(message);
-        System.out.println("Mail Send...");
-    }
+@Configuration
+public class EmailSenderConfig implements JavaMailSender {
 
     @Override
     public MimeMessage createMimeMessage() {

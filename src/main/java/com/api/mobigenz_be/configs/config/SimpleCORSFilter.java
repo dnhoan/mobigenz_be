@@ -1,4 +1,4 @@
-package com.api.mobigenz_be.configs.securities;
+package com.api.mobigenz_be.configs.config;
 
 import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;

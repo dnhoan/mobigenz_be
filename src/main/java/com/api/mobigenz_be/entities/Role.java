@@ -1,18 +1,15 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
-import java.time.Instant;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,5 +34,9 @@ public class Role{
     @Column(name = "note")
     @Type(type = "org.hibernate.type.TextType")
     private String note;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "role")
+    Set<Permission> permissions;
 
 }

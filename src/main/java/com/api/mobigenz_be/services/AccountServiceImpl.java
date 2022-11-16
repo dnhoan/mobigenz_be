@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -43,10 +44,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDTO add(Account account) {
         account.setCtime(LocalDateTime.now());
         this.accountRepository.save(account);
-        return this.modelMapper.map(account, AccountDTO.class);
+        return new AccountDTO();
+//        return this.modelMapper.map(account, AccountDTO.class);
     }
 
 
@@ -70,18 +73,18 @@ public class AccountServiceImpl implements AccountService {
         return this.accountRepository.findAccountById(id);
     }
 
+//    @Override
+//    public List<Account> findAll() {
+//        return this.accountRepository.findAll();
+//    }
+
     @Override
     public Account findByEmail(String email) {
         return this.accountRepository.findAccountByEmail(email);
     }
 
     @Override
-    public List<Account> getAdministrators() {
-        return this.accountRepository.getAdministrators();
-    }
-
-    @Override
-    public Optional<Account> getAccountLogin(String email, String password) {
+    public Optional<Account>  getAccountLogin(String email, String password) {
         return this.accountRepository.getAccountLogin(email, password);
     }
 
