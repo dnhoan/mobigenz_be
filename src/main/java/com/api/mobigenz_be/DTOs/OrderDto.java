@@ -57,4 +57,6 @@ public class OrderDto {
 
     private String note;
 
+    private String cancelNote;
+
 }

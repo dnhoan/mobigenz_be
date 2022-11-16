@@ -1,4 +1,4 @@
-package com.api.mobigenz_be.controllers.admin;
+package com.api.mobigenz_be.controllers.user;
 
 import com.api.mobigenz_be.DTOs.CartDTO;
 import com.api.mobigenz_be.DTOs.CartItemDTO;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @CrossOrigin("*")
 public class CartController {
 	@Autowired
@@ -31,7 +31,7 @@ public class CartController {
 	
 	@GetMapping("carts")
 	public ResponseEntity<ResponseDTO> getCarts() {
-		CartDTO cartDto = this.cartService.getCartByCustomerId(1);
+		CartDTO cartDto = this.cartService.getCartByCustomerId(4);
 		return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("cartDto", cartDto))
@@ -70,18 +70,18 @@ public class CartController {
         );
 	}
 	
-//	@PutMapping("cartItem")
-//	public ResponseEntity<ResponseDTO> saveCartItem(@RequestBody CartItemDTO cartItemDTO) {
-//		CartItemDTO cartItemInsertDto = this.cartItemService.addCartItem(cartItemDTO);
-//		return ResponseEntity.ok(
-//                ResponseDTO.builder()
-//                        .data(Map.of("cartItemInsertDto", cartItemInsertDto))
-//                        .status(OK)
-//                        .statusCode(OK.value())
-//                        .timeStamp(LocalDateTime.now())
-//                        .build()
-//        );
-//	}
+	@PutMapping("cartItem/{cart_id}")
+	public ResponseEntity<ResponseDTO> saveCartItem(@PathVariable("cart_id") Integer cart_id, @RequestBody CartItemDTO cartItemDTO) {
+		CartItemDTO cartItemInsertDto = this.cartItemService.updateCartItem(cartItemDTO, cart_id);
+		return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("cartItemInsertDto", cartItemInsertDto))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+	}
 	
 	@DeleteMapping("cartItem/{citem_id}")
 	public ResponseEntity<ResponseDTO> removeCartItem(@PathVariable("citem_id") Integer citem_id) {

@@ -56,7 +56,7 @@ public class OrderServiceImp implements OrderService {
         List<OrderDetail> orderDetailList = orderDto.getOrderDetailDtos().stream().map(orderDetailDto -> {
                     ProductDetail productDetail = ProductDetail
                             .builder()
-                            .id(orderDetailDto.getProductDetailDto().getId())
+                            .id(orderDetailDto.getProductDetailCartDto().getId())
                             .build();
                     return OrderDetail
                             .builder()
@@ -73,6 +73,12 @@ public class OrderServiceImp implements OrderService {
         ).collect(Collectors.toList());
         this.orderDetailRepository.saveAll(orderDetailList);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(Integer order_id, String note) {
+        this.orderRepository.updateOrderStatus(-1, note, order_id);
     }
 
     @Override
@@ -95,7 +101,9 @@ public class OrderServiceImp implements OrderService {
                 .stream()
                 .map(orderDetail -> {
                             OrderDetailDto orderDetailDto = this.modelMapper.map(orderDetail, OrderDetailDto.class);
-                            orderDetailDto.setProductDetailDto(this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailDto.class));
+                            ProductDetailCartDto productDetailCartDto = this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailCartDto.class);
+                            productDetailCartDto.setPrice(orderDetail.getProductDetail().getPriceSell());
+                            orderDetailDto.setProductDetailCartDto(productDetailCartDto);
                             return orderDetailDto;
                         }
                 ).collect(Collectors.toList());

@@ -16,7 +16,7 @@ public class OrderDetailDto {
 
     private List<ImeiDto> imeiDtoList;
 
-    private ProductDetailDto productDetailDto;
+    private ProductDetailCartDto productDetailCartDto;
 
     private Double priceSell;
 

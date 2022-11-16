@@ -38,6 +38,19 @@ public class OrderShopController {
 
     }
 
+    @PutMapping("cancelOrder/{order_id}")
+    public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable("order_id") Integer order_id, @RequestBody String note) {
+        this.orderService.cancelOrder(order_id, note);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("result", true))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
     @GetMapping("order/{order_id}")
     public ResponseEntity<ResponseDTO> getOrderById(@PathVariable("order_id") Integer order_id) {
         OrderDto orderDto = this.orderService.getOrderById(order_id);
