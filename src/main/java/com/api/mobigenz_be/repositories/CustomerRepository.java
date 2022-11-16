@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.repositories;
 
+import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -25,7 +27,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer >{
     Page<Customer> findByAll(@Param("search") String search, Pageable pageable);
 
 
+    @Query("SELECT cus from Customer cus where cus.account.id = :accountId")
+    Customer findByAccountId(Integer accountId);
 
+    @Query("SELECT cus from Customer cus where cus.customerName = :customerName")
+    List<Customer> findByCustomerName(@Param("customerName") String customerName);
+
+    Customer findByEmail(String email);
     //@Query(name="Customer.findByUsername")
 //    @Query("select c from Customer c where c.customerName=:customer_name")
 //    Page<Customer> findByCustomerName(@Param("customer_name") String customerName, Pageable pageable);

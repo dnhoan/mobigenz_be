@@ -21,7 +21,7 @@ public class CustomerDTO {
     private String email;
     private Integer gender;
     private Integer customerType;
-    private AccountDTO account;
+    private AccountDTO accountDTO;
     private String citizenIdentifyCart;
     private LocalDate ctime;
     private LocalDate mtime;
