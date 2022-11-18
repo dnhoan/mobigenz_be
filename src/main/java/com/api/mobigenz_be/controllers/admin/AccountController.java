@@ -57,7 +57,7 @@ public class AccountController {
     public ResponseEntity<ResponseDTO> getAccountByEmail(@RequestParam(value = "email") String email) {
         try {
             Account account = this.accountService.findByEmail(email);
-            System.out.println(account.getCustomer().getCustomerName());
+//            System.out.println(account.getCustomer().getCustomerName());
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
