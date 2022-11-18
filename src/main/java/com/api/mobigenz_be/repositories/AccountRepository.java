@@ -20,7 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     Account findAccountById(Integer id);
 
     @Query("select acc from Account acc where  acc.email = :email")
-    Account findAccountByEmail(String email);
+    Account findAccountByEmail(@Param("email") String email);
 
     @Query("SELECT a from Account a where a.email= ?1 and a.password = ?2 ")
     Optional<Account> getAccountLogin(String email, String password);

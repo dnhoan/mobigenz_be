@@ -169,7 +169,7 @@ public class AuthenticateController {
                 System.out.println(session);
             }
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("true", "OTP da duoc gui den email cua ban!", session)
+                    new ResponseObject("true", "OTP da duoc gui den email cua ban!","")
             );
         } catch (Exception e) {
             e.printStackTrace();
