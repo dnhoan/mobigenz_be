@@ -21,7 +21,7 @@ public class ProductsVariant  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "option_value_id")
     private OptionsValue optionValue;
 

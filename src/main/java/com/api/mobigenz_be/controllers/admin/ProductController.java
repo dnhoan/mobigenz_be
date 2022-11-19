@@ -23,10 +23,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("products")
-    public ResponseEntity<ResponseDTO> getList() {
+    public ResponseEntity<ResponseDTO> getList(
+            @RequestParam(value = "searchTerm", defaultValue = "", required = false) String searchTerm) {
+        System.out.println("get products");
         return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("products", this.productService.getProducts()))
+                        .data(Map.of("products", this.productService.getProducts(searchTerm)))
                         .status(OK)
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())

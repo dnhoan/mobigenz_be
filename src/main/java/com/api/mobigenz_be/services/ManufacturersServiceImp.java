@@ -41,7 +41,7 @@ public class ManufacturersServiceImp implements ManufacturersService {
     private ManufacturerDto manufacturerMapToManufacturerDto(Manufacturer manufacturer) {
         List<ProductLineDto> productLineDtos = manufacturer.getProductLines()
                 .stream()
-                .map(this::optionMapToOptionDto)
+                .map(this::productLineMapToProductLineDto)
                 .collect(Collectors.toList());
         return ManufacturerDto
                 .builder()
@@ -51,7 +51,9 @@ public class ManufacturersServiceImp implements ManufacturersService {
                 .build();
     }
 
-    private ProductLineDto optionMapToOptionDto(ProductLine productLine) {
+    private ProductLineDto productLineMapToProductLineDto(ProductLine productLine) {
+        System.out.println(productLine.toString());
+        System.out.println(productLine.getId());
         return ProductLineDto
                 .builder()
                 .id(productLine.getId())

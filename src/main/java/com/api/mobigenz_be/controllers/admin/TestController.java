@@ -24,7 +24,7 @@ public class TestController {
     public ResponseEntity<ResponseDTO> getList() {
         return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("products", this.productService.getProducts()))
+                        .data(Map.of("products", this.productService.getProducts("")))
                         .build()
         );
     }

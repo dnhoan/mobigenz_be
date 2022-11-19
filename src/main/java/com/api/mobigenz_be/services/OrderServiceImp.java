@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.*;
+import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.*;
 import com.api.mobigenz_be.repositories.OrderDetailRepository;
 import com.api.mobigenz_be.repositories.OrderRepository;
@@ -78,7 +79,13 @@ public class OrderServiceImp implements OrderService {
     @Override
     @Transactional
     public void cancelOrder(Integer order_id, String note) {
-        this.orderRepository.updateOrderStatus(-1, note, order_id);
+        this.orderRepository.updateOrderStatus(Constant.OrderStatus.CANCEL_ORDER, note, order_id);
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus(Integer order_id, Integer newStatus, String note) {
+        this.orderRepository.updateOrderStatus(newStatus, note, order_id);
     }
 
     @Override
@@ -91,6 +98,12 @@ public class OrderServiceImp implements OrderService {
     @Override
     public List<OrderDto> getOrdersByCustomerId(Integer customer_id) {
         List<Order> orders = this.orderRepository.getOrdersByCustomerId(customer_id);
+        return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDto> getOrdersByOrderStatus(Integer orderStatus) {
+        List<Order> orders = this.orderRepository.getOrderByOrderStatus(orderStatus);
         return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
     }
 

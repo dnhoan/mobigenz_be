@@ -47,7 +47,7 @@ public class Product {
     @JoinColumn(name = "product_id")
     private List<ProductsOption> productsOptions;
 
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "product_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<ProductDetail> productDetails;
