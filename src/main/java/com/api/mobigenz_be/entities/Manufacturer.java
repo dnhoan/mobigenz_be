@@ -34,7 +34,7 @@ public class Manufacturer {
     @Column(name = "status")
     private Integer status;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "manufacturer_id")
     private List<ProductLine> productLines;
 

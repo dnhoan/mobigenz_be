@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.DTOs;
 
 import com.api.mobigenz_be.entities.ProductDetail;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -23,9 +24,9 @@ public class ProductDto {
     private String description;
 
     private String detail;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime ctime;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime mtime;
 
     private boolean expand = false;
