@@ -33,8 +33,8 @@ public class ProductServiceImp implements ProductService {
     private SpecificationGroupService specificationGroupService;
 
     @Override
-    public List<ProductDto> getProducts() {
-        List<Product> products = this.productRepository.findAll();
+    public List<ProductDto> getProducts(String searchTerm) {
+        List<Product> products = this.productRepository.searchProducts(searchTerm);
         return products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
     }
 
@@ -165,6 +165,7 @@ public class ProductServiceImp implements ProductService {
     private ProductDto productMapToProductDto(Product product) {
         ProductLineDto productLineDto = this.productLineRepository.getProductLineByProductId(product.getId());
         ManufacturerDto manufacturerDto = this.manufacturersService.getManufacturerByProductLineId(productLineDto.getId());
+        System.out.println(product.getProductDetails().size());
         List<ProductDetailDto> productDetailDtos = product.getProductDetails().stream().map(productDetail -> this.productDetailService.productDetailMapToProductDetailDto(productDetail)).collect(Collectors.toList());
         List<OptionDto> optionDtos = this.optionsService.getOptionsByProductId(product.getId());
         List<SpecificationGroupDto> specificationGroupDtos = this.specificationGroupService.getSpecificationGroupByProductId((product.getId()));

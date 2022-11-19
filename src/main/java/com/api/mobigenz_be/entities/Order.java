@@ -28,7 +28,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "product_detail_id")
     private List<OrderDetail> orderDetails;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
