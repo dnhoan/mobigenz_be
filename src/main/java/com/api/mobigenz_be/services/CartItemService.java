@@ -1,5 +1,8 @@
 package com.api.mobigenz_be.services;
+import com.api.mobigenz_be.DTOs.CartDTO;
 import com.api.mobigenz_be.DTOs.CartItemDTO;
+import com.api.mobigenz_be.entities.Cart;
+
 import java.util.List;
 
 public interface CartItemService {

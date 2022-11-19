@@ -42,14 +42,14 @@ public class CartItemServiceImp implements CartItemService {
 				.build();
 	}
 
-    @Override
-    @Transactional
-    public CartItemDTO addCartItem(CartItemDTO cartItemDTO, Integer customerId) {
-        Cart cart = new Cart();
-        Optional<Cart> cartOptional = this.cartRepository.getCartByCustomerId(customerId);
+	@Override
+	@Transactional
+	public CartItemDTO addCartItem(CartItemDTO cartItemDTO, Integer customerId) {
+		Cart cart = new Cart();
+		Optional<Cart> cartOptional = this.cartRepository.getCartByCustomerId(customerId);
 		CartItem cartItem = this.cartItemDtoMapToCartItem(cartItemDTO);
 		if(cartOptional.isPresent()) {
-        	Optional<CartItem> cartItemOptional = this.cartItemRepository.getCartItemByProductDetailIdAndCartId(
+			Optional<CartItem> cartItemOptional = this.cartItemRepository.getCartItemByProductDetailIdAndCartId(
 					cartItem.getProductDetail().getId(),
 					cartOptional.get().getId()
 			);
@@ -62,16 +62,16 @@ public class CartItemServiceImp implements CartItemService {
 			cartItem.setCart(cartOptional.get());
 		} else {
 			cart = Cart.builder()
-						.customer(Customer.builder().id(customerId).build())
-						.itemsAmount(0)
-						.totalMoney(0.0)
-						.build();
+					.customer(Customer.builder().id(customerId).build())
+					.itemsAmount(0)
+					.totalMoney(0.0)
+					.build();
 			this.cartRepository.save(cart);
-        	cartItem.setCart(cart);
+			cartItem.setCart(cart);
 		}
-        cartItem = this.cartItemRepository.saveAndFlush(cartItem);
-        return this.cartItemMapToCartItemDto(cartItem);
-    }
+		cartItem = this.cartItemRepository.saveAndFlush(cartItem);
+		return this.cartItemMapToCartItemDto(cartItem);
+	}
 
 	@Override
 	public CartItemDTO updateCartItem(CartItemDTO cartItemDTO, Integer cart_id) {

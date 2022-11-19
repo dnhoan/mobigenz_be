@@ -1,9 +1,12 @@
 package com.api.mobigenz_be.controllers.admin;
 
+import com.api.mobigenz_be.DTOs.AccountDTO;
 import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Customer;
+import com.api.mobigenz_be.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private AccountService accountService;
 
     @GetMapping("customers")
     public ResponseEntity<ResponseDTO> getPageCustomers(
@@ -126,12 +132,18 @@ public class CustomerController {
     @PutMapping("customers")
     public ResponseEntity<ResponseDTO> updateCustomer(@RequestBody Customer customer) {
         try {
+
+            Account account = new Account();
+            account.setEmail(customer.getEmail());
+            account.setPhoneNumber(customer.getPhoneNumber());
             CustomerDTO customerDTO = this.customerService.update(customer);
+            AccountDTO accountDTO1 = this.accountService.update(account);
             List<CustomerDTO> customerDTOList = this.customerService.searchById();
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
                             .data(Map.of("customer", customerDTO))
+                            .data(Map.of("account", accountDTO1))
                             .data(Map.of("customer", customerDTOList))
                             .statusCode(OK.value())
                             .timeStamp(LocalDateTime.now())
