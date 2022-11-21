@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -22,6 +22,7 @@ public class CustomersAddressController {
     @Autowired
     private CustomersAddressService customersAddressService;
 
+    private static Map<String, CustomersAddress> customersAddressMap = new HashMap<>();
 
     @GetMapping("customersAddress1")
     public ResponseEntity<ResponseDTO> getCustomersAddress() {
@@ -139,7 +140,13 @@ public class CustomersAddressController {
 
     @GetMapping("customersAddressByCustomerId")
     public ResponseEntity<ResponseDTO> getByCustomerId(@RequestParam("customerId") Integer cId) {
+
+
         List<CustomersAddress> customersAddresses = this.customersAddressService.findByCustomerId(cId);
+
+      //  if(!customersAddressMap.containsKey(cId)) throw new CustomerAddressNotFoundException();
+
+
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("customersAddresses", customersAddresses))
@@ -149,4 +156,6 @@ public class CustomersAddressController {
                         .build()
         );
     }
+
+
 }
