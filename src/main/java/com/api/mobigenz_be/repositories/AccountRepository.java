@@ -28,4 +28,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("select a from Account a join Employee e on a = e.account where  e.id =:account")
     Account getAccountByEmployeeId(@Param("account")Integer account);
 
+    @Query("select acc from Account acc join Customer cus on acc = cus.account where cus.id =:customer")
+    Account getAccountByCustomer(@Param("customer") Integer customer);
+
 }

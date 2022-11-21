@@ -6,6 +6,7 @@ import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Customer;
+import com.api.mobigenz_be.repositories.AccountRepository;
 import com.api.mobigenz_be.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,9 @@ public class CustomerController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @GetMapping("customers")
     public ResponseEntity<ResponseDTO> getPageCustomers(
@@ -132,8 +136,12 @@ public class CustomerController {
     @PutMapping("customers")
     public ResponseEntity<ResponseDTO> updateCustomer(@RequestBody Customer customer) {
         try {
+            Account account = this.accountRepository.getAccountByCustomer(customer.getId());
+            System.out.println("cusid: " + customer.getId());
+            System.out.println("jihi");
+            System.out.println("acc: "+ account);
+            account.setCtime(LocalDateTime.now());
 
-            Account account = new Account();
             account.setEmail(customer.getEmail());
             account.setPhoneNumber(customer.getPhoneNumber());
             CustomerDTO customerDTO = this.customerService.update(customer);
