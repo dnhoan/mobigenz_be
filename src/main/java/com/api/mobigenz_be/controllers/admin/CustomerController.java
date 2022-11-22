@@ -16,17 +16,17 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 @CrossOrigin("*")
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping("customers")
+    @GetMapping("customers/getCustomerById")
     public ResponseEntity<ResponseDTO> getPageCustomers(
-            @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "20") int limit
+            @RequestParam(value = "offset") int offset,
+            @RequestParam(value = "limit") int limit
     ) {
         PageDTO<CustomerDTO> items = this.customerService.getAll(offset, limit);
         return ResponseEntity.ok(
@@ -39,7 +39,7 @@ public class CustomerController {
         );
     }
 
-    @GetMapping("getCustomerByAccountId")
+    @GetMapping("customers/getCustomerByAccountId")
     public ResponseEntity<ResponseDTO> getByAccountId(@RequestParam(value = "accountId") Integer accountId) {
         Customer customer = this.customerService.findByAccountId(accountId);
         return ResponseEntity.ok(

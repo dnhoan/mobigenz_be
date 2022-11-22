@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.controllers.admin;
 
+import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.DTOs.ProductDto;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.constants.UrlConstant;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -16,7 +18,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @CrossOrigin(UrlConstant.baseUrlFE)
-@RequestMapping("api/admin")
+@RequestMapping("api/admin/")
 public class ProductController {
 
     @Autowired
@@ -24,14 +26,20 @@ public class ProductController {
 
     @GetMapping("products")
     public ResponseEntity<ResponseDTO> getList() {
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .data(Map.of("products", this.productService.getProducts()))
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
-        );
+       try {
+           List<ProductDto> items = this.productService.getProducts();
+           return ResponseEntity.ok(
+                   ResponseDTO.builder()
+                           .data(Map.of("products", items))
+                           .status(OK)
+                           .statusCode(OK.value())
+                           .timeStamp(LocalDateTime.now())
+                           .build()
+           );
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return null;
     }
 
     @PostMapping("product")

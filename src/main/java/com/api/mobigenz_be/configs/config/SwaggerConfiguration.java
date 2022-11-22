@@ -26,15 +26,15 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.api.mobilegenz_be"))
+//      .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.api.mobigenz_be"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
+        registry.addResourceHandler("/swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");

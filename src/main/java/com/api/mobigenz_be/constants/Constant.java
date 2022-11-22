@@ -5,8 +5,8 @@ public final class Constant {
     }
 
     public static final class Role {
-        public static final int Admin = 1;
-        public static final int User = 2;
+        public static final String Admin = "Admin";
+        public static final String User = "User";
     }
 
     public static final class OTP {
@@ -30,7 +30,7 @@ public final class Constant {
             public static final String PUBLIC = PREFIX + "/public";
             public static final String ADMIN = PREFIX + "/admin";
             public static final String AUTH = PREFIX + "/auth";
-            public static final String ACCOUNT = ADMIN + "/account";
+            public static final String ACCOUNT =  "/account";
             public static final String ON_BOARDING = PUBLIC + "/on-boarding";
 
             public static class Auth {

@@ -7,6 +7,7 @@ import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.ResponseObject;
 import com.api.mobigenz_be.services.AccountService;
+import com.api.mobigenz_be.services.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping(value = Constant.Api.Path.ACCOUNT)
+@RequestMapping("/api/admin")
 @CrossOrigin("*")
 public class AccountController {
 
@@ -29,13 +30,16 @@ public class AccountController {
     private AccountService accountService;
 
     @Autowired
+    private AccountServiceImpl accountServiceImpl;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
-    @GetMapping("/getAll")
+    @GetMapping("account/getAll")
     public ResponseEntity<ResponseDTO> getPageAccount(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "20") int limit
+            @RequestParam(value = "limit", defaultValue = "1") int limit
     ) {
         try {
             PageDTO<AccountDTO> items = this.accountService.getAll(offset, limit);
@@ -53,11 +57,10 @@ public class AccountController {
         return null;
     }
 
-    @GetMapping("getAccountByEmail")
+    @GetMapping("account/getAccountByEmail")
     public ResponseEntity<ResponseDTO> getAccountByEmail(@RequestParam(value = "email") String email) {
         try {
-            Account account = this.accountService.findByEmail(email);
-//            System.out.println(account.getCustomer().getCustomerName());
+            Account account = this.accountServiceImpl.findByEmail(email);
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
@@ -72,7 +75,7 @@ public class AccountController {
         }
     }
 
-    @GetMapping("getAccountById")
+    @GetMapping("account/getAccountById")
     public ResponseEntity<ResponseDTO> getAccountById(@RequestParam(value = "id") Integer id) {
         try {
             Account account = this.accountService.findById(id);
@@ -91,7 +94,7 @@ public class AccountController {
     }
 
 
-    @PostMapping("addAccount")
+    @PostMapping("account/addAccount")
     public ResponseEntity<ResponseDTO> insert(@RequestBody Account account) {
         try {
             String password = passwordEncoder.encode(account.getPassword());
@@ -112,7 +115,7 @@ public class AccountController {
     }
 
 
-    @PutMapping("updateAccount")
+    @PutMapping("account/updateAccount")
     public ResponseEntity<ResponseDTO> update(@RequestBody Account account) {
         try {
             AccountDTO accountDTO = this.accountService.update(account);
@@ -130,7 +133,7 @@ public class AccountController {
 
     }
 
-    @PutMapping("changepass/{id}")
+    @PutMapping("account/changepass/{id}")
     public ResponseEntity<ResponseDTO> changePass(@PathVariable("id") Integer id, @RequestBody String password) {
         try {
             Account account = accountService.findById(id);
@@ -151,7 +154,7 @@ public class AccountController {
     }
 
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("account/delete/{id}")
     public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id") Integer id) {
         Account account = this.accountService.findById(id);
         if (account != null) {
