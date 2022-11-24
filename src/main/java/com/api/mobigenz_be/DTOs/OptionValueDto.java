@@ -31,4 +31,6 @@ public class OptionValueDto {
     private LocalDateTime mtime;
 
     private Integer status;
+
+    private boolean selected = false;
 }

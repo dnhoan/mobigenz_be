@@ -2,6 +2,7 @@ package com.api.mobigenz_be.entities;
 
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class Order implements Serializable {
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_detail_id")
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails ;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
@@ -63,13 +64,17 @@ public class Order implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @Column(name = "delivery")
+    private Integer delivery;
+
     @Column(name = "ship_date")
     private LocalDateTime shipDate;
 
     @Column(name = "carrier", length = 100)
     private String carrier;
 
-    @Column(name = "ctime", nullable = false)
+    @Column(name = "ctime", nullable = false,updatable = false)
+    @CreationTimestamp
     private LocalDateTime ctime = LocalDateTime.now();
 
     @Column(name = "mtime")

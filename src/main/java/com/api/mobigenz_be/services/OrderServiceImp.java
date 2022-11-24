@@ -24,6 +24,35 @@ public class OrderServiceImp implements OrderService {
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private OrderDetailService orderDetailService;
+
+
+    @Override
+    @Transactional
+    public OrderDto adminSaveOrder(OrderDto orderDto) {
+        Customer customer = this.modelMapper.map(orderDto.getCustomerDTO(), Customer.class);
+        Order order = this.modelMapper.map(orderDto, Order.class);
+        order.setCustomer(customer);
+        order = this.orderRepository.saveAndFlush(order);
+        Order finalOrder = order;
+        List<OrderDetail> orderDetails = orderDto.getOrderDetailDtos().stream().map(orderDetailDto -> {
+            OrderDetail orderDetail = this.modelMapper.map(orderDetailDto, OrderDetail.class);
+            List<Imei> imeis = orderDetailDto.getImeiDtoList().stream().map(imeiDto -> {
+                Imei imei = this.modelMapper.map(imeiDto, Imei.class);
+                imei.setOrderDetail(orderDetail);
+                imei.setStatus(0);
+                return imei;
+            }).collect(Collectors.toList());
+            ProductDetail productDetail = this.modelMapper.map(orderDetailDto.getProductDetailCartDto(), ProductDetail.class);
+            orderDetail.setImeis(imeis);
+            orderDetail.setOrder(finalOrder);
+            orderDetail.setProductDetail(productDetail);
+            return orderDetail;
+        }).collect(Collectors.toList());
+        this.orderDetailRepository.saveAll(orderDetails);
+        return this.mapOrderToCustomerOrderDto(order);
+    }
 
     @Override
     @Transactional
@@ -89,6 +118,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto getOrderById(Integer order_id) {
         Optional<Order> orderOptional = this.orderRepository.findById(order_id);
         OrderDto orderDto = new OrderDto();
@@ -96,12 +126,14 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    @Transactional
     public List<OrderDto> getOrdersByCustomerId(Integer customer_id) {
-        List<Order> orders = this.orderRepository.getOrdersByCustomerId(customer_id);
+        List<Order> orders = this.orderRepository.getOrdersByCustomerIdOrderByCtimeDesc(customer_id);
         return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<OrderDto> getOrdersByOrderStatus(Integer orderStatus) {
         List<Order> orders = this.orderRepository.getOrderByOrderStatus(orderStatus);
         return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
@@ -113,11 +145,16 @@ public class OrderServiceImp implements OrderService {
         List<OrderDetailDto> orderDetailDtos = this.orderDetailRepository.getOrderDetailByOrderId(order.getId())
                 .stream()
                 .map(orderDetail -> {
-                            OrderDetailDto orderDetailDto = this.modelMapper.map(orderDetail, OrderDetailDto.class);
-                            ProductDetailCartDto productDetailCartDto = this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailCartDto.class);
-                            productDetailCartDto.setPrice(orderDetail.getProductDetail().getPriceSell());
-                            orderDetailDto.setProductDetailCartDto(productDetailCartDto);
-                            return orderDetailDto;
+//                            List<ImeiDto> imeiDtoList = orderDetail.getImeis().stream().map(imei ->
+//                                    this.modelMapper.map(imei, ImeiDto.class)
+//                            ).collect(Collectors.toList());
+//                            OrderDetailDto orderDetailDto = this.modelMapper.map(orderDetail, OrderDetailDto.class);
+//                            ProductDetailCartDto productDetailCartDto = this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailCartDto.class);
+//                            productDetailCartDto.setPrice(orderDetail.getProductDetail().getPriceSell());
+//                            orderDetailDto.setProductDetailCartDto(productDetailCartDto);
+//                            orderDetailDto.setImeiDtoList(imeiDtoList);
+//                            return orderDetailDto;
+                            return this.orderDetailService.mapOrderDetailToOrderDetailDTO(orderDetail);
                         }
                 ).collect(Collectors.toList());
         orderDto.setOrderDetailDtos(orderDetailDtos);

@@ -3,8 +3,8 @@ package com.api.mobigenz_be.controllers.admin;
 import com.api.mobigenz_be.DTOs.OrderDto;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.constants.UrlConstant;
+import com.api.mobigenz_be.models.StatusUpdate;
 import com.api.mobigenz_be.services.OrderService;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,17 +25,16 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("order")
-    public ResponseEntity<ResponseDTO> createOrder(@RequestBody OrderDto orderDto) {
-        boolean result = this.orderService.saveOrder(orderDto);
+    public ResponseEntity<ResponseDTO> saveOrder(@RequestBody OrderDto orderDto) {
+        orderDto = this.orderService.adminSaveOrder(orderDto);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("result", result))
-                        .status(CREATED)
-                        .statusCode(CREATED.value())
+                        .data(Map.of("order", orderDto))
+                        .status(OK)
+                        .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );
-
     }
 
     @PutMapping("updateOrderStatus")
@@ -80,9 +79,3 @@ public class OrderController {
     }
 }
 
-@Data
-class StatusUpdate {
-    private Integer orderId;
-    private String note;
-    private Integer newStatus;
-}
