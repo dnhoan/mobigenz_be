@@ -34,6 +34,46 @@ public class ImeiController {
                 .build());
     }
 
+    @GetMapping("imeisInStock")
+    public ResponseEntity<ResponseDTO> getImeisInStockByProductDetailId(@RequestParam("product_detail_id") Integer productDetailId) {
+        List<ImeiDto> imeiDtos = this.imeiService.getImeisInStockByProductDetailId(productDetailId);
+        return ResponseEntity.ok(ResponseDTO
+                .builder()
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .data(Map.of("imeis", imeiDtos))
+                .build());
+    }
+
+    @DeleteMapping("deleteOrderDetailToImei/{id}")
+    public ResponseEntity<ResponseDTO> deleteOrderDetailToImei(@PathVariable("id") Integer imeiId) {
+        boolean res = this.imeiService.deleteOrderDetailToImei(imeiId);
+        return ResponseEntity.ok(ResponseDTO
+                .builder()
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .data(Map.of("result", res))
+                .build());
+    }
+
+    @PostMapping("addImeisToOrderDetail/{order_detail_id}/{product_detail_id}")
+    public ResponseEntity<ResponseDTO> addImeisToOrderDetail(
+            @PathVariable("order_detail_id") Integer order_detail_id,
+            @PathVariable("product_detail_id") Integer product_detail_id,
+            @RequestBody List<ImeiDto> imeiDtos
+    ) {
+        imeiDtos = this.imeiService.addImeisToOrderDetail(imeiDtos, order_detail_id,product_detail_id);
+        return ResponseEntity.ok(ResponseDTO
+                .builder()
+                .status(HttpStatus.CREATED)
+                .statusCode(HttpStatus.CREATED.value())
+                .timeStamp(LocalDateTime.now())
+                .data(Map.of("imeis", imeiDtos))
+                .build());
+    }
+
     @PostMapping("imei")
     public ResponseEntity<ResponseDTO> save(@RequestBody ImeiDto imeiDto) {
         ImeiDto resImeiDto = this.imeiService.save(imeiDto);
