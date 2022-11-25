@@ -179,14 +179,16 @@ public class CustomerController {
 
             account.setEmail(customer.getEmail());
             account.setPhoneNumber(customer.getPhoneNumber());
-            CustomerDTO customerDTO = this.customerService.update(customer);
             AccountDTO accountDTO1 = this.accountService.update(account);
+            customer.setAccount(account);
+            CustomerDTO customerDTO = this.customerService.update(customer);
             List<CustomerDTO> customerDTOList = this.customerService.searchById();
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
-                            .data(Map.of("customer", customerDTO))
+
                             .data(Map.of("account", accountDTO1))
+                            .data(Map.of("customer", customerDTO))
                             .data(Map.of("customer", customerDTOList))
                             .statusCode(OK.value())
                             .timeStamp(LocalDateTime.now())
@@ -227,6 +229,8 @@ public class CustomerController {
     @GetMapping("searchCustomer")
     public ResponseEntity<ResponseDTO> searchByAll(@RequestParam("search") String search) {
         List<CustomerDTO> customerDTOList = this.customerService.searchByAll(search);
+
+
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .status(OK)
