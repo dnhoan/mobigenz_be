@@ -38,6 +38,7 @@ public class ProductDetailServiceImp implements ProductDetailService{
                 .image(productDetail.getImage())
                 .note(productDetail.getNote())
                 .status(productDetail.getStatus())
+                .productName(productDetail.getProductName())
                 .productVariantCombinationDtos(productVariantCombinationDtos)
                 .build();
 

@@ -3,6 +3,7 @@ package com.api.mobigenz_be.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -27,11 +28,12 @@ public class OrderDetail implements Serializable {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.LOCK)
     @JoinColumn(name = "product_detail_id", nullable = false)
     private ProductDetail productDetail;
 
-
     @OneToMany(fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.LOCK)
     @JoinColumn(name = "order_detail_id")
     private List<Imei> imeis;
 
@@ -49,7 +51,8 @@ public class OrderDetail implements Serializable {
     @Column(name = "amount")
     private Integer amount;
 
-    @Column(name = "ctime", nullable = false)
+    @Column(name = "ctime", nullable = false,updatable = false)
+    @CreationTimestamp
     private LocalDateTime ctime = LocalDateTime.now();
 
     @Column(name = "mtime")
