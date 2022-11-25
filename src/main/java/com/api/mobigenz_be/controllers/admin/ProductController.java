@@ -24,37 +24,19 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-//    @GetMapping("products")
-//<<<<<<< HEAD
-//    public ResponseEntity<ResponseDTO> getList() {
-//       try {
-//           List<ProductDto> items = this.productService.getProducts();
-//           return ResponseEntity.ok(
-//                   ResponseDTO.builder()
-//                           .data(Map.of("products", items))
-//                           .status(OK)
-//                           .statusCode(OK.value())
-//                           .timeStamp(LocalDateTime.now())
-//                           .build()
-//           );
-//       } catch (Exception e) {
-//           e.printStackTrace();
-//       }
-//       return null;
-//=======
-//    public ResponseEntity<ResponseDTO> getList(
-//            @RequestParam(value = "searchTerm", defaultValue = "", required = false) String searchTerm) {
-//        System.out.println("get products");
-//        return ResponseEntity.ok(
-//                ResponseDTO.builder()
-//                        .data(Map.of("products", this.productService.getProducts(searchTerm)))
-//                        .status(OK)
-//                        .statusCode(OK.value())
-//                        .timeStamp(LocalDateTime.now())
-//                        .build()
-//        );
-//>>>>>>> 852d50fa32a01dfbad0afa8005faaccd09f6f0c7
-//    }
+    @GetMapping("products")
+    public ResponseEntity<ResponseDTO> getList(
+            @RequestParam(value = "searchTerm", defaultValue = "", required = false) String searchTerm) {
+        System.out.println("get products");
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("products", this.productService.getProducts(searchTerm)))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 
     @PostMapping("product")
     public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductDto productDto) {
