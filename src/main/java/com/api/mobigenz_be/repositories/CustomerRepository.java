@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.repositories;
 
 import com.api.mobigenz_be.DTOs.CustomerDTO;
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
             "or c.phoneNumber=:search \n" +
             "or c.email=:search")
     Page<Customer> findByAll(@Param("search") String search, Pageable pageable);
+
+
+    @Query("select c from Customer c where c.phoneNumber = :valueSearch" +
+            " or (lower(c.email) like  '%' || lower(:valueSearch) || '%') " +
+            " or (lower(c.customerName) like  '%' || lower(:valueSearch) || '%')" +
+            " or (lower(c.customerType) like  '%' || lower(:valueSearch) || '%')" +
+            " or (lower(c.citizenIdentifyCart) like  '%' || lower(:valueSearch) || '%')" +
+            " or (lower(c.status) like  '%' || lower(:valueSearch) || '%')")
+    Page<Customer> findByKey(Pageable pageable, @Param("valueSearch") String valueSearch);
 
 
     @Query("SELECT cus from Customer cus where cus.account.id = :accountId")

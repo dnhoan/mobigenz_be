@@ -45,6 +45,11 @@ public class CustomerService {
         );
     }
 
+    public Page<Customer> findByKey(Pageable pageable, String valueSearch) {
+        return this.customerRepo.findByKey(pageable,valueSearch);
+    }
+
+
     public CustomerDTO create(Customer customer) throws SQLException {
         this.customerRepo.saveAndFlush(customer);
 //            return this.modelMapper.map(customer, CustomerDTO.class);
@@ -63,9 +68,6 @@ public class CustomerService {
 
     public CustomerDTO update(Customer customer) {
         Customer ctm = this.customerRepo.save(customer);
-
-
-
         return this.modelMapper.map(customer, CustomerDTO.class);
     }
 

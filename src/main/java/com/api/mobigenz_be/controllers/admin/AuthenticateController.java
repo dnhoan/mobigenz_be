@@ -42,7 +42,7 @@ public class AuthenticateController {
 
     private final TokenProvider tokenProvider;
 
-    public AuthenticateController(AuthenticationManagerBuilder authenticationManagerBuilder,TokenProvider tokenProvider) {
+    public AuthenticateController(AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenProvider = tokenProvider;
     }
@@ -67,28 +67,6 @@ public class AuthenticateController {
 
 
 
-//    @GetMapping("mobilegenz/login")
-//    public ResponseEntity<ResponseObject> login(@RequestParam String email, @RequestParam String password) {
-//        try {
-//            Account account = this.accountRepository.findAccountByEmail(email);
-//            Boolean check = EncryptUtils.check(password, account.getPassword());
-//            if (check) {
-//                return ResponseEntity.status(HttpStatus.OK).body(
-//                        new ResponseObject("true", "Đăng nhập thành công!", account)
-//                );
-//            }
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-//                    new ResponseObject("false", "Đăng nhập not thành công!", null)
-//            );
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-//                    new ResponseObject("false", "Đăng nhập thất bại!", e)
-//            );
-//        }
-//    }
-
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody LoginVM loginVM) {
 //		Tạo chuỗi authentication từ email và password (object LoginRequest
@@ -105,9 +83,9 @@ public class AuthenticateController {
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, String.format("Bearer %s", jwt));
             System.out.println(jwt);
             return new ResponseEntity<>(Collections.singletonMap("token", jwt), httpHeaders, HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.internalServerError().build();
         }
 
 //        User userLogin = userService.findUserByUserName(adminLoginVM.getUserName());
@@ -120,7 +98,7 @@ public class AuthenticateController {
         try {
             String password = passwordEncoder.encode(account.getPassword());
             String email = account.getEmail();
-            String name = account.getEmail().substring(0,email.indexOf("@"));
+            String name = account.getEmail().substring(0, email.indexOf("@"));
             Set<Role> roles = new HashSet<>();
             Role role = this.roleServiceImpl.getRoleById(1);
             roles.add(role);
@@ -131,15 +109,18 @@ public class AuthenticateController {
             Customer customer = new Customer();
             customer.setCustomerName(name);
             customer.setAccount(account);
-            customer.setEmail(account.getEmail());
-            customer.setBirthday(LocalDate.of(1990,1,1));
-            customer.setCtime(LocalDate.now());
             customer.setPhoneNumber(account.getPhoneNumber());
+            customer.setBirthday(LocalDate.EPOCH);
+            customer.setEmail(account.getEmail());
+            customer.setStatus(1);
+
+
+            customer.setCtime(LocalDate.now());
+
             account.setCustomer(customer);
 //          CustomerDTO customerDTO = this.customerService.create(customer);
             AccountDTO accountDTO = this.accountService.add(account);
 
-            System.out.println(customer);
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
@@ -158,35 +139,37 @@ public class AuthenticateController {
     @GetMapping("forgot")
     public ResponseEntity<ResponseObject> forgot(@RequestParam(name = "email") String email, HttpServletRequest request) {
         HttpSession session = request.getSession();
+        Account account = this.accountRepository.findAccountByEmail(email);
         try {
-            Account account = this.accountRepository.findAccountByEmail(email);
-            System.out.println(account.getEmail());
-            if (account.getEmail().equalsIgnoreCase(email)) {
-                Random random = new Random();
-                int otp = random.nextInt(900000) + 100000;
-                emailSenderService.sendSimpleEmail(email, "OTP code", "Your OTP code is: " + otp);
-                session.setAttribute(email, otp);
-                System.out.println(session);
+            if (account == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new ResponseObject("false", "Email ko ton tai!", "")
+                );
+            }else{
+                if (email.equals(account.getEmail())) {
+                    Random random = new Random();
+                    int otp = random.nextInt(900000) + 100000;
+                    emailSenderService.sendSimpleEmail(email, "Mã OTP", "Mã OTP của bạn là: " + otp);
+                    session.setAttribute(email, otp);
+                    System.out.println(session);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("true", "OTP đã được gửi đến email của bạn!", "")
+                );
             }
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("true", "OTP da duoc gui den email cua ban!","")
-            );
+
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseObject("false", "Email ko ton tai!", email)
-            );
         }
+        return null;
     }
 
     @GetMapping("getOTP")
     public ResponseEntity<ResponseObject> getOtp(@RequestParam(name = "email") String email, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object isOtp = session.getAttribute(email);
-        System.out.println(isOtp);
-
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("true", "OTP la: ", isOtp)
+                new ResponseObject("true", "OTP la: " + isOtp, "")
         );
     }
 }
