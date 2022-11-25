@@ -25,6 +25,7 @@ public class ProductDetailServiceImp implements ProductDetailService{
     }
 
     public ProductDetailDto productDetailMapToProductDetailDto(ProductDetail productDetail) {
+        System.out.println(productDetail);
         List<ProductVariantCombinationDto> productVariantCombinationDtos = productDetail.getProductVariantCombinationList().stream().map(this::productVariantCombinationMapToProductVariantCombinationDto).collect(Collectors.toList());
         return ProductDetailDto
                 .builder()

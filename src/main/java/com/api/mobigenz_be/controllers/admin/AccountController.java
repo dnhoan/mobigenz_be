@@ -1,14 +1,16 @@
 package com.api.mobigenz_be.controllers.admin;
 
-import com.api.mobigenz_be.DTOs.AccountDTO;
-import com.api.mobigenz_be.DTOs.PageDTO;
-import com.api.mobigenz_be.DTOs.ResponseDTO;
+import com.api.mobigenz_be.DTOs.*;
 import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.ResponseObject;
 import com.api.mobigenz_be.services.AccountService;
 import com.api.mobigenz_be.services.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -53,8 +57,43 @@ public class AccountController {
             );
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
-        return null;
+    }
+
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equals("desc")) {
+            return Sort.Direction.DESC;
+        }
+        return Sort.Direction.ASC;
+    }
+
+    @PutMapping("account/findByKey")
+    public ResponseEntity<ResponseDTO> findByKey(@RequestParam int offset
+                                                , @RequestParam int limit
+                                                , @RequestBody SearchDTO searchDTO) {
+        try {
+            offset = offset < 0 ? 0 : offset;
+            Pageable pageable;
+
+            List<Sort.Order> orders = new ArrayList<>();
+            List<ListSortDTO> listSortDTO = searchDTO.getListSortDTO();
+            pageable = PageRequest.of(offset, limit, Sort.by("id"));
+            Page<Account> pageAccount = this.accountService.findByKey(pageable, searchDTO.getValueSearch());
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("accounts", pageAccount))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("account/getAccountByEmail")

@@ -2,6 +2,7 @@ package com.api.mobigenz_be.DTOs;
 
 import com.api.mobigenz_be.entities.Customer;
 import com.api.mobigenz_be.entities.Transaction;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -40,13 +41,13 @@ public class OrderDto {
     private Double checkout;
 
     private Integer quantity;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime shipDate;
 
     private String carrier;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime ctime;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime mtime;
 
     private Integer payStatus;
@@ -56,5 +57,7 @@ public class OrderDto {
     private List<OrderDetailDto> orderDetailDtos;
 
     private String note;
+
+    private String cancelNote;
 
 }

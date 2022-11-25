@@ -1,0 +1,1 @@
+alter table orders add column cancel_note text

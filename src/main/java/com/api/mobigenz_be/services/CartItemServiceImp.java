@@ -12,8 +12,6 @@ import com.api.mobigenz_be.repositories.CartItemRepository;
 import com.api.mobigenz_be.repositories.CartRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,14 +42,14 @@ public class CartItemServiceImp implements CartItemService {
 				.build();
 	}
 
-    @Override
-    @Transactional
-    public CartItemDTO addCartItem(CartItemDTO cartItemDTO, Integer customerId) {
-        Cart cart = new Cart();
-        Optional<Cart> cartOptional = this.cartRepository.getCartByCustomerId(customerId);
+	@Override
+	@Transactional
+	public CartItemDTO addCartItem(CartItemDTO cartItemDTO, Integer customerId) {
+		Cart cart = new Cart();
+		Optional<Cart> cartOptional = this.cartRepository.getCartByCustomerId(customerId);
 		CartItem cartItem = this.cartItemDtoMapToCartItem(cartItemDTO);
 		if(cartOptional.isPresent()) {
-        	Optional<CartItem> cartItemOptional = this.cartItemRepository.getCartItemByProductDetailIdAndCartId(
+			Optional<CartItem> cartItemOptional = this.cartItemRepository.getCartItemByProductDetailIdAndCartId(
 					cartItem.getProductDetail().getId(),
 					cartOptional.get().getId()
 			);
@@ -61,22 +59,27 @@ public class CartItemServiceImp implements CartItemService {
 				amount++;
 				cartItem.setAmount(amount);
 			}
+			cartItem.setCart(cartOptional.get());
 		} else {
 			cart = Cart.builder()
-						.customer(Customer.builder().id(customerId).build())
-						.itemsAmount(0)
-						.totalMoney(0.0)
-						.build();
+					.customer(Customer.builder().id(customerId).build())
+					.itemsAmount(0)
+					.totalMoney(0.0)
+					.build();
 			this.cartRepository.save(cart);
-        	cartItem.setCart(cart);
+			cartItem.setCart(cart);
 		}
-        cartItem = this.cartItemRepository.saveAndFlush(cartItem);
-        return this.cartItemMapToCartItemDto(cartItem);
-    }
+		cartItem = this.cartItemRepository.saveAndFlush(cartItem);
+		return this.cartItemMapToCartItemDto(cartItem);
+	}
 
 	@Override
-	public CartItemDTO updateCartItem(CartItemDTO cartItemDTO) {
-		CartItem cartItem = this.cartItemRepository.save(cartItemDtoMapToCartItem(cartItemDTO));
+	public CartItemDTO updateCartItem(CartItemDTO cartItemDTO, Integer cart_id) {
+		CartItem cartItem = cartItemDtoMapToCartItem(cartItemDTO);
+		Cart cart = new Cart();
+		cart.setId(cart_id);
+		cartItem.setCart(cart);
+		cartItem = this.cartItemRepository.save(cartItem);
 		return this.cartItemMapToCartItemDto(cartItem);
 	}
 

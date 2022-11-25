@@ -84,6 +84,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Page<Account> findByKey(Pageable pageable, String valueSearch) {
+        return this.accountRepository.findByKey(pageable,valueSearch);
+    }
+
+    @Override
     public Optional<Account>  getAccountLogin(String email, String password) {
         return this.accountRepository.getAccountLogin(email, password);
     }

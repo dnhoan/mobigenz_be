@@ -28,7 +28,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "product_detail_id")
     private List<OrderDetail> orderDetails;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -80,6 +80,9 @@ public class Order implements Serializable {
 
     @Column(name = "order_status")
     private Integer orderStatus;
+
+    @Column(name = "cancel_note")
+    private String cancelNote;
 
     @Column(name = "note")
     @Type(type = "org.hibernate.type.TextType")

@@ -56,6 +56,38 @@ public final class Constant {
         }
     }
 
+    public static class OrderStatus {
+        public static final Integer CANCEL_ORDER = -1;
+        public static final Integer PENDING = 0;
+        public static final Integer CONFIRMED = 1;
+        public static final Integer PACKAGING = 2;
+        public static final Integer PACKAGED = 3;
+        public static final Integer DELIVERING = 4;
+        public static final Integer COMPLETE = 5;
+    }
+//        -1	Hủy đơn hàng
+//1	Chưa tiếp nhận
+//2	Đã tiếp nhận
+//3	Đã lấy hàng/Đã nhập kho
+//4	Đã điều phối giao hàng/Đang giao hàng
+//5	Đã giao hàng/Chưa đối soát
+//6	Đã đối soát
+//7	Không lấy được hàng
+//8	Hoãn lấy hàng
+//9	Không giao được hàng
+//10	Delay giao hàng
+//11	Đã đối soát công nợ trả hàng
+//12	Đã điều phối lấy hàng/Đang lấy hàng
+//13	Đơn hàng bồi hoàn
+//20	Đang trả hàng (COD cầm hàng đi trả)
+//21	Đã trả hàng (COD đã trả xong hàng)
+//123	Shipper báo đã lấy hàng
+//127	Shipper (nhân viên lấy/giao hàng) báo không lấy được hàng
+//128	Shipper báo delay lấy hàng
+//45	Shipper báo đã giao hàng
+//49	Shipper báo không giao được giao hàng
+//410	Shipper báo delay giao hàng
+
     public static class ValidationMessage {
         public static final String FIELD_IS_REQUIRED = "validation.mustNotBeNull";
 

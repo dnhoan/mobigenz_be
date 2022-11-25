@@ -41,7 +41,7 @@ public class Cart {
 	@JoinColumn(name = "customer_id")
     private Customer customer;
 	
-    @OneToMany(fetch = FetchType.LAZY ,  orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private List<CartItem> cartItems;

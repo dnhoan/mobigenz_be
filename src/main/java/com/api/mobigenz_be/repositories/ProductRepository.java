@@ -4,6 +4,7 @@ import com.api.mobigenz_be.DTOs.ProductDto;
 import com.api.mobigenz_be.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,15 +12,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-//    @Query("SELECT " +
-//            "new com.api.mobigenz_be.DTOs.ProductDto(" +
-//                "p.id, " +
-//                "p.productName, " +
-//                "p.description, " +
-//                "p.ctime, " +
-//                "p.mtime, " +
-//                "p.status) " +
-//            "FROM Product p ")
-//    List<ProductDto> getProducts();
+    @Query("SELECT p FROM Product p where  lower(p.productName) like  lower(concat('%', :searchTerm,'%')) ")
+    List<Product> searchProducts(@Param("searchTerm") String searchTerm);
 
 }

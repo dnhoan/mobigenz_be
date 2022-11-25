@@ -1,10 +1,15 @@
 package com.api.mobigenz_be.controllers.admin;
 
-import com.api.mobigenz_be.DTOs.CustomerDTO;
-import com.api.mobigenz_be.DTOs.PageDTO;
-import com.api.mobigenz_be.DTOs.ResponseDTO;
+import com.api.mobigenz_be.DTOs.*;
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Customer;
+import com.api.mobigenz_be.repositories.AccountRepository;
+import com.api.mobigenz_be.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.api.mobigenz_be.services.CustomerService;
@@ -12,6 +17,7 @@ import com.api.mobigenz_be.services.CustomerService;
 import static org.springframework.http.HttpStatus.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +29,13 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping("customers/getCustomerById")
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @GetMapping("customers")
     public ResponseEntity<ResponseDTO> getPageCustomers(
             @RequestParam(value = "offset") int offset,
             @RequestParam(value = "limit") int limit
@@ -37,6 +49,42 @@ public class CustomerController {
                         .timeStamp(LocalDateTime.now())
                         .build()
         );
+    }
+
+
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equals("desc")) {
+            return Sort.Direction.DESC;
+        }
+        return Sort.Direction.ASC;
+    }
+
+    @PutMapping("customers/findByKey")
+    public ResponseEntity<ResponseDTO> findByKey(@RequestParam int offset
+            , @RequestParam int limit
+            , @RequestBody SearchDTO searchDTO) {
+        try {
+            offset = offset < 0 ? 0 : offset;
+            Pageable pageable;
+
+            List<Sort.Order> orders = new ArrayList<>();
+            List<ListSortDTO> listSortDTO = searchDTO.getListSortDTO();
+            pageable = PageRequest.of(offset, limit, Sort.by("id"));
+            Page<Customer> pageCustomer = this.customerService.findByKey(pageable, searchDTO.getValueSearch());
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("customers", pageCustomer))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("customers/getCustomerByAccountId")
@@ -126,12 +174,19 @@ public class CustomerController {
     @PutMapping("customers")
     public ResponseEntity<ResponseDTO> updateCustomer(@RequestBody Customer customer) {
         try {
+            Account account = this.accountRepository.getAccountByCustomer(customer.getId());
+            account.setCtime(LocalDateTime.now());
+
+            account.setEmail(customer.getEmail());
+            account.setPhoneNumber(customer.getPhoneNumber());
             CustomerDTO customerDTO = this.customerService.update(customer);
+            AccountDTO accountDTO1 = this.accountService.update(account);
             List<CustomerDTO> customerDTOList = this.customerService.searchById();
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
                             .data(Map.of("customer", customerDTO))
+                            .data(Map.of("account", accountDTO1))
                             .data(Map.of("customer", customerDTOList))
                             .statusCode(OK.value())
                             .timeStamp(LocalDateTime.now())

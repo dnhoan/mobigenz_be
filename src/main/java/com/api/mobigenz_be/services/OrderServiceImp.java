@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.*;
+import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.*;
 import com.api.mobigenz_be.repositories.OrderDetailRepository;
 import com.api.mobigenz_be.repositories.OrderRepository;
@@ -56,7 +57,7 @@ public class OrderServiceImp implements OrderService {
         List<OrderDetail> orderDetailList = orderDto.getOrderDetailDtos().stream().map(orderDetailDto -> {
                     ProductDetail productDetail = ProductDetail
                             .builder()
-                            .id(orderDetailDto.getProductDetailDto().getId())
+                            .id(orderDetailDto.getProductDetailCartDto().getId())
                             .build();
                     return OrderDetail
                             .builder()
@@ -76,6 +77,18 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    @Transactional
+    public void cancelOrder(Integer order_id, String note) {
+        this.orderRepository.updateOrderStatus(Constant.OrderStatus.CANCEL_ORDER, note, order_id);
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus(Integer order_id, Integer newStatus, String note) {
+        this.orderRepository.updateOrderStatus(newStatus, note, order_id);
+    }
+
+    @Override
     public OrderDto getOrderById(Integer order_id) {
         Optional<Order> orderOptional = this.orderRepository.findById(order_id);
         OrderDto orderDto = new OrderDto();
@@ -88,6 +101,12 @@ public class OrderServiceImp implements OrderService {
         return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
     }
 
+    @Override
+    public List<OrderDto> getOrdersByOrderStatus(Integer orderStatus) {
+        List<Order> orders = this.orderRepository.getOrderByOrderStatus(orderStatus);
+        return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
+    }
+
     private OrderDto mapOrderToCustomerOrderDto(Order order) {
         OrderDto orderDto = this.modelMapper.map(order, OrderDto.class);
         orderDto.setCustomerDTO(this.modelMapper.map(order.getCustomer(), CustomerDTO.class));
@@ -95,7 +114,9 @@ public class OrderServiceImp implements OrderService {
                 .stream()
                 .map(orderDetail -> {
                             OrderDetailDto orderDetailDto = this.modelMapper.map(orderDetail, OrderDetailDto.class);
-                            orderDetailDto.setProductDetailDto(this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailDto.class));
+                            ProductDetailCartDto productDetailCartDto = this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailCartDto.class);
+                            productDetailCartDto.setPrice(orderDetail.getProductDetail().getPriceSell());
+                            orderDetailDto.setProductDetailCartDto(productDetailCartDto);
                             return orderDetailDto;
                         }
                 ).collect(Collectors.toList());

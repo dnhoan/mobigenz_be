@@ -39,7 +39,7 @@ public class Option{
     @Column(name = "status")
     private Integer status;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "option_id")
     private List<OptionsValue> optionsValues;
 
