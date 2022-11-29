@@ -9,7 +9,7 @@ public interface OrderService {
 
     OrderDto adminSaveOrder(OrderDto orderDto);
 
-    boolean saveOrder(OrderDto orderDto);
+    OrderDto saveOrder(OrderDto orderDto);
 
     void cancelOrder(Integer order_id, String note);
 

@@ -19,10 +19,12 @@ public class CustomersAddress {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "customer_id")
+//    private Customer customerId;
     @JoinColumn(name = "customer_id")
-    private Customer customerId;
+    private Integer customerId;
 
     @Column(name = "ward", nullable = false)
     private String ward;

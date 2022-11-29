@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CustomersAddressDto {
     private Integer id;
-    private CustomerDTO customerId;
     private String ward;
     private String city;
     private String district;

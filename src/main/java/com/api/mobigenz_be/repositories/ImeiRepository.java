@@ -19,6 +19,12 @@ public interface ImeiRepository extends JpaRepository<Imei, Integer> {
     List<Imei> getImeisInStockByProductDetailId(Integer productDetailId);
 
     @Modifying
-    @Query("update Imei i set i.orderDetail = null where i.id = :id")
+    @Query("update Imei i set i.orderDetail = null, i.status = 1 where i.id = :id")
     void deleteOrderDetailToImei(@Param("id") Integer id);
+
+    @Modifying
+    @Query("update Imei i set i.orderDetail.id = :orderDetailId where i.id = :id")
+    void exchangeImeiTheSameOrderDetail(@Param("orderDetailId") Integer orderDetailId,
+                                 @Param("id") Integer id);
+
 }

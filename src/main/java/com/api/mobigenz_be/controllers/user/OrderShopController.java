@@ -26,7 +26,7 @@ public class OrderShopController {
 
     @PostMapping("order")
     public ResponseEntity<ResponseDTO> createOrder(@RequestBody OrderDto orderDto) {
-        boolean result = this.orderService.saveOrder(orderDto);
+        OrderDto result = this.orderService.saveOrder(orderDto);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("result", result))

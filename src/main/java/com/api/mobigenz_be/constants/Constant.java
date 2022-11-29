@@ -57,10 +57,10 @@ public final class Constant {
     }
 
     public static class OrderStatus {
+        public static final Integer EXCHANGE = -2;
         public static final Integer CANCEL_ORDER = -1;
         public static final Integer PENDING = 0;
         public static final Integer CONFIRMED = 1;
-        public static final Integer PACKAGING = 2;
         public static final Integer PACKAGED = 3;
         public static final Integer DELIVERING = 4;
         public static final Integer COMPLETE = 5;

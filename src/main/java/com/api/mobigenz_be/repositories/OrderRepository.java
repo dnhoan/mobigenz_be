@@ -18,7 +18,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> getOrderByOrderStatus(Integer orderStatus);
 
     @Modifying(clearAutomatically = true)
-    @Query("update Order o set o.orderStatus = :newOrderStatus, o.cancelNote = :note where o.id = :order_id")
+    @Query("update Order o set o.orderStatus = :newOrderStatus,  o.cancelNote = :note where o.id = :order_id")
     void updateOrderStatus(
                     @Param("newOrderStatus") Integer newOrderStatus,
                      @Param("note") String note,

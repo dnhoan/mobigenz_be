@@ -21,4 +21,6 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
 
 	boolean existsCartByCustomerId(Integer customerId);
 
+	void deleteCartByCustomerId(Integer customerId);
+
 }
