@@ -17,7 +17,7 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Integer > {
 
     @Query("select c from Customer c order by c.id")
-    Page<Customer> getAllById(Pageable pageable);
+    Page<Customer> getAll(Pageable pageable);
 
     @Query("Select c from Customer  c\n" +
             "left Join CustomersAddress as ca on ca.customerId = c.id \n" +
@@ -28,14 +28,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
     Page<Customer> findByAll(@Param("search") String search, Pageable pageable);
 
 
+    @Query("select cus from Customer cus where  cus.email = :email or cus.phoneNumber = :phoneNumber")
+    Customer findCustomerByEmailorPhone(@Param("email") String email,@Param("phoneNumber") String phoneNumber);
+
     @Query("select c from Customer c where c.phoneNumber = :valueSearch" +
             " or (lower(c.email) like  '%' || lower(:valueSearch) || '%') " +
             " or (lower(c.customerName) like  '%' || lower(:valueSearch) || '%')" +
-            " or (lower(c.customerType) like  '%' || lower(:valueSearch) || '%')" +
-            " or (lower(c.citizenIdentifyCart) like  '%' || lower(:valueSearch) || '%')" +
-            " or (lower(c.status) like  '%' || lower(:valueSearch) || '%')")
+            " or (lower(c.citizenIdentifyCart) like  '%' || lower(:valueSearch) || '%')")
     Page<Customer> findByKey(Pageable pageable, @Param("valueSearch") String valueSearch);
 
+    Customer findCusById(Integer id);
 
     @Query("SELECT cus from Customer cus where cus.account.id = :accountId")
     Customer findByAccountId(Integer accountId);
@@ -44,6 +46,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
     List<Customer> findByCustomerName(@Param("customerName") String customerName);
 
     Customer findByEmail(String email);
+
+
     //@Query(name="Customer.findByUsername")
 //    @Query("select c from Customer c where c.customerName=:customer_name")
 //    Page<Customer> findByCustomerName(@Param("customer_name") String customerName, Pageable pageable);
@@ -64,5 +68,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
 
    @Query("select c from Customer c join CustomersAddress ca on c = ca.customerId where ca.id =:customer_id ")
     Customer getCustomerByCustomerAddressId(@Param("customer_id") Integer customer_id);
+
+//    @Query("select cus from Customer cus where cus.id =:id")
+//    Customer getAccountByCustomer(Integer id);
 
 }
