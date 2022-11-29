@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -123,5 +126,25 @@ public class OrderServiceImp implements OrderService {
         orderDto.setOrderDetailDtos(orderDetailDtos);
         return orderDto;
     }
+
+    private OrderDto mapTo(Order order){
+        return OrderDto.builder()
+                .totalMoney(order.getTotalMoney())
+                .build();
+    }
+
+
+    @Override
+    public List<Object[]> statisticsByBestSellingProducts(){
+        List<Object[]> orders = this.orderRepository.statisticsByBestSellingProducts();
+
+        return  orders;
+    }
+
+//    @Override
+//    public Double dthu2(LocalDate time1 , LocalDate time2 ){
+//      return this.orderRepository.dthu1(time1, time2);
+//
+//    }
 
 }
