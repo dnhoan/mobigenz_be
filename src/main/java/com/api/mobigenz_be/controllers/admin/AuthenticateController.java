@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -66,75 +67,89 @@ public class AuthenticateController {
     private PasswordEncoder passwordEncoder;
 
 
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody LoginVM loginVM) {
 //		Tạo chuỗi authentication từ email và password (object LoginRequest
         try {
-            UsernamePasswordAuthenticationToken authenticationString = new UsernamePasswordAuthenticationToken(
-                    loginVM.getEmail(),
-                    loginVM.getPassword()
-            );
-
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationString);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = tokenProvider.createToken(authentication, loginVM.getRememberMe());
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, String.format("Bearer %s", jwt));
-            System.out.println(jwt);
-            return new ResponseEntity<>(Collections.singletonMap("token", jwt), httpHeaders, HttpStatus.OK);
+            Account account = this.accountRepository.findAccountByEmail(loginVM.getEmail());
+            if (account != null) {
+                UsernamePasswordAuthenticationToken authenticationString = new UsernamePasswordAuthenticationToken(
+                        loginVM.getEmail(),
+                        loginVM.getPassword()
+                );
+                Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationString);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = tokenProvider.createToken(authentication, loginVM.getRememberMe());
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, String.format("Bearer %s", jwt));
+                System.out.println(jwt);
+                return new ResponseEntity<>(Collections.singletonMap("token", jwt), httpHeaders, HttpStatus.OK);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
 
+        }
+        return ResponseEntity.internalServerError().build();
 //        User userLogin = userService.findUserByUserName(adminLoginVM.getUserName());
 //        return ResponseEntity.ok().body(new JWTTokenResponse(jwt, userLogin.getUserName())); //Trả về chuỗi jwt(authentication string)
 
     }
 
     @PostMapping("register")
-    public ResponseEntity<ResponseDTO> insert(@RequestBody Account account) {
+    public ResponseEntity<ResponseObject> insert(@RequestBody Account account) {
         try {
-            String password = passwordEncoder.encode(account.getPassword());
-            String email = account.getEmail();
-            String name = account.getEmail().substring(0, email.indexOf("@"));
-            Set<Role> roles = new HashSet<>();
-            Role role = this.roleServiceImpl.getRoleById(1);
-            roles.add(role);
-            account.setRoles(roles);
-            account.setPassword(password);
-            account.setStatus(0);
+            Account acc = this.accountRepository.findAccountByEmailorPhone(account.getEmail(), account.getPhoneNumber());
+            if (acc != null) {
+                if (acc.getPhoneNumber().equalsIgnoreCase(account.getPhoneNumber())) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Số điện thoại đã tồn tại!", acc.getPhoneNumber())
+                    );
+                }
+                if (acc.getEmail().equalsIgnoreCase(account.getEmail())) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Email đã tồn tại!", acc.getEmail())
+                    );
+                }
+                return ResponseEntity.status(BAD_REQUEST).body(
+                        new ResponseObject("false", "Đăng ký thất bại!", "")
+                );
 
-            Customer customer = new Customer();
-            customer.setCustomerName(name);
-            customer.setAccount(account);
-            customer.setPhoneNumber(account.getPhoneNumber());
-            customer.setBirthday(LocalDate.EPOCH);
-            customer.setEmail(account.getEmail());
-            customer.setStatus(1);
+            } else {
+                String password = passwordEncoder.encode(account.getPassword());
+                String email = account.getEmail();
+                String name = account.getEmail().substring(0, email.indexOf("@"));
+                Set<Role> roles = new HashSet<>();
+                Role role = this.roleServiceImpl.getRoleById(1);
+                roles.add(role);
+                account.setRoles(roles);
+                account.setPassword(password);
+                account.setStatus(0);
+
+                Customer customer = new Customer();
+                customer.setCustomerName(name);
+                customer.setAccount(account);
+                customer.setPhoneNumber(account.getPhoneNumber());
+                customer.setBirthday(LocalDate.parse("2000-01-01"));
+                customer.setEmail(account.getEmail());
+                customer.setStatus(1);
 
 
-            customer.setCtime(LocalDate.now());
+                customer.setCtime(LocalDate.now());
 
-            account.setCustomer(customer);
+                account.setCustomer(customer);
 //          CustomerDTO customerDTO = this.customerService.create(customer);
-            AccountDTO accountDTO = this.accountService.add(account);
+                AccountDTO accountDTO = this.accountService.add(account);
+                return ResponseEntity.status(OK).body(
+                        new ResponseObject("true", "Đăng ký tài khoản thành công!", accountDTO)
+                );
+            }
 
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .status(OK)
-                            .data(Map.of("account", accountDTO))
-//                           .data(Map.of("customer",customerDTO))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-            );
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.badRequest().build();
         }
     }
+
 
     @GetMapping("forgot")
     public ResponseEntity<ResponseObject> forgot(@RequestParam(name = "email") String email, HttpServletRequest request) {
@@ -145,7 +160,7 @@ public class AuthenticateController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         new ResponseObject("false", "Email ko ton tai!", "")
                 );
-            }else{
+            } else {
                 if (email.equals(account.getEmail())) {
                     Random random = new Random();
                     int otp = random.nextInt(900000) + 100000;
