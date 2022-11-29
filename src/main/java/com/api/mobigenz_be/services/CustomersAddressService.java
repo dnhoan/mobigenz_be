@@ -13,15 +13,15 @@ public interface CustomersAddressService {
     PageDTO<CustomersAddressDto> getAll(int offset, int limit);
 
 
-    List<CustomersAddress> findByCustomerId(Integer cid);
+    List<CustomersAddressDto> findByCustomerId(Integer cid);
 
     List<CustomersAddress> findByCustomerName(String customerName);
 
     CustomersAddressDto createCa(CustomersAddressDto customersAddressDto) ;
 
-    CustomersAddressDto update(CustomersAddressDto customersAddressDto);
+    CustomersAddressDto saveAddressByCustomerId(CustomersAddressDto customersAddressDto, Integer customerId);
 
-    CustomersAddress delete(CustomersAddress customersAddress);
+    boolean deleteCustomerAddress(Integer addressId);
 
     List<CustomersAddressDto> searchById();
 

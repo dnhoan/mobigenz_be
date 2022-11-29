@@ -3,6 +3,7 @@ package com.api.mobigenz_be.services;
 import com.api.mobigenz_be.DTOs.*;
 import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.*;
+import com.api.mobigenz_be.repositories.CartRepository;
 import com.api.mobigenz_be.repositories.OrderDetailRepository;
 import com.api.mobigenz_be.repositories.OrderRepository;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,8 @@ public class OrderServiceImp implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private CartRepository cartRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
@@ -56,8 +59,7 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     @Transactional
-    public boolean saveOrder(OrderDto orderDto) {
-
+    public OrderDto saveOrder(OrderDto orderDto) {
         Order order = Order
                 .builder()
                 .address(orderDto.getAddress())
@@ -82,6 +84,7 @@ public class OrderServiceImp implements OrderService {
 //                .transaction(new Transaction())w
                 .build();
         order = this.orderRepository.saveAndFlush(order);
+        this.cartRepository.deleteCartByCustomerId(order.getCustomer().getId());
         Order finalOrder = order;
         List<OrderDetail> orderDetailList = orderDto.getOrderDetailDtos().stream().map(orderDetailDto -> {
                     ProductDetail productDetail = ProductDetail
@@ -102,7 +105,7 @@ public class OrderServiceImp implements OrderService {
                 }
         ).collect(Collectors.toList());
         this.orderDetailRepository.saveAll(orderDetailList);
-        return true;
+        return this.mapOrderToCustomerOrderDto(order);
     }
 
     @Override

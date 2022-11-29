@@ -7,7 +7,11 @@ public interface OrderDetailService {
 
     boolean deleteOrderDetail(Integer id);
 
-    OrderDetailDto addOrderDetailToOrder(Integer order_id, OrderDetailDto orderDetailDto);
+    OrderDetailDto addOrderDetailToOrder(Integer orderId, OrderDetailDto orderDetailDto);
+
+    OrderDetailDto createOrderDetailWhenExchangeImei(Integer oldImeiId,Integer orderId, OrderDetailDto orderDetailDto);
+
+    OrderDetailDto changeOrderDetail(Integer currentOrderDetailId,Integer orderId, OrderDetailDto orderDetailDto);
 
      OrderDetailDto mapOrderDetailToOrderDetailDTO(OrderDetail orderDetail);
 }

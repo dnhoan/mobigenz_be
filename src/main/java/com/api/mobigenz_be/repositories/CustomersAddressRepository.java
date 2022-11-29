@@ -5,6 +5,7 @@ import com.api.mobigenz_be.entities.CustomersAddress;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,12 +24,15 @@ public interface CustomersAddressRepository extends JpaRepository<CustomersAddre
     List<CustomersAddress> findByCustomerName(@Param("customerName") String customerName);
 
     @Query("Select ca from CustomersAddress as ca \n" +
-            " join Customer as c on ca.customerId = c.id where c.id = :customerId")
+            " join Customer as c on ca.customerId = c.id where c.id = :customerId and ca.status = 1")
     List<CustomersAddress> findByCustomerId(@Param("customerId")Integer customerId);
 
     @Query("select ca from CustomersAddress  ca order by ca.id")
     List<CustomersAddress> getAllById();
 
+    @Modifying
+    @Query("update CustomersAddress address set address.status = 0 where address.id = :id")
+    void deleteCustomersAddress(@Param("id") Integer id);
 
     @Query("select ca from CustomersAddress  ca order by ca.id")
     Page<CustomersAddress> getAllId(Pageable pageable);

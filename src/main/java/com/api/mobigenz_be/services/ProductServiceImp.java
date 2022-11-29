@@ -46,8 +46,10 @@ public class ProductServiceImp implements ProductService {
 
     @Transactional
     public ProductDto getProductDtoById(Integer id) {
-        Optional<Product> productDtoOptional = this.productRepository.findById(id);
-        return productDtoOptional.isPresent() ? this.productMapToProductDto(productDtoOptional.get()) : new ProductDto();
+          Product product = this.productRepository.getProductById(id);
+          return this.productMapToProductDto(product);
+//        Optional<Product> productDtoOptional = this.productRepository.findById(id);
+//        return productDtoOptional.isPresent() ? this.productMapToProductDto(productDtoOptional.get()) : new ProductDto();
     }
 
     private Product productDtoMapToProduct(ProductDto productDto) {

@@ -52,4 +52,38 @@ public class OrderDetailController {
         );
     }
 
+    @PostMapping("createOrderDetailWhenExchangeImei/{orderId}/{oldImeiId}")
+    public ResponseEntity<ResponseDTO> createOrderDetailWhenExchangeImei(
+            @PathVariable("orderId") Integer orderId,
+            @PathVariable("oldImeiId") Integer oldImeiId,
+            @RequestBody OrderDetailDto orderDetailDto
+    ) {
+        orderDetailDto = this.orderDetailService.createOrderDetailWhenExchangeImei(oldImeiId,orderId, orderDetailDto);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("orderDetail", orderDetailDto))
+                        .status(CREATED)
+                        .statusCode(CREATED.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PostMapping("changeOrderDetail/{orderId}/{currentOrderDetailId}")
+    public ResponseEntity<ResponseDTO> changeOrderDetail(
+            @PathVariable("orderId") Integer orderId,
+            @PathVariable("currentOrderDetailId") Integer currentOrderDetailId,
+            @RequestBody OrderDetailDto orderDetailDto
+    ) {
+        orderDetailDto = this.orderDetailService.changeOrderDetail(currentOrderDetailId,orderId, orderDetailDto);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("orderDetail", orderDetailDto))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
 }

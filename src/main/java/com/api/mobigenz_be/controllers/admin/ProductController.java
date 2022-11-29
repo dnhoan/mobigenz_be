@@ -3,6 +3,7 @@ package com.api.mobigenz_be.controllers.admin;
 import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.DTOs.ProductDto;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
+import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.constants.UrlConstant;
 import com.api.mobigenz_be.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @CrossOrigin(UrlConstant.baseUrlFE)
-@RequestMapping("api/admin/")
+@RequestMapping(Constant.Api.Path.ADMIN)
 public class ProductController {
 
     @Autowired
