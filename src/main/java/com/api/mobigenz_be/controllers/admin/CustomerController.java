@@ -3,7 +3,10 @@ package com.api.mobigenz_be.controllers.admin;
 import com.api.mobigenz_be.DTOs.*;
 import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Customer;
+import com.api.mobigenz_be.entities.ResponseObject;
+import com.api.mobigenz_be.entities.Role;
 import com.api.mobigenz_be.repositories.AccountRepository;
+import com.api.mobigenz_be.repositories.CustomerRepository;
 import com.api.mobigenz_be.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +19,10 @@ import com.api.mobigenz_be.services.CustomerService;
 
 import static org.springframework.http.HttpStatus.*;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -33,12 +36,16 @@ public class CustomerController {
     private AccountService accountService;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+
+    @Autowired
     private AccountRepository accountRepository;
 
-    @GetMapping("customers")
+    @GetMapping("customers/getAll")
     public ResponseEntity<ResponseDTO> getPageCustomers(
-            @RequestParam(value = "offset") int offset,
-            @RequestParam(value = "limit") int limit
+            @RequestParam(value = "offset", defaultValue = "") int offset,
+            @RequestParam(value = "limit", defaultValue = "") int limit
     ) {
         PageDTO<CustomerDTO> items = this.customerService.getAll(offset, limit);
         return ResponseEntity.ok(
@@ -62,8 +69,9 @@ public class CustomerController {
     }
 
     @PutMapping("customers/findByKey")
-    public ResponseEntity<ResponseDTO> findByKey(@RequestParam int offset
-            , @RequestParam int limit
+    public ResponseEntity<ResponseDTO> findByKey(
+            @RequestParam(value = "offset", defaultValue = "") int offset
+            , @RequestParam(value = "limit", defaultValue = "") int limit
             , @RequestBody SearchDTO searchDTO) {
         try {
             offset = offset < 0 ? 0 : offset;
@@ -81,7 +89,7 @@ public class CustomerController {
                             .timeStamp(LocalDateTime.now())
                             .build()
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -103,7 +111,7 @@ public class CustomerController {
 
     @GetMapping("customers/customerName")
     public ResponseEntity<ResponseDTO> getByCustomerName(@RequestParam(value = "customerName") String customerName) {
-         List<Customer> customer = this.customerService.findByCustomerName(customerName);
+        List<Customer> customer = this.customerService.findByCustomerName(customerName);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .status(OK)
@@ -130,21 +138,32 @@ public class CustomerController {
 
 
     @PostMapping("customers")
-    public ResponseEntity<ResponseDTO> insertCustomer(@RequestBody Customer customer) {
-        System.out.println("create customer");
+    public ResponseEntity<ResponseObject> insertCustomer(@RequestBody Customer customer) {
         try {
-            CustomerDTO customerDTO = this.customerService.create(customer);
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .status(OK)
-                            .data(Map.of("customers", customerDTO))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-            );
+            Customer cus = this.customerRepository.findCustomerByEmailorPhone(customer.getEmail(), customer.getPhoneNumber());
+            if (cus != null) {
+                if (cus.getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber())) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Số điện thoại đã tồn tại!", cus.getPhoneNumber())
+                    );
+                }
+                if (cus.getEmail().equalsIgnoreCase(customer.getEmail())) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Email đã tồn tại!", cus.getEmail())
+                    );
+                }
+            } else {
+                CustomerDTO customerDTO = this.customerService.create(customer);
+                return ResponseEntity.status(OK).body(
+                        new ResponseObject("true", "Thêm khách hàng thành công!", customerDTO)
+                );
+            }
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            e.printStackTrace();
         }
+        return ResponseEntity.status(BAD_REQUEST).body(
+                new ResponseObject("false", "Thêm khách hàng thất bại!", "")
+        );
     }
 
     @GetMapping("customers/{id}")
@@ -172,65 +191,50 @@ public class CustomerController {
     }
 
     @PutMapping("customers")
-    public ResponseEntity<ResponseDTO> updateCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<ResponseObject> updateCustomer(@RequestBody Customer customer) {
         try {
-            Account account = this.accountRepository.getAccountByCustomer(customer.getId());
-            account.setCtime(LocalDateTime.now());
-
-            account.setEmail(customer.getEmail());
-            account.setPhoneNumber(customer.getPhoneNumber());
-            AccountDTO accountDTO1 = this.accountService.update(account);
-            customer.setAccount(account);
-            CustomerDTO customerDTO = this.customerService.update(customer);
-            List<CustomerDTO> customerDTOList = this.customerService.searchById();
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .status(OK)
-
-                            .data(Map.of("account", accountDTO1))
-                            .data(Map.of("customer", customerDTO))
-                            .data(Map.of("customer", customerDTOList))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-            );
+            Optional<Customer> cus = this.customerRepository.findById(customer.getId());
+            if (cus.isPresent()) {
+                Account account = cus.get().getAccount();
+               if(account != null){
+                   account.setCtime(LocalDateTime.now());
+                   account.setPhoneNumber(customer.getPhoneNumber());
+                   AccountDTO accountDTO = this.accountService.add(account);
+                   customer.setAccount(account);
+               }
+                this.customerService.update(customer);
+                List<CustomerDTO> customerDTOList = this.customerService.getAllCus();
+                return ResponseEntity.status(OK).body(
+                        new ResponseObject("true", "Cập nhật khách hàng thành công!", customerDTOList)
+                );
+            }
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            e.printStackTrace();
         }
+        return ResponseEntity.status(BAD_REQUEST).body(
+                new ResponseObject("false", "Cập nhật thất bại!", "")
+        );
     }
 
     @DeleteMapping("customers/{id}")
-    public ResponseEntity<ResponseDTO> deleteCustomer(@PathVariable("id") String id,
-                                                      Customer customer) {
+    public ResponseEntity<ResponseObject> deleteCustomer(@PathVariable(value = "id") Integer id) {
+        Customer customer = this.customerRepository.findCusById(id);
         if (customer != null) {
             this.customerService.delete(customer);
-            List<CustomerDTO> customerDTOList = this.customerService.searchById();
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .message("Delete success")
-                            .status(OK)
-                            .data(Map.of("customer", customerDTOList))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-
+            List<CustomerDTO> customerDTOList = this.customerService.getAllCus();
+            return ResponseEntity.status(OK).body(
+                    new ResponseObject("true", "Xóa thành công!", customerDTOList)
             );
+
         }
-        return ResponseEntity.ok(
-                ResponseDTO.builder()
-                        .message("Customer id not exist")
-                        .status(NO_CONTENT)
-                        .statusCode(NO_CONTENT.value())
-                        .timeStamp(LocalDateTime.now())
-                        .build()
+        return ResponseEntity.status(OK).body(
+                new ResponseObject("true", "Xóa thất bại!", "")
         );
     }
 
     @GetMapping("searchCustomer")
     public ResponseEntity<ResponseDTO> searchByAll(@RequestParam("search") String search) {
         List<CustomerDTO> customerDTOList = this.customerService.searchByAll(search);
-
-
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .status(OK)

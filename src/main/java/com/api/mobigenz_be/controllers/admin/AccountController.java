@@ -4,6 +4,7 @@ import com.api.mobigenz_be.DTOs.*;
 import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.ResponseObject;
+import com.api.mobigenz_be.repositories.AccountRepository;
 import com.api.mobigenz_be.services.AccountService;
 import com.api.mobigenz_be.services.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -37,13 +38,16 @@ public class AccountController {
     private AccountServiceImpl accountServiceImpl;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
     @GetMapping("account/getAll")
     public ResponseEntity<ResponseDTO> getPageAccount(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "1") int limit
+            @RequestParam(value = "limit", defaultValue = "5") int limit
     ) {
         try {
             PageDTO<AccountDTO> items = this.accountService.getAll(offset, limit);
@@ -71,9 +75,10 @@ public class AccountController {
     }
 
     @PutMapping("account/findByKey")
-    public ResponseEntity<ResponseDTO> findByKey(@RequestParam int offset
-                                                , @RequestParam int limit
-                                                , @RequestBody SearchDTO searchDTO) {
+    public ResponseEntity<ResponseDTO> findByKey(
+             @RequestParam(value = "offset", defaultValue = "")  int offset
+            ,@RequestParam(value = "limit",defaultValue = "") int limit
+            ,@RequestBody SearchDTO searchDTO) {
         try {
             offset = offset < 0 ? 0 : offset;
             Pageable pageable;
@@ -134,19 +139,32 @@ public class AccountController {
 
 
     @PostMapping("account/addAccount")
-    public ResponseEntity<ResponseDTO> insert(@RequestBody Account account) {
+    public ResponseEntity<ResponseObject> insert(@RequestBody Account account) {
         try {
-            String password = passwordEncoder.encode(account.getPassword());
-            account.setPassword(password);
-            AccountDTO accountDTO = this.accountService.add(account);
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .status(OK)
-                            .data(Map.of("account", accountDTO))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-            );
+            Account acc = this.accountRepository.findAccountByEmailorPhone(account.getEmail(), account.getPhoneNumber());
+            if (acc != null) {
+                if (acc.getPhoneNumber().equalsIgnoreCase(account.getPhoneNumber())) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Số điện thoại đã tồn tại!", acc.getPhoneNumber())
+                    );
+                }
+                if (acc.getEmail().equalsIgnoreCase(account.getEmail())) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Email đã tồn tại!", acc.getEmail())
+                    );
+                }
+                return ResponseEntity.status(BAD_REQUEST).body(
+                        new ResponseObject("false", "Thêm tài khoản thất bại!", "")
+                );
+
+            } else {
+                String password = passwordEncoder.encode(account.getPassword());
+                account.setPassword(password);
+                AccountDTO accountDTO = this.accountService.add(account);
+                return ResponseEntity.status(OK).body(
+                        new ResponseObject("true", "Thêm tài khoản thành công!", accountDTO)
+                );
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
