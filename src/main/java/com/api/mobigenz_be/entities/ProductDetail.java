@@ -62,6 +62,11 @@ public class ProductDetail {
     private List<OrderDetail> orderDetails;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "productDetail",fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private List<CartItem> cartItems;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

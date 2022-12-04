@@ -12,7 +12,7 @@ public interface OptionValueService {
 
     List<OptionValueDto> getList();
 
-    OptionValueDto saveOptionValue(OptionValueDto optionsValueDto);
+    OptionValueDto saveOptionValue(Integer option_id, String optionValueName);
 
     List<Option> getOptionByOptionName(String option_Name);
 }

@@ -83,9 +83,11 @@ public class OptionsServiceImp implements OptionsService {
     }
 
     @Transactional
-    public OptionDto insertOption(OptionDto optionDto){
-        Option option = this.optionsRepository.save(this.optionDtoMapToOption(optionDto));
-        return this.optionMapToOptionDto(option);
+    public OptionDto insertOption(String optionName){
+        Option option = Option.builder().optionName(optionName).build();
+        option.setCtime(LocalDateTime.now());
+        option = this.optionsRepository.save(option);
+        return this.modelMapper.map(option, OptionDto.class);
     }
 
 

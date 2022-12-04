@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,8 @@ public class OrderDetailServiceImp implements OrderDetailService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private ImeiRepository imeiRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -50,10 +53,26 @@ public class OrderDetailServiceImp implements OrderDetailService {
         return this.mapOrderDetailToOrderDetailDTO(orderDetail);
     }
 
+    @Override
+    @Transactional
+    public OrderDetailDto createOrderDetailWhenExchangeImei(Integer oldImeiId, Integer order_id, OrderDetailDto orderDetailDto) {
+        this.imeiRepository.deleteOrderDetailToImei(oldImeiId);
+        return this.addOrderDetailToOrder(order_id, orderDetailDto);
+    }
+
+    @Transactional
+    public OrderDetailDto changeOrderDetail(Integer currentOrderDetailId, Integer order_id, OrderDetailDto orderDetailDto) {
+        this.orderDetailRepository.deleteById(currentOrderDetailId);
+        return this.addOrderDetailToOrder(order_id, orderDetailDto);
+    }
+
     public OrderDetailDto mapOrderDetailToOrderDetailDTO(OrderDetail orderDetail) {
-        List<ImeiDto> imeiDtoList = orderDetail.getImeis().stream().map(imei ->
-                this.modelMapper.map(imei, ImeiDto.class)
-        ).collect(Collectors.toList());
+        List<ImeiDto> imeiDtoList = new ArrayList<>();
+        if(orderDetail.getImeis() != null) {
+            imeiDtoList = orderDetail.getImeis().stream().map(imei ->
+                    this.modelMapper.map(imei, ImeiDto.class)
+            ).collect(Collectors.toList());
+        }
         OrderDetailDto orderDetailDto = this.modelMapper.map(orderDetail, OrderDetailDto.class);
         ProductDetailCartDto productDetailCartDto = this.modelMapper.map(orderDetail.getProductDetail(), ProductDetailCartDto.class);
         productDetailCartDto.setPrice(orderDetail.getProductDetail().getPriceSell());

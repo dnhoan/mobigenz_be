@@ -47,6 +47,7 @@ public class ImeiServiceImp implements ImeiService {
             Imei imei = this.modelMapper.map(imeiDto, Imei.class);
             imei.setOrderDetail(OrderDetail.builder().id(order_detail_id).build());
             imei.setProductDetail(ProductDetail.builder().id(product_detail_id).build());
+            imei.setStatus(0);
             return imei;
         }).collect(Collectors.toList());
         imeis = this.imeiRepository.saveAllAndFlush(imeis);
@@ -77,6 +78,15 @@ public class ImeiServiceImp implements ImeiService {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    @Transactional
+    public boolean exchangeImeiTheSameOrderDetail(Integer newImei, Integer oldImei, Integer orderDetailId) {
+        System.out.println(newImei + " " + oldImei + " " + orderDetailId);
+        this.imeiRepository.deleteOrderDetailToImei(oldImei);
+        this.imeiRepository.exchangeImeiTheSameOrderDetail(orderDetailId, newImei);
+        return  true;
     }
 
     @Override

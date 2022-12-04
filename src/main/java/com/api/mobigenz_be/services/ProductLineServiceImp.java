@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.ProductLineDto;
+import com.api.mobigenz_be.entities.Manufacturer;
 import com.api.mobigenz_be.entities.ProductLine;
 import com.api.mobigenz_be.repositories.ProductLineRepository;
 import org.modelmapper.ModelMapper;
@@ -33,9 +34,11 @@ public class ProductLineServiceImp implements ProductLineService{
     }
 
     @Transactional
-    public ProductLineDto saveProductLine(ProductLineDto productLineDto) {
-        ProductLine productLine = this.productLineRepository.save(this.productLineDtoMapToProductLine(productLineDto));
-        return this.productLineMapToProductLineDto(productLine);
+    public ProductLineDto saveProductLine(Integer manufacturerId, ProductLineDto productLineDto) {
+        ProductLine productLine = this.productLineDtoMapToProductLine(productLineDto);
+        productLine.setManufacturer(Manufacturer.builder().id(manufacturerId).build());
+        productLine = this.productLineRepository.saveAndFlush(productLine);
+        return this.modelMapper.map(productLine, ProductLineDto.class);
     }
 
     private ProductLineDto productLineMapToProductLineDto(ProductLine productLine){

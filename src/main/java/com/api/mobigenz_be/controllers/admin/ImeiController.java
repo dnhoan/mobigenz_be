@@ -4,6 +4,7 @@ import com.api.mobigenz_be.DTOs.ImeiDto;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.constants.UrlConstant;
 import com.api.mobigenz_be.services.ImeiService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,7 @@ public class ImeiController {
                 .build());
     }
 
+
     @PostMapping("addImeisToOrderDetail/{order_detail_id}/{product_detail_id}")
     public ResponseEntity<ResponseDTO> addImeisToOrderDetail(
             @PathVariable("order_detail_id") Integer order_detail_id,
@@ -85,6 +87,18 @@ public class ImeiController {
                 .data(Map.of("imei", resImeiDto))
                 .build());
     }
+    @PutMapping("exchangeImeiTheSameOrderDetail")
+    public ResponseEntity<ResponseDTO> exchangeImeiTheSameOrderDetail(
+            @RequestBody ExchangeImei exchangeImei) {
+        boolean res = this.imeiService.exchangeImeiTheSameOrderDetail(exchangeImei.getNewImeiId(), exchangeImei.getOldImeiId(), exchangeImei.getCurrentOrderDetailId());
+        return ResponseEntity.ok(ResponseDTO
+                .builder()
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .timeStamp(LocalDateTime.now())
+                .data(Map.of("result", res))
+                .build());
+    }
 
     @DeleteMapping("imei/{id}")
     public ResponseEntity<ResponseDTO> deleteImei(@PathVariable("id") Integer id) {
@@ -97,4 +111,10 @@ public class ImeiController {
                 .data(Map.of("result", res))
                 .build());
     }
+}
+@Data
+class ExchangeImei {
+    private Integer newImeiId;
+    private Integer  oldImeiId;
+    private Integer currentOrderDetailId;
 }

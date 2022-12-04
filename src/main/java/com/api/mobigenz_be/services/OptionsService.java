@@ -10,7 +10,7 @@ public interface OptionsService {
     List<OptionDto> getList();
     List<OptionDto> getOptionsByProductId(Integer product_id);
 
-    OptionDto insertOption(OptionDto optionDto);
+    OptionDto insertOption(String optionName);
 
 
 }

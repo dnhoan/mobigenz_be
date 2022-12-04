@@ -52,6 +52,6 @@ public class ProductDetailServiceImp implements ProductDetailService{
         OptionValueDto optionValueDto = this.modelMapper.map(
                 productVariantCombination.getProductVariant().getOptionValue(), OptionValueDto.class
         );
-        return new ProductVariantCombinationDto(optionDto, optionValueDto);
+        return new ProductVariantCombinationDto(productVariantCombination.getId(),optionDto, optionValueDto);
     }
 }

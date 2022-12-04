@@ -52,7 +52,7 @@ public class CustomerService {
 
     public CustomerDTO create(Customer customer) throws SQLException {
         this.customerRepo.saveAndFlush(customer);
-            return this.modelMapper.map(customer, CustomerDTO.class);
+        return this.modelMapper.map(customer, CustomerDTO.class);
     }
 
 //    public CustomerDTO add(Customer customer) throws Exception {

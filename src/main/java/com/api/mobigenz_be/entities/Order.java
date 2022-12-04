@@ -86,6 +86,9 @@ public class Order implements Serializable {
     @Column(name = "order_status")
     private Integer orderStatus;
 
+    @Column(name = "purchasetype")
+    private Integer purchaseType;
+
     @Column(name = "cancel_note")
     private String cancelNote;
 

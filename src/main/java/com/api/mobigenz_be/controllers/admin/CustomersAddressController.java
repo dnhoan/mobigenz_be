@@ -79,50 +79,38 @@ public class CustomersAddressController {
     }
 
     @PutMapping("customersAddress/{id}")
-    public ResponseEntity<ResponseDTO> update(@RequestBody CustomersAddressDto customersAddressDto) {
+    public ResponseEntity<ResponseDTO> update(
+            @PathVariable("id") Integer customerId,
+            @RequestBody CustomersAddressDto customersAddressDto
+    ) {
         try {
-            CustomersAddressDto customersAddress1 = this.customersAddressService.update(customersAddressDto);
+            CustomersAddressDto customersAddress1 = this.customersAddressService.saveAddressByCustomerId(customersAddressDto, customerId);
             return ResponseEntity.ok(
                     ResponseDTO.builder()
                             .status(OK)
-                            .data(Map.of("customersAddress", customersAddress1))
+                            .data(Map.of("address", customersAddress1))
                             .statusCode(OK.value())
                             .timeStamp(LocalDateTime.now())
                             .build()
             );
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
 
     @DeleteMapping("customersAddress/{id}")
-    public ResponseEntity<ResponseDTO> delete(@PathVariable("id") CustomersAddress customersAddress ) {
-
-        if (customersAddress != null) {
-            this.customersAddressService.delete(customersAddress);
-            List<CustomersAddress> customersAddressList = this.customersAddressService.getById();
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .message("Delete success")
-                            .status(OK)
-                            .data(Map.of("customersAddress",customersAddressList ))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-
-            );
-        }
+    public ResponseEntity<ResponseDTO> delete(@PathVariable("id") Integer address_id ) {
+        boolean res = this.customersAddressService.deleteCustomerAddress(address_id);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .message("Customer Address id not exist")
-                        .status(NO_CONTENT)
-                        .statusCode(NO_CONTENT.value())
+                        .message("Delete " + (res ? "success" : "false"))
+                        .status(res ? OK : INTERNAL_SERVER_ERROR)
+                        .data(Map.of("res",res ))
+                        .statusCode(res ? OK.value() : INTERNAL_SERVER_ERROR.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );
-
-
-
     }
 
     @GetMapping("customersAddressByCustomerName")
@@ -140,16 +128,10 @@ public class CustomersAddressController {
 
     @GetMapping("customersAddressByCustomerId")
     public ResponseEntity<ResponseDTO> getByCustomerId(@RequestParam("customerId") Integer cId) {
-
-
-        List<CustomersAddress> customersAddresses = this.customersAddressService.findByCustomerId(cId);
-
-      //  if(!customersAddressMap.containsKey(cId)) throw new CustomerAddressNotFoundException();
-
-
+        List<CustomersAddressDto> customersAddresses = this.customersAddressService.findByCustomerId(cId);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
-                        .data(Map.of("customersAddresses", customersAddresses))
+                        .data(Map.of("addresses", customersAddresses))
                         .status(OK)
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())

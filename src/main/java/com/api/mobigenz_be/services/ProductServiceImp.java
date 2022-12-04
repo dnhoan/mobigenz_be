@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-//@Transactional
+@Transactional
 public class ProductServiceImp implements ProductService {
 
     @Autowired
@@ -38,16 +38,16 @@ public class ProductServiceImp implements ProductService {
         return products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
     }
 
-    @Transactional
     public ProductDto saveProduct(ProductDto productDto) {
         Product product = this.productRepository.save(this.productDtoMapToProduct(productDto));
         return this.productMapToProductDto(product);
     }
 
-    @Transactional
     public ProductDto getProductDtoById(Integer id) {
-        Optional<Product> productDtoOptional = this.productRepository.findById(id);
-        return productDtoOptional.isPresent() ? this.productMapToProductDto(productDtoOptional.get()) : new ProductDto();
+          Product product = this.productRepository.getProductById(id);
+          return this.productMapToProductDto(product);
+//        Optional<Product> productDtoOptional = this.productRepository.findById(id);
+//        return productDtoOptional.isPresent() ? this.productMapToProductDto(productDtoOptional.get()) : new ProductDto();
     }
 
     private Product productDtoMapToProduct(ProductDto productDto) {
@@ -105,7 +105,7 @@ public class ProductServiceImp implements ProductService {
                         productVariantCombinations.add(
                                 ProductVariantCombination
                                         .builder()
-//                                        .id(productDetailDto.getProductVariantCombineId())
+                                        .id(productDetailDto.getProductVariantCombineId())
                                         .productVariant(productsVariant)
                                         .sku(productDetailDto.getSku())
                                         .build()
@@ -123,12 +123,12 @@ public class ProductServiceImp implements ProductService {
             ).collect(Collectors.toList());
             ProductDetail productDetail = ProductDetail
                     .builder()
-//                    .id(productDetailDto.getId())
+                    .id(productDetailDto.getId())
                     .priceSell(productDetailDto.getPriceSell())
                     .priceOrigin(productDetailDto.getPriceOrigin())
                     .productVariantCombinationList(variantCombinations)
                     .price(productDetailDto.getPrice())
-                    .stock(0)
+                    .stock(productDetailDto.getStock())
                     .sku(productDetailDto.getSku())
                     .image(productDetailDto.getImage())
                     .note(productDetailDto.getNote())
@@ -161,7 +161,6 @@ public class ProductServiceImp implements ProductService {
         productsOption.setProductsVariants(productsVariants);
         return productsOption;
     }
-
     private ProductDto productMapToProductDto(Product product) {
         ProductLineDto productLineDto = this.productLineRepository.getProductLineByProductId(product.getId());
         ManufacturerDto manufacturerDto = this.manufacturersService.getManufacturerByProductLineId(productLineDto.getId());

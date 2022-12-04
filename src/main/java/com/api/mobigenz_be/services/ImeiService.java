@@ -20,5 +20,5 @@ public interface ImeiService {
 
     boolean deleteOrderDetailToImei(Integer id);
 
-
+    boolean exchangeImeiTheSameOrderDetail(Integer newImei, Integer oldImei, Integer orderDetailId);
 }

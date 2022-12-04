@@ -66,7 +66,7 @@ public class OrderController {
     }
 
     @GetMapping("orders")
-    public ResponseEntity<ResponseDTO> getOrdersByCustomerId(@RequestParam(name = "orderStatus",defaultValue = "", required = false) Integer orderStatus) {
+    public ResponseEntity<ResponseDTO> getOrdersByOrderStatus(@RequestParam(name = "orderStatus",defaultValue = "", required = false) Integer orderStatus) {
         List<OrderDto> orderDtos = this.orderService.getOrdersByOrderStatus(orderStatus);
         return ResponseEntity.ok(
                 ResponseDTO.builder()

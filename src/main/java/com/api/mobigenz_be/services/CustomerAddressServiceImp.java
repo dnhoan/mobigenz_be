@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CustomerAddressServiceImp implements CustomersAddressService{
+public class CustomerAddressServiceImp implements CustomersAddressService {
 
     @Autowired
     private CustomersAddressRepository customersAddressRepository;
@@ -50,16 +50,13 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
         );
     }
 
-    private CustomersAddress customersAddressDtoMapToCustomerAddress(CustomersAddressDto customersAddressDto){
-       Customer customer = modelMapper.map(customersAddressDto.getCustomerId(), Customer.class);
-
+    private CustomersAddress customersAddressDtoMapToCustomerAddress(CustomersAddressDto customersAddressDto) {
         CustomersAddress customersAddress = CustomersAddress
                 .builder()
                 .ward(customersAddressDto.getWard())
                 .district(customersAddressDto.getDistrict())
                 .city(customersAddressDto.getCity())
                 .detailAddress(customersAddressDto.getDetailAddress())
-                .customerId(customer)
                 .status(1)
                 .build();
         System.out.println(customersAddress.getStatus());
@@ -67,29 +64,30 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
         return customersAddress;
     }
 
-    private CustomerDTO customerMapToCustomerDto(Customer customer){
+    private CustomerDTO customerMapToCustomerDto(Customer customer) {
 
-        if(customer.getId() == null){
+        if (customer.getId() == null) {
             return CustomerDTO.builder().build();
-        }else{
+        } else {
 
-        return CustomerDTO.builder()
-                .id(customer.getId())
-                .customerName(customer.getCustomerName())
-                .birthday(customer.getBirthday())
-                .citizenIdentifyCart(customer.getCitizenIdentifyCart())
-                .image(customer.getImage())
-                .customerType(customer.getCustomerType())
-                .status(customer.getStatus())
-                .phoneNumber(customer.getPhoneNumber())
-                .ctime(customer.getCtime())
-                .mtime(customer.getMtime())
-                .gender(customer.getGender())
-                .build();
-    }}
+            return CustomerDTO.builder()
+                    .id(customer.getId())
+                    .customerName(customer.getCustomerName())
+                    .birthday(customer.getBirthday())
+                    .citizenIdentifyCart(customer.getCitizenIdentifyCart())
+                    .image(customer.getImage())
+                    .customerType(customer.getCustomerType())
+                    .status(customer.getStatus())
+                    .phoneNumber(customer.getPhoneNumber())
+                    .ctime(customer.getCtime())
+                    .mtime(customer.getMtime())
+                    .gender(customer.getGender())
+                    .build();
+        }
+    }
 
-    private CustomersAddressDto customersAddressMapToCustomerAddressDto(CustomersAddress customersAddress){
-        Customer customer = this.customerRepository.getCustomerByCustomerAddressId(customersAddress.getId());
+    private CustomersAddressDto customersAddressMapToCustomerAddressDto(CustomersAddress customersAddress) {
+//        Customer customer = this.customerRepository.getCustomerByCustomerAddressId(customersAddress.getId());
 
         return CustomersAddressDto.builder()
                 .id(customersAddress.getId())
@@ -97,18 +95,18 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
                 .district(customersAddress.getDistrict())
                 .city(customersAddress.getCity())
                 .detailAddress(customersAddress.getDetailAddress())
-                .customerId(this.customerMapToCustomerDto(customer))
+//                .customerId(this.customerMapToCustomerDto(customer))
                 .build();
     }
 
     @Transactional
-    public CustomersAddressDto createCa(CustomersAddressDto customersAddressDto){
+    public CustomersAddressDto createCa(CustomersAddressDto customersAddressDto) {
         CustomersAddress customersAddress = this.customersAddressRepository.save(this.customersAddressDtoMapToCustomerAddress(customersAddressDto));
         return this.customersAddressMapToCustomerAddressDto(customersAddress);
     }
 
     @Override
-    public List<CustomersAddress> getById(){
+    public List<CustomersAddress> getById() {
 
         return this.customersAddressRepository.getAllById();
 
@@ -116,7 +114,7 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
     }
 
     @Override
-    public List<CustomersAddressDto> searchById(){
+    public List<CustomersAddressDto> searchById() {
 
         List<CustomersAddress> customersAddresses = this.customersAddressRepository.getAllById();
 
@@ -126,29 +124,41 @@ public class CustomerAddressServiceImp implements CustomersAddressService{
     }
 
     @Override
-    public List<CustomersAddress> findByCustomerId(Integer cid) {
-        return this.customersAddressRepository.findByCustomerId(cid);
+    @Transactional
+    public List<CustomersAddressDto> findByCustomerId(Integer cid) {
+        return this.customersAddressRepository.findByCustomerId(cid).stream().map(customersAddress ->
+                this.modelMapper.map(customersAddress, CustomersAddressDto.class)
+        ).collect(Collectors.toList());
     }
 
     @Override
     public List<CustomersAddress> findByCustomerName(String customerName) {
 
-        return  this.customersAddressRepository.findByCustomerName(customerName);
+        return this.customersAddressRepository.findByCustomerName(customerName);
     }
 
 
     @Override
-    public CustomersAddressDto update(CustomersAddressDto customersAddressDto) {
-        CustomersAddress customersAddress = this.customersAddressRepository.save(this.customersAddressDtoMapToCustomerAddress(customersAddressDto));
-        return this.customersAddressMapToCustomerAddressDto(customersAddress);    }
-
-    @Override
-    public CustomersAddress delete(CustomersAddress customersAddress) {
-        customersAddress.setStatus(0);
-
-        return this.customersAddressRepository.save(customersAddress);
+    @Transactional
+    public CustomersAddressDto saveAddressByCustomerId(CustomersAddressDto customersAddressDto, Integer customerId) {
+//        Customer customer = new Customer();
+//        customer.setId(customerId);
+        CustomersAddress customersAddress = this.modelMapper.map(customersAddressDto, CustomersAddress.class);
+        customersAddress.setCustomerId(customerId);
+        customersAddress = this.customersAddressRepository.saveAndFlush(customersAddress);
+        return this.modelMapper.map(customersAddress, CustomersAddressDto.class);
     }
 
-
+    @Override
+    @Transactional
+    public boolean deleteCustomerAddress(Integer addressId) {
+        try {
+            this.customersAddressRepository.deleteCustomersAddress(addressId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }
