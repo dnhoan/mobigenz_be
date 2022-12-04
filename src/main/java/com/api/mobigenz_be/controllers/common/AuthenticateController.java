@@ -180,9 +180,7 @@ public class AuthenticateController {
 
                     CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> emailSender.send(message), executor);
                     executor.shutdown();
-                    System.out.println(email +"   / " + otp);
                     session.setAttribute(email, otp);
-                    System.out.println(session.getAttribute(email));
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("true", "OTP đã được gửi đến email của bạn!", email)
@@ -208,15 +206,14 @@ public class AuthenticateController {
 
 
     @GetMapping("changepass")
-    public ResponseEntity<ResponseObject> changePass(@RequestParam String email,
-                                                     @RequestParam String otp,
-                                                     @RequestParam String password,
-                                                     @RequestParam String repassword,
+    public ResponseEntity<ResponseObject> changePass(@RequestParam(value = "email") String email,
+                                                     @RequestParam(value = "isOtp") String otp,
+                                                     @RequestParam(value = "password") String password,
+                                                     @RequestParam(value = "repassword") String repassword,
                                                      HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
             Object isOtp = session.getAttribute(email);
-            System.out.println(session.getAttribute(email));
             if(otp.equals(isOtp.toString()) && password.equals(repassword)){
                 Account account = accountService.findByEmail(email);
                 account.setPassword(passwordEncoder.encode(password));
