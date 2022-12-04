@@ -41,12 +41,12 @@ public class ManufacturerController {
     public ResponseEntity<ResponseDTO> saveManufacturer(@RequestBody ManufacturerDto manufacturerDto){
         System.out.println("name " + manufacturerDto.getManufacturerName());
         try {
-            ManufacturerDto manufacturerDto1 = this.manufacturersService.saveManufacturer(manufacturerDto);
+            manufacturerDto = this.manufacturersService.saveManufacturer(manufacturerDto);
             return ResponseEntity.ok(
                     ResponseDTO.builder()
-                            .status(OK)
-                            .statusCode(OK.value())
-                            .data(Map.of("manufacturer", manufacturerDto1))
+                            .status(CREATED)
+                            .statusCode(CREATED.value())
+                            .data(Map.of("manufacturer", manufacturerDto))
                             .timeStamp(LocalDateTime.now())
                             .build()
             );

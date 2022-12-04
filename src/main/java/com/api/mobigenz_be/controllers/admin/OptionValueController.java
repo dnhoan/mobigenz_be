@@ -39,8 +39,19 @@ public class OptionValueController {
         );
     }
 
-    @PostMapping("optionValue")
-    public OptionValueDto create(@RequestBody OptionValueDto optionsValueDto){
-        return this.optionValueService.saveOptionValue(optionsValueDto);
+    @PostMapping("optionValue/{option_id}")
+    public ResponseEntity<ResponseDTO> createOptionValue(
+            @PathVariable("option_id") Integer option_id,
+            @RequestBody String optionValueName
+    ) {
+        OptionValueDto optionValueDto = this.optionValueService.saveOptionValue(option_id, optionValueName);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("optionValue", optionValueDto))
+                        .status(CREATED)
+                        .statusCode(CREATED.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
     }
 }

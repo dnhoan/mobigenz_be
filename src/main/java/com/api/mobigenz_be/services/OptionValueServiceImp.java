@@ -82,10 +82,13 @@ public class OptionValueServiceImp implements OptionValueService{
     }
 
     @Transactional
-    public OptionValueDto saveOptionValue(OptionValueDto optionsValueDto){
-        OptionsValue optionsValue = this.optionValueRepository.save(this.optionValueDtoMapToOptionValue(optionsValueDto));
-
-        return this.optionValueMapToOptionValueDto(optionsValue);
+    public OptionValueDto saveOptionValue(Integer option_id, String optionValueName){
+        OptionsValue optionsValue = OptionsValue.builder().optionValueName(optionValueName).build();
+        optionsValue.setOptionId(Option.builder().id(option_id).build());
+        optionsValue.setOptionName("");
+        optionsValue.setCtime(LocalDateTime.now());
+        optionsValue = this.optionValueRepository.save(optionsValue);
+        return this.modelMapper.map(optionsValue, OptionValueDto.class);
 
     }
 

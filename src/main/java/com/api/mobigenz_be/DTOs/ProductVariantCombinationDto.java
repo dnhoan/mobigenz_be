@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductVariantCombinationDto {
+    private Integer id;
     private OptionDto optionDto;
     private OptionValueDto optionValueDto;
 }

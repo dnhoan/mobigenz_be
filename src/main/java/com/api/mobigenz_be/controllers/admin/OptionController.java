@@ -37,12 +37,12 @@ public class OptionController {
     }
 
     @PostMapping("options")
-    public ResponseEntity<ResponseDTO> createOption(@RequestBody OptionDto optionDto){
-        OptionDto optionDto1 = this.optionsService.insertOption(optionDto);
+    public ResponseEntity<ResponseDTO> createOption(@RequestBody String optionName){
+        OptionDto optionDto = this.optionsService.insertOption(optionName);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("options", optionDto1))
+                        .data(Map.of("option", optionDto))
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .timeStamp(LocalDateTime.now())

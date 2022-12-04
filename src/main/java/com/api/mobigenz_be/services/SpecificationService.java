@@ -13,5 +13,5 @@ public interface SpecificationService {
 
     List<SpecificationDto> getList();
 
-    SpecificationDto insertSpecification(SpecificationDto specificationDto);
+    SpecificationDto insertSpecification(Integer specification_group_id, String specification_name);
 }

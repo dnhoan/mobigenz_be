@@ -4,8 +4,10 @@ import com.api.mobigenz_be.DTOs.ProductSpecificationDto;
 import com.api.mobigenz_be.DTOs.SpecificationDto;
 import com.api.mobigenz_be.entities.ProductsSpecification;
 import com.api.mobigenz_be.entities.Specification;
+import com.api.mobigenz_be.entities.SpecificationGroup;
 import com.api.mobigenz_be.repositories.ProductSpecificationRepository;
 import com.api.mobigenz_be.repositories.SpecificationRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +22,8 @@ public class SpecificationServiceImp implements SpecificationService{
 
     @Autowired
     private SpecificationRepository specificationRepository;
-
-
+    @Autowired
+    private ModelMapper modelMapper;
     @Override
     public List<Specification> getSpecificationsBySpecificationGroupIdAndProductId(Integer specification_group_id, Integer product_id) {
         return this.specificationRepository.getSpecificationsBySpecificationGroupIdAndProductId(specification_group_id, product_id);
@@ -39,9 +41,12 @@ public class SpecificationServiceImp implements SpecificationService{
     }
 
     @Transactional
-    public SpecificationDto insertSpecification(SpecificationDto specificationDto){
-        Specification specification = this.specificationRepository.save(SpecificationDtoMapToSpecification(specificationDto));
-        return specificationMapToSpecificationDto(specification);
+    public SpecificationDto insertSpecification(Integer specification_group_id, String specification_name){
+        Specification specification = Specification.builder().specificationName(specification_name).build();
+        specification.setCtime(LocalDateTime.now());
+        specification.setSpecificationGroup(SpecificationGroup.builder().id(specification_group_id).build());
+        specification = this.specificationRepository.save(specification);
+        return this.modelMapper.map(specification, SpecificationDto.class);
 
     }
 

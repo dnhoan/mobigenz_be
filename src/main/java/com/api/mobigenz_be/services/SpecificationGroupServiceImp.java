@@ -8,6 +8,7 @@ import com.api.mobigenz_be.entities.Specification;
 import com.api.mobigenz_be.entities.SpecificationGroup;
 import com.api.mobigenz_be.repositories.ProductSpecificationRepository;
 import com.api.mobigenz_be.repositories.SpecificationGroupRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,8 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
     private SpecificationService specificationService;
     @Autowired
     private ProductSpecificationRepository productSpecificationRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public List<SpecificationGroupDto> getSpecificationGroupByProductId(Integer product_id) {
         return this.specificationGroupRepository.getSpecificationGroupByProductId((product_id))
@@ -44,11 +47,11 @@ public class SpecificationGroupServiceImp implements SpecificationGroupService {
 
 
     @Transactional
-    public SpecificationGroupDto insertSpecificationGroup(SpecificationGroupDto specificationGroupDto){
-        SpecificationGroup specificationGroup = this.specificationGroupRepository.save(specificationGroupDtoMapToSpecification(specificationGroupDto));
-
-        return this.specificationGroupMapToSpecificationGroupDto(specificationGroup);
-
+    public SpecificationGroupDto insertSpecificationGroup(String specificationGroupName){
+        SpecificationGroup specificationGroup = SpecificationGroup.builder().specificationGroupName(specificationGroupName).build();
+        specificationGroup.setCtime(LocalDateTime.now());
+        specificationGroup = this.specificationGroupRepository.save(specificationGroup);
+        return this.modelMapper.map(specificationGroup, SpecificationGroupDto.class);
     }
 
 
