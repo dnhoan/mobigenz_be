@@ -1,10 +1,12 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -31,6 +33,7 @@ public class Customer{
     private String phoneNumber;
 
     @Column(name = "birthday", nullable = false)
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDate birthday;
 
     @Column(name = "image")

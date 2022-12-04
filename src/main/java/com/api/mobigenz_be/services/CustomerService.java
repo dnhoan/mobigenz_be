@@ -124,6 +124,10 @@ public class CustomerService {
     }
 
 
+    public Customer getCustomerByCustomerID(Integer idCustomer){
+        return this.customerRepo.getCustomerByCustomerID(idCustomer);
+    }
+
 //    @Override
 //    public CustomerDTO getByCustomerName(String name) throws Exception {
 //        Optional<Customer> customer = this.customerRepo.findByCustomerName(name);

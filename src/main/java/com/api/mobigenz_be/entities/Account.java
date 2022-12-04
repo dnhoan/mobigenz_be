@@ -30,7 +30,6 @@ public class Account {
     @Column(name = "phonenumber", nullable = false, length = 15)
     private String phoneNumber;
 
-    @JsonIgnore
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
     private Customer customer;

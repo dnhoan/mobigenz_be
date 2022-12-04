@@ -47,6 +47,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
 
     Customer findByEmail(String email);
 
+    @Query("select acc.customer from Account acc join Customer  cus on acc.customer.id = cus.id where acc.customer.id = :idCustomer")
+    Customer getCustomerByCustomerID(@Param("idCustomer") Integer idCustomer);
+
 
     //@Query(name="Customer.findByUsername")
 //    @Query("select c from Customer c where c.customerName=:customer_name")
