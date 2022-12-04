@@ -39,13 +39,15 @@ public class ProductLineController {
 
     }
 
-    @PostMapping("productLine")
-    public ResponseEntity<ResponseDTO> saveProductLine(@RequestBody ProductLineDto productLineDto){
-        ProductLineDto productLineDto1 = this.productLineService.saveProductLine(productLineDto);
+    @PostMapping("productLine/{manufacturer_id}")
+    public ResponseEntity<ResponseDTO> saveProductLine(
+            @PathVariable("manufacturer_id") Integer manufacturer_id,
+            @RequestBody ProductLineDto productLineDto){
+        productLineDto = this.productLineService.saveProductLine(manufacturer_id, productLineDto);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("productLine", productLineDto1))
+                        .data(Map.of("productLine", productLineDto))
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .timeStamp(LocalDateTime.now())

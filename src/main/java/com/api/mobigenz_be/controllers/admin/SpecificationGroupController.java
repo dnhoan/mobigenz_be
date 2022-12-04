@@ -36,13 +36,13 @@ public class SpecificationGroupController {
         );
     }
 
-    @PostMapping("specificationGroups")
-    public ResponseEntity<ResponseDTO> insertSpecificationGroup(@RequestBody SpecificationGroupDto specificationGroupDto){
-        SpecificationGroupDto specificationGroupDto1 = this.specificationGroupService.insertSpecificationGroup(specificationGroupDto);
+    @PostMapping("specificationGroup")
+    public ResponseEntity<ResponseDTO> insertSpecificationGroup(@RequestBody String specificationGroupName){
+        SpecificationGroupDto specificationGroupDto = this.specificationGroupService.insertSpecificationGroup(specificationGroupName);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("specificationGroup", specificationGroupDto1))
+                        .data(Map.of("specificationGroup", specificationGroupDto))
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .timeStamp(LocalDateTime.now())

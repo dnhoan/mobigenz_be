@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,5 +44,6 @@ public class CartItem {
 	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_detail_id")
+    @Cascade(org.hibernate.annotations.CascadeType.LOCK)
     private ProductDetail productDetail;
 }

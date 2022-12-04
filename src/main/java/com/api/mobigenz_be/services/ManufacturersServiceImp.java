@@ -63,33 +63,25 @@ public class ManufacturersServiceImp implements ManufacturersService {
 
     @Transactional
     public ManufacturerDto saveManufacturer(ManufacturerDto manufacturerDto){
-       Manufacturer manufacturer = this.manufacturersRepository.save(manufacturerDtoMapToManufacturer(manufacturerDto));
-       return this.manufacturerMapToManufacturerDto(manufacturer);
+       Manufacturer manufacturer = this.modelMapper.map(manufacturerDto, Manufacturer.class);
+       manufacturer.setCtime(LocalDateTime.now());
+        manufacturer = this.manufacturersRepository.saveAndFlush(manufacturer);
+       return this.modelMapper.map(manufacturer, ManufacturerDto.class);
+    }
 
-
-//        manufacturer.setProductLines(new ArrayList<>());
-//        manufacturer.setCtime(LocalDateTime.now());
-//        manufacturer.getManufacturerName();
+//    private Manufacturer manufacturerDtoMapToManufacturer(ManufacturerDto manufacturerDto){
+//        Manufacturer manufacturer = Manufacturer
+//                .builder()
+//                .manufacturerName(manufacturerDto.getManufacturerName())
+//                .productLines(new ArrayList<>())
+//                .ctime(LocalDateTime.now())
+//                .build();
+//
 //        System.out.println("balbla");
-//        System.out.println(manufacturer.getManufacturerName());
-//        return this.manufacturersRepository.saveAndFlush(manufacturer);
-//        return this.modelMapper.map(manufacturer, ManufacturerDto.class);
-
-    }
-
-    private Manufacturer manufacturerDtoMapToManufacturer(ManufacturerDto manufacturerDto){
-        Manufacturer manufacturer = Manufacturer
-                .builder()
-                .manufacturerName(manufacturerDto.getManufacturerName())
-                .productLines(new ArrayList<>())
-                .ctime(LocalDateTime.now())
-                .build();
-
-        System.out.println("balbla");
-       System.out.println(manufacturer.getManufacturerName());
-
-        return manufacturer;
-    }
+//       System.out.println(manufacturer.getManufacturerName());
+//
+//        return manufacturer;
+//    }
 
 
 

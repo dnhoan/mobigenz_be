@@ -40,13 +40,15 @@ public class SpecificationController {
 
     }
 
-    @PostMapping("specifications")
-    public ResponseEntity<ResponseDTO> insertSpecification(@RequestBody SpecificationDto specificationDto) {
-        SpecificationDto specificationDto1 = this.specificationService.insertSpecification(specificationDto);
+    @PostMapping("specification/{specification_group_id}")
+    public ResponseEntity<ResponseDTO> insertSpecification(
+            @PathVariable("specification_group_id") Integer specification_group_id,
+            @RequestBody String specification_name) {
+        SpecificationDto specificationDto = this.specificationService.insertSpecification(specification_group_id, specification_name);
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("specifications", specificationDto1))
+                        .data(Map.of("specification", specificationDto))
                         .status(CREATED)
                         .statusCode(CREATED.value())
                         .timeStamp(LocalDateTime.now())

@@ -10,5 +10,5 @@ public interface SpecificationGroupService {
 
     List<SpecificationGroupDto> getSpecificationGroup();
 
-    SpecificationGroupDto insertSpecificationGroup (SpecificationGroupDto specificationGroupDto);
+    SpecificationGroupDto insertSpecificationGroup (String specificationGroupName);
 }

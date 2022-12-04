@@ -7,5 +7,5 @@ import java.util.List;
 public interface ProductLineService {
 
     List<ProductLineDto> getProductLine();
-    ProductLineDto saveProductLine(ProductLineDto productLineDto);
+    ProductLineDto saveProductLine(Integer manufacturerId, ProductLineDto productLineDto);
 }
