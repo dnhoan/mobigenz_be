@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -58,4 +59,18 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
                     @Param("newOrderStatus") Integer newOrderStatus,
                      @Param("note") String note,
                      @Param("order_id") Integer order_id);
+
+
+
+
+    @Query("select pd.productName, sum(od.amount) as amount,sum(od.priceSell) as priceSell from OrderDetail od " +
+            "join Order odr on od.order.id = odr.id " +
+            "join ProductDetail pds on od.productDetail.id = pds.id " +
+            "join Product pd on pds.product.id = pd.id " +
+            "where odr.orderStatus =5 " +
+            "group by pd.productName " +
+            "order by amount desc ")
+    List<Object[]> statisticsByBestSellingProducts();
+
+
 }

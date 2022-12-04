@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,23 @@ public class OrderShopController {
                         .timeStamp(LocalDateTime.now())
                         .build()
         );
+
+    }
+
+    @GetMapping("statisticsByBestSellingProducts")
+    public List<Object[]> tk1(){
+
+
+        return this.orderService.statisticsByBestSellingProducts();
+
+//        return ResponseEntity.ok(
+//                ResponseDTO.builder()
+//                        .data(Map.of("order", this.orderService.dthu(time1, time2)))
+//                        .status(OK)
+//                        .statusCode(OK.value())
+//                        .timeStamp(LocalDateTime.now())
+//                        .build()
+//        );
 
     }
 
