@@ -15,7 +15,6 @@ import com.api.mobigenz_be.repositories.CustomerRepository;
 
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public class CustomerService {
 
     public PageDTO<CustomerDTO> getAll(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
-        Page<Customer> page = this.customerRepo.getAllById(pageable);
+        Page<Customer> page = this.customerRepo.getAll(pageable);
         List<CustomerDTO> customerDTOList = page.stream().map(u -> this.modelMapper.map(u, CustomerDTO.class)).collect(Collectors.toList());
         return new PageDTO<CustomerDTO>(
                 page.getTotalPages(),
@@ -52,10 +51,8 @@ public class CustomerService {
 
 
     public CustomerDTO create(Customer customer) throws SQLException {
-        customer.setCtime(LocalDate.now());
         this.customerRepo.saveAndFlush(customer);
         return this.modelMapper.map(customer, CustomerDTO.class);
-//        return new CustomerDTO();
     }
 
 //    public CustomerDTO add(Customer customer) throws Exception {
@@ -69,7 +66,7 @@ public class CustomerService {
 
 
     public CustomerDTO update(Customer customer) {
-        Customer ctm = this.customerRepo.save(customer);
+        customer = this.customerRepo.save(customer);
         return this.modelMapper.map(customer, CustomerDTO.class);
     }
 
@@ -89,11 +86,14 @@ public class CustomerService {
         return this.modelMapper.map(customer, CustomerDTO.class);
     }
 
+    public Customer findCusById(Integer id){
+        return this.customerRepo.findCusById(id);
+    }
 
 
-    public List<CustomerDTO> searchById() {
+    public List<CustomerDTO> getAllCus() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Customer> page = this.customerRepo.getAllById(pageable);
+        Page<Customer> page = this.customerRepo.getAll(pageable);
 
 
         List<CustomerDTO> customerDTOList = page.stream().map(u ->

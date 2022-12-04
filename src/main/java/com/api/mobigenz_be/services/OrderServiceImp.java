@@ -62,6 +62,7 @@ public class OrderServiceImp implements OrderService {
     public OrderDto saveOrder(OrderDto orderDto) {
         Order order = Order
                 .builder()
+                .purchaseType(1)
                 .address(orderDto.getAddress())
                 .carrier(orderDto.getCarrier())
                 .checkout(orderDto.getCheckout())
