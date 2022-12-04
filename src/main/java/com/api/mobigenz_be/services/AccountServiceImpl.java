@@ -100,5 +100,4 @@ public class AccountServiceImpl implements AccountService {
         return this.accountRepository.getAccountLogin(email, password);
     }
 
-
 }

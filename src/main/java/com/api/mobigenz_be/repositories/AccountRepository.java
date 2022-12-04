@@ -2,6 +2,7 @@ package com.api.mobigenz_be.repositories;
 
 import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.entities.Account;
+import com.api.mobigenz_be.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,5 +40,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     @Query("select acc from Account acc join Customer cus on acc = cus.account where cus.id =:customer")
     Account getAccountByCustomer(@Param("customer") Integer customer);
+
+
 
 }
