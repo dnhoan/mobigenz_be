@@ -9,7 +9,7 @@ CREATE TABLE customers
     gender int,
     customer_type int,
     account_id bigint,
-    citizen_identify_cart varchar(12) unique null,
+    citizen_identify_cart varchar(12) null,
     ctime timestamp NOT NULL DEFAULT current_timestamp,
     mtime timestamp NULL,
     status int,
