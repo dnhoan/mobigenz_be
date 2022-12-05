@@ -199,7 +199,8 @@ public class CustomerController {
                if(account != null){
                    account.setCtime(LocalDateTime.now());
                    account.setPhoneNumber(customer.getPhoneNumber());
-                   AccountDTO accountDTO = this.accountService.add(account);
+                   this.accountService.add(account);
+                   customer.setBirthday(customer.getBirthday());
                    customer.setAccount(account);
                }
                 this.customerService.update(customer);

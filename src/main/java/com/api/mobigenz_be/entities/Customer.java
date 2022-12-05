@@ -33,7 +33,7 @@ public class Customer{
     private String phoneNumber;
 
     @Column(name = "birthday", nullable = false)
-    @JsonFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @Column(name = "image")

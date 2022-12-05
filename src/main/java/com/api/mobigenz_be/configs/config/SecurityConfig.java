@@ -70,11 +70,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/forgot").permitAll()
                 .antMatchers("/api/getOTP").permitAll()
-                .antMatchers("/api/**").permitAll()
-//                .antMatchers("/api/admin/**").authenticated()
-//                .antMatchers("/api/admin/**").hasAuthority(Constant.Role.Admin)
 //                .antMatchers("/api/user/**").authenticated()
 //                .antMatchers("/api/user/**").hasAnyAuthority(Constant.Role.Admin,Constant.Role.User)
+//                .antMatchers("/api/admin/**").authenticated()
+//                .antMatchers("/api/admin/**").hasAuthority(Constant.Role.Admin)
+                .antMatchers("/api/**").permitAll()
+
 
                 .and()
                 .httpBasic()
