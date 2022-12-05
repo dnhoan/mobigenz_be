@@ -1,22 +1,21 @@
-package com.api.mobigenz_be.controllers.admin;
+package com.api.mobigenz_be.controllers.common;
 
 import com.api.mobigenz_be.DTOs.AccountDTO;
-import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.configs.securities.jwt.JWTFilter;
 import com.api.mobigenz_be.configs.securities.jwt.TokenProvider;
 import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.controllers.admin.vm.LoginVM;
-import com.api.mobigenz_be.entities.Account;
-import com.api.mobigenz_be.entities.Customer;
-import com.api.mobigenz_be.entities.ResponseObject;
-import com.api.mobigenz_be.entities.Role;
+import com.api.mobigenz_be.entities.*;
 import com.api.mobigenz_be.repositories.AccountRepository;
 import com.api.mobigenz_be.services.*;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -28,8 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -49,6 +50,9 @@ public class AuthenticateController {
     }
 
     @Autowired
+    public JavaMailSender emailSender;
+
+    @Autowired
     private AccountService accountService;
 
     @Autowired
@@ -66,8 +70,11 @@ public class AuthenticateController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private OtpService otpService;
 
-    @PostMapping("/login")
+
+    @PostMapping("login")
     public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody LoginVM loginVM) {
 //		Tạo chuỗi authentication từ email và password (object LoginRequest
         try {
@@ -129,18 +136,16 @@ public class AuthenticateController {
                 customer.setCustomerName(name);
                 customer.setAccount(account);
                 customer.setPhoneNumber(account.getPhoneNumber());
-                customer.setBirthday(LocalDate.parse("2000-01-01"));
+                customer.setBirthday(LocalDate.of(1970, 1, 1));
                 customer.setEmail(account.getEmail());
                 customer.setStatus(1);
-
-
                 customer.setCtime(LocalDate.now());
 
                 account.setCustomer(customer);
 //          CustomerDTO customerDTO = this.customerService.create(customer);
                 AccountDTO accountDTO = this.accountService.add(account);
                 return ResponseEntity.status(OK).body(
-                        new ResponseObject("true", "Đăng ký tài khoản thành công!", accountDTO)
+                        new ResponseObject("true", "Đăng ký tài khoản thành công!", "")
                 );
             }
 
@@ -152,39 +157,83 @@ public class AuthenticateController {
 
 
     @GetMapping("forgot")
-    public ResponseEntity<ResponseObject> forgot(@RequestParam(name = "email") String email, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public ResponseEntity<ResponseObject> forgot(@RequestParam(value = "email") String email) {
         Account account = this.accountRepository.findAccountByEmail(email);
         try {
             if (account == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new ResponseObject("false", "Email ko ton tai!", "")
+                        new ResponseObject("false", "Email không có trong hệ thống!", "")
                 );
             } else {
-                if (email.equals(account.getEmail())) {
-                    Random random = new Random();
-                    int otp = random.nextInt(900000) + 100000;
-                    emailSenderService.sendSimpleEmail(email, "Mã OTP", "Mã OTP của bạn là: " + otp);
-                    session.setAttribute(email, otp);
-                    System.out.println(session);
+                ExecutorService executor = Executors.newFixedThreadPool(10);
+                Random random = new Random();
+                int otp = random.nextInt(900000) + 100000;
+                SimpleMailMessage message = new SimpleMailMessage();
+
+                message.setTo(email);
+                message.setSubject("Mã OTP xác thực tài khoản:");
+                message.setText("Mã OTP của bạn là: " + otp);
+                Otp isOtp = new Otp();
+                isOtp.setOtpCode(otp);
+                isOtp.setEmailAccount(account.getEmail());
+                isOtp.setStatus(1);
+                isOtp.setIssue_At(System.currentTimeMillis() + 300000);
+                Optional<Otp> otp1 = this.otpService.findByEmail(email);
+                if (otp1.isPresent()) {
+                    isOtp.setId(otp1.get().getId());
                 }
+                this.otpService.save(isOtp);
+
+                CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> emailSender.send(message), executor);
+                executor.shutdown();
+
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("true", "OTP đã được gửi đến email của bạn!", "")
+                        new ResponseObject("true", "OTP đã được gửi đến email của bạn!", email)
                 );
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.status(BAD_REQUEST).body(
+                    new ResponseObject("false", "Lấy mã OTP thất bại!", "")
+            );
         }
-        return null;
     }
 
-    @GetMapping("getOTP")
-    public ResponseEntity<ResponseObject> getOtp(@RequestParam(name = "email") String email, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Object isOtp = session.getAttribute(email);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("true", "OTP la: " + isOtp, "")
-        );
+//    @GetMapping("getOTP")
+//    public ResponseEntity<ResponseObject> getOTP(@RequestParam(value = "email") String email) {
+//        Object isOtp = session.getAttribute(email);
+//        return ResponseEntity.status(OK).body(
+//                new ResponseObject("true", "OTP la: " + isOtp, isOtp)
+//        );
+//    }
+
+
+    @GetMapping("changepass")
+    public ResponseEntity<ResponseObject> changePass(@RequestParam(value = "email") String email,
+                                                     @RequestParam(value = "isOtp") String otp,
+                                                     @RequestParam(value = "password") String password,
+                                                     @RequestParam(value = "repassword") String repassword
+    ) {
+        try {
+            Optional<Otp> isOtp = this.otpService.findByEmail(email);
+            if (isOtp.isPresent() && (otp.equals(isOtp.get().getOtpCode().toString())) && password.equals(repassword)) {
+                Account account = accountService.findByEmail(email);
+                account.setPassword(passwordEncoder.encode(password));
+                accountService.update(account);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("true", "Thay đổi mật khẩu thành công", "")
+                );
+            } else {
+                return ResponseEntity.status(BAD_REQUEST).body(
+                        new ResponseObject("false", "OTP không chính xác! Kiểm tra lại mã OTP trong gmail của bạn!", "")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ResponseObject("false", "Thay đổi mật khẩu thất bại", ""));
+        }
     }
+
 }
