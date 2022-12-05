@@ -15,6 +15,7 @@ import com.api.mobigenz_be.repositories.CustomerRepository;
 
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +52,7 @@ public class CustomerService {
 
 
     public CustomerDTO create(Customer customer) throws SQLException {
+        customer.setCtime(LocalDate.now());
         this.customerRepo.saveAndFlush(customer);
         return this.modelMapper.map(customer, CustomerDTO.class);
     }

@@ -6,6 +6,7 @@ import com.api.mobigenz_be.repositories.ProductLineRepository;
 import com.api.mobigenz_be.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,18 @@ public class ProductServiceImp implements ProductService {
         return products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductDto> searchProducts(String searchTerm, boolean sortPriceIncrease, Float min_price, Float max_price, Integer manufacturer) {
+        List<Product> products = this.productRepository
+                .searchProductsShop(
+                        searchTerm,
+                        manufacturer,
+                        min_price,
+                        max_price,
+                        Sort.by(sortPriceIncrease ? Sort.Direction.ASC : Sort.Direction.DESC, "minPrice", "maxPrice"));
+        return  products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
+    }
+
     public ProductDto saveProduct(ProductDto productDto) {
         Product product = this.productRepository.save(this.productDtoMapToProduct(productDto));
         return this.productMapToProductDto(product);
@@ -65,6 +78,8 @@ public class ProductServiceImp implements ProductService {
                 .ctime(LocalDateTime.now())
                 .images(String.join(", ", productDto.getImages()))
                 .status(1)
+                .minPrice(productDto.getMinPrice())
+                .maxPrice(productDto.getMaxPrice())
                 .id(productDto.getId())
                 .detail(productDto.getDetail())
                 .description(productDto.getDescription())
@@ -174,6 +189,8 @@ public class ProductServiceImp implements ProductService {
                 .description(product.getDescription())
                 .ctime(product.getCtime())
                 .mtime(product.getMtime())
+                .maxPrice(product.getMaxPrice())
+                .minPrice(product.getMinPrice())
                 .detail(product.getDetail())
                 .images(Arrays.asList(product.getImages().split(", ")))
                 .manufacturerDto(manufacturerDto)

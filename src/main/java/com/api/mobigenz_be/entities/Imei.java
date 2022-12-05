@@ -1,10 +1,7 @@
 package com.api.mobigenz_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "imei")
 public class Imei{
