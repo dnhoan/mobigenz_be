@@ -12,6 +12,3 @@ create table order_details
     constraint fk_orders FOREIGN KEY (order_id) REFERENCES orders(id),
     constraint fk_product_details FOREIGN KEY (product_detail_id) REFERENCES product_details(id)
 );
-
-ALTER TABLE imei ADD order_detail_id int;
-ALTER TABLE imei ADD CONSTRAINT fk_order_details FOREIGN KEY (order_detail_id) REFERENCES order_details(id);
