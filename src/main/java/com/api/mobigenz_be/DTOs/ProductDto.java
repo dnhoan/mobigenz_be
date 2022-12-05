@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import javax.persistence.Column;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +37,10 @@ public class ProductDto {
     private ProductLineDto productLineDto;
 
     private Integer status;
+
+    private Float minPrice;
+
+    private Float maxPrice;
 
     private List<ProductDetailDto> productDetailDtos;
 

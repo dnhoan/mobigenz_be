@@ -68,6 +68,13 @@ public class Product {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "min_price")
+    private Float minPrice;
+
+    @Column(name = "max_price")
+    private Float maxPrice;
+
+
     @Column(name = "images")
     private String images;
 

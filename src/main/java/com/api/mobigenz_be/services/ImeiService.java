@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.ImeiDto;
+import com.api.mobigenz_be.DTOs.ImeiUpload;
 import com.api.mobigenz_be.entities.Imei;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,10 @@ public interface ImeiService {
     List<ImeiDto> addImeisToOrderDetail(List<ImeiDto> imeiDtoList, Integer order_detail_id,Integer product_detail_id);
 
     ImeiDto save(ImeiDto imeiDto);
+
+    List<ImeiDto> batchSave(Integer productDetailId, List<ImeiUpload> imeiUploads);
+
+    List<ImeiUpload> validateBatchImei(Integer productDetailId, List<ImeiUpload> imeiUploads);
 
     boolean removeImei(Integer id);
 

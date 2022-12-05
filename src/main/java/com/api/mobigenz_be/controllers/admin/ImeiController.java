@@ -1,6 +1,7 @@
 package com.api.mobigenz_be.controllers.admin;
 
 import com.api.mobigenz_be.DTOs.ImeiDto;
+import com.api.mobigenz_be.DTOs.ImeiUpload;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.constants.UrlConstant;
 import com.api.mobigenz_be.services.ImeiService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +87,26 @@ public class ImeiController {
                 .statusCode(HttpStatus.CREATED.value())
                 .timeStamp(LocalDateTime.now())
                 .data(Map.of("imei", resImeiDto))
+                .build());
+    }
+    @PostMapping("imeis/{productDetailId}")
+    public ResponseEntity<ResponseDTO> batchSave(
+            @PathVariable("productDetailId") Integer productDetailId,
+            @RequestBody List<ImeiUpload> imeiUploads
+    ) {
+        boolean invalid = true;
+        List<ImeiDto> imeiDtos = new ArrayList<>();
+        List<ImeiUpload> imeiUploadValidate = this.imeiService.validateBatchImei(productDetailId,imeiUploads);
+        if(imeiUploadValidate.isEmpty()) {
+            invalid = false;
+            imeiDtos = this.imeiService.batchSave(productDetailId, imeiUploads);
+        }
+        return ResponseEntity.ok(ResponseDTO
+                .builder()
+                .status(invalid ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED)
+                .statusCode(invalid ? HttpStatus.BAD_REQUEST.value() : HttpStatus.CREATED.value())
+                .timeStamp(LocalDateTime.now())
+                .data(Map.of("data", invalid ? imeiUploadValidate: imeiDtos))
                 .build());
     }
     @PutMapping("exchangeImeiTheSameOrderDetail")

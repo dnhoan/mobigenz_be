@@ -1,7 +1,7 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.ImeiDto;
-import com.api.mobigenz_be.DTOs.ProductDetailDto;
+import com.api.mobigenz_be.DTOs.ImeiUpload;
 import com.api.mobigenz_be.entities.Imei;
 import com.api.mobigenz_be.entities.OrderDetail;
 import com.api.mobigenz_be.entities.ProductDetail;
@@ -12,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,6 +71,35 @@ public class ImeiServiceImp implements ImeiService {
 
     @Override
     @Transactional
+    public List<ImeiDto> batchSave(Integer productDetailId, List<ImeiUpload> imeiUploads) {
+        List<Imei> imeis = imeiUploads.stream().map(imeiUpload ->
+                Imei
+                        .builder()
+                        .imei(imeiUpload.getImei())
+                        .status(1)
+                        .productDetail(ProductDetail.builder().id(productDetailId).build())
+                        .build()
+        ).collect(Collectors.toList());
+        imeis = this.imeiRepository.saveAllAndFlush(imeis);
+        return imeis.stream().map(imei -> this.modelMapper.map(imei, ImeiDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<ImeiUpload> validateBatchImei(Integer productDetailId, List<ImeiUpload> imeiUploads) {
+        AtomicBoolean hasError = new AtomicBoolean(false);
+            imeiUploads = imeiUploads.stream().peek(imeiUpload -> {
+                if(this.imeiRepository.existsImeiByImei(imeiUpload.getImei())) {
+                    imeiUpload.setError("Imei đã tồn tại");
+                    hasError.set(true);
+                }
+            }).collect(Collectors.toList());
+
+        return hasError.get() ? imeiUploads : new ArrayList<>();
+    }
+
+    @Override
+    @Transactional
     public boolean removeImei(Integer id) {
         try {
             this.imeiRepository.deleteById(id);
@@ -86,7 +116,7 @@ public class ImeiServiceImp implements ImeiService {
         System.out.println(newImei + " " + oldImei + " " + orderDetailId);
         this.imeiRepository.deleteOrderDetailToImei(oldImei);
         this.imeiRepository.exchangeImeiTheSameOrderDetail(orderDetailId, newImei);
-        return  true;
+        return true;
     }
 
     @Override

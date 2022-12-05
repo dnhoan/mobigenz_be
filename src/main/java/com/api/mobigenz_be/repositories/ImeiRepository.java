@@ -27,4 +27,5 @@ public interface ImeiRepository extends JpaRepository<Imei, Integer> {
     void exchangeImeiTheSameOrderDetail(@Param("orderDetailId") Integer orderDetailId,
                                  @Param("id") Integer id);
 
+    boolean existsImeiByImei(String imei);
 }
