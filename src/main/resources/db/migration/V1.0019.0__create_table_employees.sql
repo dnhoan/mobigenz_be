@@ -16,5 +16,7 @@ CREATE TABLE employees
     day_off timestamp NULL,
     note text,
     status int default 1,
+    ctime timestamp DEFAULT current_timestamp,
+    mtime timestamp DEFAULT NULL,
     constraint fk_accounts FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
