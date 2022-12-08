@@ -2,7 +2,6 @@ create table orders
 (
     id serial primary key,
     customer_id int,
-    transaction_id int,
     recipient_name varchar(100),
     recipient_phone varchar(100),
     recipient_email varchar(100),
@@ -14,11 +13,13 @@ create table orders
     quantity int,
     ship_date timestamp,
     carrier varchar(100),
-    ctime timestamp NOT NULL DEFAULT current_timestamp ,
-    mtime timestamp NULL DEFAULT NULL,
+    ctime timestamp  DEFAULT current_timestamp ,
+    mtime timestamp  DEFAULT NULL,
     pay_status int,
     order_status int,
     note text,
-    constraint fk_transactions FOREIGN KEY (transaction_id) REFERENCES transactions(id),
+    cancel_note text,
+    delivery int,
+    purchaseType int,
     constraint fk_customers FOREIGN KEY (customer_id) REFERENCES customers(id)
 );

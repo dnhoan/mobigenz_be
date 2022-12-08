@@ -1,1 +1,0 @@
-alter table orders add column purchaseType int
