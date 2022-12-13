@@ -1,2 +1,2 @@
-INSERT INTO accounts(id,email,password,phoneNumber)
-VALUES (1,'admin@gmail.com','$2a$10$ASLr8t9/14uH2mSuzhOIsuZ3iwHlrq3J51ZzTyZxVD243Qr1lbYIS','0967973101');
+INSERT INTO accounts(email,password,phoneNumber)
+VALUES ('admin@gmail.com','$2a$10$Gdmr23PMbSAn0btkkTj9N.1qQSHNR25Nyt.ZUTC0YaelfiNcY7.sS','0967973101');
