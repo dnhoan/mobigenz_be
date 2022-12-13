@@ -193,21 +193,30 @@ public class CustomerController {
     @PutMapping("customers")
     public ResponseEntity<ResponseObject> updateCustomer(@RequestBody Customer customer) {
         try {
-            Optional<Customer> cus = this.customerRepository.findById(customer.getId());
-            if (cus.isPresent()) {
-                Account account = cus.get().getAccount();
-               if(account != null){
-                   account.setCtime(LocalDateTime.now());
-                   account.setPhoneNumber(customer.getPhoneNumber());
-                   this.accountService.add(account);
-                   customer.setBirthday(customer.getBirthday());
-                   customer.setAccount(account);
-               }
-                this.customerService.update(customer);
-                List<CustomerDTO> customerDTOList = this.customerService.getAllCus();
-                return ResponseEntity.status(OK).body(
-                        new ResponseObject("true", "Cập nhật khách hàng thành công!", customerDTOList)
-                );
+            Customer cus = this.customerRepository.checkCustomer(customer.getId(), customer.getPhoneNumber());
+            if (cus != null) {
+                    return ResponseEntity.status(BAD_REQUEST).body(
+                            new ResponseObject("false", "Số điện thoại đã tồn tại!", cus.getPhoneNumber())
+                    );
+                }else {
+                Optional<Customer> customer1 = this.customerRepository.findById(customer.getId());
+                if (customer1.isPresent())
+                {
+                    Account account = customer1.get().getAccount();
+                    if (account != null) {
+                        account.setCtime(LocalDateTime.now());
+                        account.setPhoneNumber(customer.getPhoneNumber());
+                        this.accountService.add(account);
+                        customer.setBirthday(customer.getBirthday());
+                        customer.setAccount(account);
+                    }
+                    this.customerService.update(customer);
+                    List<CustomerDTO> customerDTOList = this.customerService.getAllCus();
+                    return ResponseEntity.status(OK).body(
+                            new ResponseObject("true", "Cập nhật khách hàng thành công!", customerDTOList)
+                    );
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -52,6 +52,8 @@ public class CustomerService {
 
 
     public CustomerDTO create(Customer customer) throws SQLException {
+        customer.setCustomerType(0);
+        customer.setStatus(1);
         customer.setCtime(LocalDate.now());
         this.customerRepo.saveAndFlush(customer);
         return this.modelMapper.map(customer, CustomerDTO.class);

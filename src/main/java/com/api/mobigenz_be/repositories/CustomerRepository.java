@@ -50,6 +50,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
     @Query("select acc.customer from Account acc join Customer  cus on acc.customer.id = cus.id where acc.customer.id = :idCustomer")
     Customer getCustomerByCustomerID(@Param("idCustomer") Integer idCustomer);
 
+    @Query("select cus from Customer cus where cus.id != :id and (cus.phoneNumber = :phoneNumber) ")
+    Customer checkCustomer(Integer id, String phoneNumber);
+
 
     //@Query(name="Customer.findByUsername")
 //    @Query("select c from Customer c where c.customerName=:customer_name")
@@ -69,7 +72,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
 
 
 
-   @Query("select c from Customer c join CustomersAddress ca on c = ca.customerId where ca.id =:customer_id ")
+   @Query("select c from Customer c join CustomersAddress ca on c.id = ca.customerId where ca.id =:customer_id ")
     Customer getCustomerByCustomerAddressId(@Param("customer_id") Integer customer_id);
 
 //    @Query("select cus from Customer cus where cus.id =:id")
