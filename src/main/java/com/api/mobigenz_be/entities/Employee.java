@@ -1,5 +1,7 @@
 package com.api.mobigenz_be.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -25,17 +27,19 @@ public class Employee {
     @Column(name = "employee_code", nullable = false, length = 100)
     private String employeeCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private Account account;
 
     @Column(name = "phone_number", nullable = false, length = 12)
     private String phoneNumber;
 
-    @Column(name = "address", nullable = false, length = 100)
+    @Column(name = "address", length = 100)
     private String address;
 
     @Column(name = "birthday")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @Column(name = "gender")
@@ -55,9 +59,11 @@ public class Employee {
     private Float salary;
 
     @Column(name = "time_onboard")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate timeOnboard;
 
     @Column(name = "day_off")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dayOff;
 
     @Column(name = "note")

@@ -34,6 +34,10 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
     private Customer customer;
 
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
+    private Employee employee;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "PERMISSION",

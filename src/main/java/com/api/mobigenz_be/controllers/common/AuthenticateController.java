@@ -126,7 +126,7 @@ public class AuthenticateController {
                 String email = account.getEmail();
                 String name = account.getEmail().substring(0, email.indexOf("@"));
                 Set<Role> roles = new HashSet<>();
-                Role role = this.roleServiceImpl.getRoleById(1);
+                Role role = this.roleServiceImpl.getRoleById(3);
                 roles.add(role);
                 account.setRoles(roles);
                 account.setPassword(password);

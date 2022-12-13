@@ -53,6 +53,7 @@ public class AccountServiceImpl implements AccountService {
                 return null;
             }
         }
+        account.setStatus(1);
         account.setCtime(LocalDateTime.now());
         this.accountRepository.save(account);
         return new AccountDTO();
