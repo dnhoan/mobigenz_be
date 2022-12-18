@@ -11,7 +11,7 @@ public interface ProductService {
 
     List<ProductDto> getProducts(String searchTerm);
     List<ProductDto> searchProducts(String searchTerm, boolean sortPriceIncrease, Float min_price,  Float max_price,Integer manufacturer);
-    ProductDto saveProduct(ProductDto productDto);
+    Integer saveProduct(ProductDto productDto);
     ProductDto getProductDtoById(Integer id);
 
 }

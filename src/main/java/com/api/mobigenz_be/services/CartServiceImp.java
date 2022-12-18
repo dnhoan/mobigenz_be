@@ -47,7 +47,6 @@ public class CartServiceImp implements CartService {
 				.id(cart.getId())
 				.totalMoney(cart.getTotalMoney())
 				.itemsAmount(cart.getItemsAmount())
-				.mtime(cart.getMtime())
 				.cartItemDtos(cartItemDTOs)
 				.build();
 	}
@@ -90,7 +89,10 @@ public class CartServiceImp implements CartService {
 				.builder()
 				.id(cartItemDTO.getId())
 				.amount(cartItemDTO.getAmount())
-				.productDetail(this.cartItemRepository.getProductDetailById(cartItemDTO.getProductDetailCartDto().getId()))
+				.productDetailId(cartItemDTO.getProductDetailCartDto().getId())
+//				.productDetail(this.cartItemRepository.getProductDetailById(
+//						cartItemDTO.getProductDetailCartDto().getId()
+//				))
 				.build();
 	}
 

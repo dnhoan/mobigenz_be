@@ -15,6 +15,6 @@ import java.util.List;
 public interface ManufacturersRepository extends JpaRepository<Manufacturer, Integer> {
 
     @Query("select m " +
-            "from ProductLine pl join Manufacturer m on pl.manufacturer = m where pl.id = :product_line_id")
+            "from Manufacturer m join ProductLine pl on pl.manufacturer.id = m.id where pl.id = :product_line_id")
     Manufacturer getManufacturerByProductLineId(@Param("product_line_id") Integer product_line_id);
 }

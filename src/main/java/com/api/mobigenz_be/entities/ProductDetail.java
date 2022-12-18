@@ -61,10 +61,10 @@ public class ProductDetail {
     @OneToMany(mappedBy = "productDetail",fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "productDetail",fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private List<CartItem> cartItems;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "productDetail",fetch = FetchType.LAZY)
+//    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+//    private List<CartItem> cartItems;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

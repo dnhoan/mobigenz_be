@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,10 +41,13 @@ public class CartItem {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cart_id")
     private Cart cart;
-	
-	@JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_detail_id")
-    @Cascade(org.hibernate.annotations.CascadeType.LOCK)
-    private ProductDetail productDetail;
+
+    @Column(name = "product_detail_id")
+    private Integer productDetailId;
+
+//	@JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_detail_id")
+//    @Cascade(CascadeType.LOCK)
+//    private ProductDetail productDetail;
 }

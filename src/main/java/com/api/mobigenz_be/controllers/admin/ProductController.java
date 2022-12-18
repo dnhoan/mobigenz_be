@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @CrossOrigin(UrlConstant.baseUrlFE)
@@ -41,13 +40,16 @@ public class ProductController {
 
     @PostMapping("product")
     public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductDto productDto) {
-        ProductDto productDto1 = this.productService.saveProduct(productDto);
+        Integer res = this.productService.saveProduct(productDto);
+        if(res > 0) {
+            productDto = this.productService.getProductDtoById(res);
+        }
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("product", productDto1))
-                        .status(CREATED)
-                        .statusCode(CREATED.value())
+                        .data(Map.of("product", productDto))
+                        .status(res > 0 ? CREATED : INTERNAL_SERVER_ERROR)
+                        .statusCode(res > 0 ? CREATED.value() : INTERNAL_SERVER_ERROR.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );
@@ -55,13 +57,17 @@ public class ProductController {
 
     @PutMapping("product")
     public ResponseEntity<ResponseDTO> updateProduct(@RequestBody ProductDto productDto) {
-        ProductDto productDto1 = this.productService.saveProduct(productDto);
+        Integer res = this.productService.saveProduct(productDto);
+        if(res > 0) {
+            productDto = this.productService.getProductDtoById(res);
+        }
         return ResponseEntity.ok(
                 ResponseDTO
                         .builder()
-                        .data(Map.of("product", productDto1))
-                        .status(OK)
-                        .statusCode(OK.value())
+                        .data(Map.of("product", productDto))
+                        .status(res > 0 ? OK : INTERNAL_SERVER_ERROR)
+                        .statusCode(res > 0 ? OK.value() : INTERNAL_SERVER_ERROR.value())
+                        .timeStamp(LocalDateTime.now())
                         .timeStamp(LocalDateTime.now())
                         .build()
         );

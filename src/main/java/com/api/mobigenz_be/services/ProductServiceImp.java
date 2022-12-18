@@ -48,17 +48,24 @@ public class ProductServiceImp implements ProductService {
                         min_price,
                         max_price,
                         Sort.by(sortPriceIncrease ? Sort.Direction.ASC : Sort.Direction.DESC, "minPrice", "maxPrice"));
-        return  products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
+        return products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
     }
 
-    public ProductDto saveProduct(ProductDto productDto) {
-        Product product = this.productRepository.save(this.productDtoMapToProduct(productDto));
-        return this.productMapToProductDto(product);
+    @Transactional
+    public Integer saveProduct(ProductDto productDto) {
+        try {
+            Product product = this.productDtoMapToProduct(productDto);
+            product = this.productRepository.saveAndFlush(product);
+            return product.getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     public ProductDto getProductDtoById(Integer id) {
-          Product product = this.productRepository.getProductById(id);
-          return this.productMapToProductDto(product);
+        Product product = this.productRepository.getProductById(id);
+        return this.productMapToProductDto(product);
 //        Optional<Product> productDtoOptional = this.productRepository.findById(id);
 //        return productDtoOptional.isPresent() ? this.productMapToProductDto(productDtoOptional.get()) : new ProductDto();
     }
@@ -89,24 +96,24 @@ public class ProductServiceImp implements ProductService {
         List<ProductsSpecificationGroup> productsSpecificationGroups = productDto.getSpecificationGroupDtos()
                 .stream()
                 .map(specificationGroupDto -> {
-            ProductsSpecificationGroup productsSpecificationGroup = ProductsSpecificationGroup
-                    .builder()
-                    .specificationGroup(this.modelMapper.map(specificationGroupDto, SpecificationGroup.class))
-                    .product(product)
-                    .id(specificationGroupDto.getProductSpecificationGroupId())
-                    .build();
-            List<ProductsSpecification> productsSpecifications = specificationGroupDto.getSpecificationDtos().stream().map(specificationDto ->
-                    ProductsSpecification
+                    ProductsSpecificationGroup productsSpecificationGroup = ProductsSpecificationGroup
                             .builder()
-                            .id(specificationDto.getProductSpecificationId())
-                            .productSpecificationGroup(productsSpecificationGroup)
-                            .specification(this.modelMapper.map(specificationDto, Specification.class))
-                            .productSpecificationName(specificationDto.getProductSpecificationDtos().getProductSpecificationName())
-                            .build()
-            ).collect(Collectors.toList());
-            productsSpecificationGroup.setProductsSpecifications(productsSpecifications);
-            return productsSpecificationGroup;
-        }).collect(Collectors.toList());
+                            .specificationGroup(this.modelMapper.map(specificationGroupDto, SpecificationGroup.class))
+                            .product(product)
+                            .id(specificationGroupDto.getProductSpecificationGroupId())
+                            .build();
+                    List<ProductsSpecification> productsSpecifications = specificationGroupDto.getSpecificationDtos().stream().map(specificationDto ->
+                            ProductsSpecification
+                                    .builder()
+                                    .id(specificationDto.getProductSpecificationId())
+                                    .productSpecificationGroup(productsSpecificationGroup)
+                                    .specification(this.modelMapper.map(specificationDto, Specification.class))
+                                    .productSpecificationName(specificationDto.getProductSpecificationDtos().getProductSpecificationName())
+                                    .build()
+                    ).collect(Collectors.toList());
+                    productsSpecificationGroup.setProductsSpecifications(productsSpecifications);
+                    return productsSpecificationGroup;
+                }).collect(Collectors.toList());
 
         Set<ProductDetail> productDetails = new HashSet<>();
         List<ProductVariantCombination> productVariantCombinations = new ArrayList<>();
@@ -176,6 +183,7 @@ public class ProductServiceImp implements ProductService {
         productsOption.setProductsVariants(productsVariants);
         return productsOption;
     }
+
     private ProductDto productMapToProductDto(Product product) {
         ProductLineDto productLineDto = this.productLineRepository.getProductLineByProductId(product.getId());
         ManufacturerDto manufacturerDto = this.manufacturersService.getManufacturerByProductLineId(productLineDto.getId());
