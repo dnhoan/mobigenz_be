@@ -32,9 +32,6 @@ public class Cart {
 	
 	@Column(name = "items_amount")
     private Integer itemsAmount;
-	
-	@Column(name = "mtime")
-    private LocalDateTime mtime;
 
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)

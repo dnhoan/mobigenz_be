@@ -16,7 +16,7 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
 	Optional<Cart> getCartByCustomerId(@Param("customer_id") Integer customer_id);
 	
 	@Query("select new com.api.mobigenz_be.DTOs.ProductDetailCartDto(pd.id, pd.priceSell, pd.sku, pd.image, pd.stock, pd.productName)"
-			+ "from ProductDetail pd join CartItem c on pd = c.productDetail where c.id = :cart_item_id")
+			+ "from ProductDetail pd join CartItem c on pd.id = c.productDetailId where c.id = :cart_item_id")
 	ProductDetailCartDto getProductDetailByCartItemId(@Param("cart_item_id") Integer cart_item_id);
 
 	boolean existsCartByCustomerId(Integer customerId);

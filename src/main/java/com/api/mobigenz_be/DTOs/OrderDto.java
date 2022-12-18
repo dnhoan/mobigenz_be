@@ -1,13 +1,8 @@
 package com.api.mobigenz_be.DTOs;
 
-import com.api.mobigenz_be.entities.Customer;
-import com.api.mobigenz_be.entities.Transaction;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 

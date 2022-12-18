@@ -38,7 +38,8 @@ public class CartItemServiceImp implements CartItemService {
 				.builder()
 				.id(cartItemDTO.getId())
 				.amount(cartItemDTO.getAmount())
-				.productDetail(ProductDetail.builder().id(cartItemDTO.getProductDetailCartDto().getId()).build())
+				.productDetailId(cartItemDTO.getProductDetailCartDto().getId())
+//				.productDetail(ProductDetail.builder().id(cartItemDTO.getProductDetailCartDto().getId()).build())
 				.build();
 	}
 
@@ -50,7 +51,8 @@ public class CartItemServiceImp implements CartItemService {
 		CartItem cartItem = this.cartItemDtoMapToCartItem(cartItemDTO);
 		if(cartOptional.isPresent()) {
 			Optional<CartItem> cartItemOptional = this.cartItemRepository.getCartItemByProductDetailIdAndCartId(
-					cartItem.getProductDetail().getId(),
+//					cartItem.getProductDetail().getId(),
+					cartItem.getProductDetailId(),
 					cartOptional.get().getId()
 			);
 			if(cartItemOptional.isPresent()) {

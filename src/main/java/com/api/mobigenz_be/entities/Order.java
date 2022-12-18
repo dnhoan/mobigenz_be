@@ -33,10 +33,6 @@ public class Order implements Serializable {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
-
     @Column(name = "recipient_name", length = 100)
     private String recipientName;
 
