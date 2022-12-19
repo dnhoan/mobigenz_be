@@ -1,7 +1,6 @@
 package com.api.mobigenz_be.controllers.common;
 
 import com.api.mobigenz_be.DTOs.AccountDTO;
-import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.configs.securities.jwt.JWTFilter;
 import com.api.mobigenz_be.configs.securities.jwt.TokenProvider;
 import com.api.mobigenz_be.constants.Constant;
@@ -138,6 +137,7 @@ public class AuthenticateController {
                 customer.setPhoneNumber(account.getPhoneNumber());
                 customer.setBirthday(LocalDate.of(1970, 1, 1));
                 customer.setEmail(account.getEmail());
+                customer.setCustomerType(0);
                 customer.setStatus(1);
                 customer.setCtime(LocalDate.now());
 
@@ -235,5 +235,4 @@ public class AuthenticateController {
                     new ResponseObject("false", "Thay đổi mật khẩu thất bại", ""));
         }
     }
-
 }

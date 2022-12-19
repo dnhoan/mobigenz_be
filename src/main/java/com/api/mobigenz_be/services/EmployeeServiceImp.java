@@ -75,6 +75,7 @@ public class EmployeeServiceImp implements EmployeeService{
     }
 
     public EmployeeDto delete(Employee employee) {
+        employee.setDayOff(LocalDate.now());
         employee.setStatus(0);
         this.employeeRepository.save(employee);
         return this.modelMapper.map(employee, EmployeeDto.class);

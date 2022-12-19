@@ -7,7 +7,7 @@ public final class Constant {
     public static final class Role {
         public static final String Admin = "Admin";
         public static final String Employee = "Employee";
-        public static final String User = "User";
+        public static final String Customer = "Customer";
     }
 
     public static final class OTP {

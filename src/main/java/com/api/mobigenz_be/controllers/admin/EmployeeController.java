@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -45,7 +46,6 @@ public class EmployeeController {
     private RoleService roleService;
 
 
-
     @GetMapping("employee/getAll")
     public ResponseEntity<ResponseDTO> getPageEmployee(
             @RequestParam(value = "offset", defaultValue = "") int offset,
@@ -56,6 +56,37 @@ public class EmployeeController {
                 ResponseDTO.builder()
                         .status(OK)
                         .data(Map.of("employee", items))
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("employee/email")
+    public ResponseEntity<ResponseDTO> getCusByCusId(@RequestParam(value = "email") String email) {
+        try {
+            Employee employee = this.employeeService.findByEmail(email);
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("employee", employee))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("employee/getAllEmp")
+    public ResponseEntity<ResponseDTO> getCustomers() {
+        List<Employee> employees = this.employeeRepository.findAll();
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("employee", employees))
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
@@ -113,7 +144,7 @@ public class EmployeeController {
             } else {
                 String password = passwordEncoder.encode("Employee@123");
                 Set<Role> roles = new HashSet<>();
-                Role role = this.roleService.getRoleById(3);
+                Role role = this.roleService.getRoleById(2);
                 roles.add(role);
                 Account account = new Account();
                 account.setEmail(employee.getEmail());
@@ -124,7 +155,7 @@ public class EmployeeController {
                 account.setStatus(1);
                 AccountDTO accountDTO = this.accountService.add(account);
                 employee.setAccount(account);
-                EmployeeDto employeeDto =  this.employeeService.create(employee);
+                EmployeeDto employeeDto = this.employeeService.create(employee);
                 return ResponseEntity.status(OK).body(
                         new ResponseObject("true", "Thêm nhân viên thành công!", employeeDto)
                 );
@@ -165,7 +196,7 @@ public class EmployeeController {
             Optional<Employee> cus = this.employeeRepository.findById(employee.getId());
             if (cus.isPresent()) {
                 Account account = cus.get().getAccount();
-                if(account != null){
+                if (account != null) {
                     account.setCtime(LocalDateTime.now());
                     account.setPhoneNumber(employee.getPhoneNumber());
                     this.accountService.add(account);
