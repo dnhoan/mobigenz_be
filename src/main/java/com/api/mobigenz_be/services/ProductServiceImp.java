@@ -81,6 +81,18 @@ public class ProductServiceImp implements ProductService {
         return this.productMapToProductDto(product);
     }
 
+    @Override
+    @Transactional
+    public boolean deleteProductById(Integer product_id) {
+        try {
+            this.productRepository.deleteProductById(product_id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private Product productDtoMapToProduct(ProductDto productDto) {
 
         ProductLine productLine = modelMapper.map(productDto.getProductLineDto(), ProductLine.class);

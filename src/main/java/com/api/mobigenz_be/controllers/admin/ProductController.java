@@ -86,4 +86,18 @@ public class ProductController {
                         .build()
         );
     }
+
+    @DeleteMapping("product/{product_id}")
+    public ResponseEntity<ResponseDTO> deleteProductById(@PathVariable("product_id") Integer product_id) {
+        boolean res = this.productService.deleteProductById(product_id);
+        return ResponseEntity.ok(
+                ResponseDTO
+                        .builder()
+                        .data(Map.of("res", res))
+                        .status(res ? OK : INTERNAL_SERVER_ERROR)
+                        .statusCode(res ? OK.value() : INTERNAL_SERVER_ERROR.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 }

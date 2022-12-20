@@ -14,5 +14,5 @@ public interface ProductService {
     Integer saveProduct(ProductDto productDto);
     Integer createProduct(ProductDto productDto);
     ProductDto getProductDtoById(Integer id);
-
+    boolean deleteProductById(Integer product_id);
 }
