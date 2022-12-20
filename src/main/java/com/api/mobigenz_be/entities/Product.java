@@ -42,12 +42,12 @@ public class Product {
     private ProductLine productLine;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private List<ProductsOption> productsOptions;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<ProductDetail> productDetails;

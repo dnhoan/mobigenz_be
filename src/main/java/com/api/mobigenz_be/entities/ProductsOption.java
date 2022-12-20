@@ -27,7 +27,7 @@ public class ProductsOption{
     private Product product;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<ProductsVariant> productsVariants;

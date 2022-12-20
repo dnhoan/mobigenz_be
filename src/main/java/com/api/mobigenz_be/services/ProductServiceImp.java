@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class ProductServiceImp implements ProductService {
 
     @Autowired
@@ -34,12 +33,14 @@ public class ProductServiceImp implements ProductService {
     private SpecificationGroupService specificationGroupService;
 
     @Override
+    @Transactional
     public List<ProductDto> getProducts(String searchTerm) {
         List<Product> products = this.productRepository.searchProducts(searchTerm);
         return products.stream().map(this::productMapToProductDto).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<ProductDto> searchProducts(String searchTerm, boolean sortPriceIncrease, Float min_price, Float max_price, Integer manufacturer) {
         List<Product> products = this.productRepository
                 .searchProductsShop(
@@ -55,7 +56,7 @@ public class ProductServiceImp implements ProductService {
     public Integer saveProduct(ProductDto productDto) {
         try {
             Product product = this.productDtoMapToProduct(productDto);
-            product = this.productRepository.saveAndFlush(product);
+            product = this.productRepository.save(product);
             return product.getId();
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,11 +64,21 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
+    @Transactional
+    public Integer createProduct(ProductDto productDto) {
+        try {
+            Product product = this.productDtoMapToProduct(productDto);
+            product = this.productRepository.saveAndFlush(product);
+            return product.getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    @Transactional
     public ProductDto getProductDtoById(Integer id) {
         Product product = this.productRepository.getProductById(id);
         return this.productMapToProductDto(product);
-//        Optional<Product> productDtoOptional = this.productRepository.findById(id);
-//        return productDtoOptional.isPresent() ? this.productMapToProductDto(productDtoOptional.get()) : new ProductDto();
     }
 
     private Product productDtoMapToProduct(ProductDto productDto) {
@@ -82,7 +93,8 @@ public class ProductServiceImp implements ProductService {
         Product product = Product
                 .builder()
                 .productLine(productLine)
-                .ctime(LocalDateTime.now())
+                .ctime(productDto.getId() != null ? productDto.getCtime() : LocalDateTime.now())
+                .mtime(productDto.getId() != null ? LocalDateTime.now() : null)
                 .images(String.join(", ", productDto.getImages()))
                 .status(1)
                 .minPrice(productDto.getMinPrice())
