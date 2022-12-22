@@ -32,7 +32,7 @@ public final class Constant {
             public static final String ADMIN = PREFIX + "/admin";
             public static final String AUTH = PREFIX + "/auth";
             public static final String ACCOUNT =  "/account";
-            public static final String USER =  "/user";
+            public static final String USER = PREFIX + "/user";
             public static final String ON_BOARDING = PUBLIC + "/on-boarding";
 
             public static class Auth {

@@ -142,7 +142,6 @@ public class AuthenticateController {
                 customer.setCtime(LocalDate.now());
 
                 account.setCustomer(customer);
-//          CustomerDTO customerDTO = this.customerService.create(customer);
                 AccountDTO accountDTO = this.accountService.add(account);
                 return ResponseEntity.status(OK).body(
                         new ResponseObject("true", "Đăng ký tài khoản thành công!", "")

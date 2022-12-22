@@ -75,6 +75,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer > {
    @Query("select c from Customer c join CustomersAddress ca on c.id = ca.customerId where ca.id =:customer_id ")
     Customer getCustomerByCustomerAddressId(@Param("customer_id") Integer customer_id);
 
+    @Query("select cus from Customer cus where  cus.status = :status ")
+    Page<Customer> findCustomerByStatus(Pageable pageable, @Param("status") int status);
+
 //    @Query("select cus from Customer cus where cus.id =:id")
 //    Customer getAccountByCustomer(Integer id);
 

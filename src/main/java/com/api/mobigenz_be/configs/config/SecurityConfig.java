@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/forgot").permitAll()
                 .antMatchers("/api/getOTP").permitAll()
 //                .antMatchers("/api/user/**").authenticated()
-//                .antMatchers("/api/user/**").hasAnyAuthority(Constant.Role.Admin,Constant.Role.User)
+//                .antMatchers("/api/user/**").hasAnyAuthority(Constant.Role.Admin,Constant.Role.Employee,Constant.Role.Customer)
 //                .antMatchers("/api/admin/**").authenticated()
 //                .antMatchers("/api/admin/**").hasAnyAuthority(Constant.Role.Admin,Constant.Role.Employee)
                 .antMatchers("/api/**").permitAll()

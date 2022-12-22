@@ -1,5 +1,6 @@
 package com.api.mobigenz_be.repositories;
 
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
@@ -45,5 +45,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query("SELECT e from Employee e where e.email = :email")
     Employee findByEmail(@Param("email") String email);
+
+    @Query("select emp from Employee emp where  emp.status = :status ")
+    Page<Employee> findEmployeeByStatus(Pageable pageable, @Param("status") int status);
+
+    @Query("select emp from Employee emp where emp.id != :id and (emp.phoneNumber = :phoneNumber) ")
+    Employee checkEmployee(Integer id, String phoneNumber);
 
 }

@@ -1,14 +1,12 @@
 package com.api.mobigenz_be.services;
 
-import com.api.mobigenz_be.DTOs.EmployeeDto;
-import com.api.mobigenz_be.DTOs.PageDTO;
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Employee;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
+import java.util.List;
 
-
-public interface EmployeeService {
-
+@Repository
+public interface EmployeeService{
 }
