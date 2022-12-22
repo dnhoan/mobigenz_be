@@ -3,6 +3,7 @@ package com.api.mobigenz_be.controllers.admin;
 import com.api.mobigenz_be.DTOs.*;
 import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.entities.Account;
+import com.api.mobigenz_be.entities.Customer;
 import com.api.mobigenz_be.entities.ResponseObject;
 import com.api.mobigenz_be.repositories.AccountRepository;
 import com.api.mobigenz_be.services.AccountService;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -60,6 +62,32 @@ public class AccountController {
                             .build()
             );
         } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("account/findByStatus")
+    public ResponseEntity<ResponseDTO> findByStatus(
+            @RequestParam(value = "offset", defaultValue = "")  int offset
+            ,@RequestParam(value = "limit",defaultValue = "") int limit
+            ,@RequestParam(value = "status",defaultValue = "") int status) {
+        try {
+            offset = offset < 0 ? 0 : offset;
+            Pageable pageable;
+
+            List<Sort.Order> orders = new ArrayList<>();
+            pageable = PageRequest.of(offset, limit, Sort.by("status"));
+            Page<Account> pageAccount = this.accountService.findByStatus(pageable, status);
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("accounts", pageAccount))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
@@ -173,21 +201,27 @@ public class AccountController {
 
 
     @PutMapping("account/updateAccount")
-    public ResponseEntity<ResponseDTO> update(@RequestBody Account account) {
+    public ResponseEntity<ResponseObject> update(@RequestBody Account account) {
         try {
-            AccountDTO accountDTO = this.accountService.update(account);
-            return ResponseEntity.ok(
-                    ResponseDTO.builder()
-                            .status(OK)
-                            .data(Map.of("account", accountDTO))
-                            .statusCode(OK.value())
-                            .timeStamp(LocalDateTime.now())
-                            .build()
-            );
+            Account acc = this.accountRepository.checkAccount(account.getId(), account.getPhoneNumber());
+            if (acc != null) {
+                return ResponseEntity.status(BAD_REQUEST).body(
+                        new ResponseObject("false", "Số điện thoại đã tồn tại!", acc.getPhoneNumber())
+                );
+            } else {
+                Optional<Account> account1 = this.accountRepository.findById(account.getId());
+                if (account1.isPresent()){
+                    this.accountService.update(account);
+                    List<AccountDTO> accountDTOList = this.accountService.getAllAcc();
+                    return ResponseEntity.status(OK).body(
+                            new ResponseObject("true", "Cập nhật khách hàng thành công!", accountDTOList)
+                    );
+                }
+            }
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            e.printStackTrace();
         }
-
+        return ResponseEntity.internalServerError().build();
     }
 
     @PutMapping("account/changepass/{id}")

@@ -8,12 +8,14 @@ import com.api.mobigenz_be.entities.Role;
 import com.api.mobigenz_be.repositories.AccountRepository;
 import com.api.mobigenz_be.repositories.CustomerRepository;
 import com.api.mobigenz_be.services.AccountService;
+import com.api.mobigenz_be.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.api.mobigenz_be.services.CustomerService;
 
@@ -42,6 +44,12 @@ public class CustomerController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("customers/getAll")
     public ResponseEntity<ResponseDTO> getPageCustomers(
             @RequestParam(value = "offset", defaultValue = "") int offset,
@@ -57,6 +65,33 @@ public class CustomerController {
                         .build()
         );
     }
+
+    @GetMapping("customers/findByStatus")
+    public ResponseEntity<ResponseDTO> findByStatus(
+            @RequestParam(value = "offset", defaultValue = "")  int offset
+            ,@RequestParam(value = "limit",defaultValue = "") int limit
+            ,@RequestParam(value = "status",defaultValue = "") int status) {
+        try {
+            offset = offset < 0 ? 0 : offset;
+            Pageable pageable;
+
+            List<Sort.Order> orders = new ArrayList<>();
+            pageable = PageRequest.of(offset, limit, Sort.by("status"));
+            Page<Customer> pageCustomer = this.customerService.findByStatus(pageable, status);
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("customer", pageCustomer))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
 
     private Sort.Direction getSortDirection(String direction) {
@@ -140,24 +175,37 @@ public class CustomerController {
     @PostMapping("customers")
     public ResponseEntity<ResponseObject> insertCustomer(@RequestBody Customer customer) {
         try {
-            Customer cus = this.customerRepository.findCustomerByEmailorPhone(customer.getEmail(), customer.getPhoneNumber());
-            if (cus != null) {
-                if (cus.getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber())) {
+            Account acc = this.accountService.findAccountByEmailorPhone(customer.getEmail(), customer.getPhoneNumber());
+            if (acc != null) {
+                if (acc.getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber())) {
                     return ResponseEntity.status(BAD_REQUEST).body(
-                            new ResponseObject("false", "Số điện thoại đã tồn tại!", cus.getPhoneNumber())
+                            new ResponseObject("false", "Số điện thoại đã được đăng ký tài khoản!", acc.getPhoneNumber())
                     );
                 }
-                if (cus.getEmail().equalsIgnoreCase(customer.getEmail())) {
+                if (acc.getEmail().equalsIgnoreCase(customer.getEmail())) {
                     return ResponseEntity.status(BAD_REQUEST).body(
-                            new ResponseObject("false", "Email đã tồn tại!", cus.getEmail())
+                            new ResponseObject("false", "Email đã được đăng ký tài khoản!", acc.getEmail())
                     );
                 }
             } else {
+                String password = passwordEncoder.encode("Customer@123");
+                Set<Role> roles = new HashSet<>();
+                Role role = this.roleService.getRoleById(3);
+                roles.add(role);
+                Account account = new Account();
+                account.setEmail(customer.getEmail());
+                account.setPhoneNumber(customer.getPhoneNumber());
+                account.setRoles(roles);
+                account.setPassword(password);
+                account.setStatus(0);
+                this.accountService.add(account);
+                customer.setAccount(account);
                 CustomerDTO customerDTO = this.customerService.create(customer);
                 return ResponseEntity.status(OK).body(
-                        new ResponseObject("true", "Thêm khách hàng thành công!", customerDTO)
+                        new ResponseObject("true", "Thêm khách hàng thành công!", "")
                 );
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,8 +248,7 @@ public class CustomerController {
                     );
                 }else {
                 Optional<Customer> customer1 = this.customerRepository.findById(customer.getId());
-                if (customer1.isPresent())
-                {
+                if (customer1.isPresent()){
                     Account account = customer1.get().getAccount();
                     if (account != null) {
                         account.setCtime(LocalDateTime.now());

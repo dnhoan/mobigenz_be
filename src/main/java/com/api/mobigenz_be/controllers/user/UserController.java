@@ -42,18 +42,18 @@ public class UserController {
     private CustomerRepository customerRepository;
 
 
-//    @GetMapping("customers/email")
-//    public ResponseEntity<ResponseDTO> getByEmail(@RequestParam(value = "email") String email) {
-//        Customer customer = this.customerService.findByEmail(email);
-//        return ResponseEntity.ok(
-//                ResponseDTO.builder()
-//                        .status(OK)
-//                        .data(Map.of("customers", customer))
-//                        .statusCode(OK.value())
-//                        .timeStamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
+    @GetMapping("customer/email")
+    public ResponseEntity<ResponseDTO> getByEmail(@RequestParam(value = "email") String email) {
+        Customer customer = this.customerService.findByEmail(email);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("customers", customer))
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 
 
     @GetMapping("customers/getAllCus")

@@ -56,7 +56,7 @@ public final class SecurityUtils {
         return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.addAll(authentication.getAuthorities());
-            return authorities.stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthoritiesConstants.ROLE_USER));
+            return authorities.stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
         }).orElse(false);
     }
 
