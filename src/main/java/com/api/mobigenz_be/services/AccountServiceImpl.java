@@ -1,8 +1,10 @@
 package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.AccountDTO;
+import com.api.mobigenz_be.DTOs.CustomerDTO;
 import com.api.mobigenz_be.DTOs.PageDTO;
 import com.api.mobigenz_be.entities.Account;
+import com.api.mobigenz_be.entities.Customer;
 import com.api.mobigenz_be.repositories.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +66,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO update(Account account) {
-        account.setCtime(LocalDateTime.now());
         account = this.accountRepository.save(account);
         return this.modelMapper.map(account, AccountDTO.class);
     }
@@ -81,14 +82,19 @@ public class AccountServiceImpl implements AccountService {
         return this.accountRepository.findAccountById(id);
     }
 
-//    @Override
-//    public List<Account> findAll() {
-//        return this.accountRepository.findAll();
-//    }
-
     @Override
     public Account findByEmail(String email) {
         return this.accountRepository.findAccountByEmail(email);
+    }
+
+    public List<AccountDTO> getAllAcc() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Account> page = this.accountRepository.getAllById(pageable);
+
+
+        List<AccountDTO> accountDTOList = page.stream().map(u ->
+                this.modelMapper.map(u, AccountDTO.class)).collect(Collectors.toList());
+        return accountDTOList;
     }
 
     @Override
@@ -99,6 +105,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Optional<Account>  getAccountLogin(String email, String password) {
         return this.accountRepository.getAccountLogin(email, password);
+    }
+
+    @Override
+    public Page<Account> findByStatus(Pageable pageable, Integer status) {
+        return this.accountRepository.findAccountByStatus(pageable, status);
+    }
+
+    @Override
+    public Account findAccountByEmailorPhone(String email, String phoneNumber) {
+        return this.accountRepository.findAccountByEmailorPhone(email,phoneNumber);
     }
 
 }

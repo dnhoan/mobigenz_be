@@ -2,6 +2,7 @@ package com.api.mobigenz_be.services;
 
 import com.api.mobigenz_be.DTOs.EmployeeDto;
 import com.api.mobigenz_be.DTOs.PageDTO;
+import com.api.mobigenz_be.entities.Account;
 import com.api.mobigenz_be.entities.Employee;
 import com.api.mobigenz_be.repositories.AccountRepository;
 import com.api.mobigenz_be.repositories.EmployeeRepository;
@@ -75,6 +76,7 @@ public class EmployeeServiceImp implements EmployeeService{
     }
 
     public EmployeeDto delete(Employee employee) {
+        employee.setDayOff(LocalDate.now());
         employee.setStatus(0);
         this.employeeRepository.save(employee);
         return this.modelMapper.map(employee, EmployeeDto.class);
@@ -117,4 +119,7 @@ public class EmployeeServiceImp implements EmployeeService{
         return this.employeeRepository.findByAccountId(accountId);
     }
 
+    public Page<Employee> findByStatus(Pageable pageable, Integer status) {
+        return this.employeeRepository.findEmployeeByStatus(pageable, status);
+    }
 }

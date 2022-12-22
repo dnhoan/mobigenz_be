@@ -6,7 +6,6 @@ import com.api.mobigenz_be.constants.UrlConstant;
 import com.api.mobigenz_be.entities.*;
 import com.api.mobigenz_be.repositories.EmployeeRepository;
 import com.api.mobigenz_be.services.AccountService;
-import com.api.mobigenz_be.services.EmployeeService;
 import com.api.mobigenz_be.services.EmployeeServiceImp;
 import com.api.mobigenz_be.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -45,7 +43,6 @@ public class EmployeeController {
     private RoleService roleService;
 
 
-
     @GetMapping("employee/getAll")
     public ResponseEntity<ResponseDTO> getPageEmployee(
             @RequestParam(value = "offset", defaultValue = "") int offset,
@@ -56,6 +53,63 @@ public class EmployeeController {
                 ResponseDTO.builder()
                         .status(OK)
                         .data(Map.of("employee", items))
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @GetMapping("employee/findByStatus")
+    public ResponseEntity<ResponseDTO> findByStatus(
+            @RequestParam(value = "offset", defaultValue = "")  int offset
+            ,@RequestParam(value = "limit",defaultValue = "") int limit
+            ,@RequestParam(value = "status",defaultValue = "") int status) {
+        try {
+            offset = offset < 0 ? 0 : offset;
+            Pageable pageable;
+
+            List<Sort.Order> orders = new ArrayList<>();
+            pageable = PageRequest.of(offset, limit, Sort.by("status"));
+            Page<Employee> pageEmployee = this.employeeService.findByStatus(pageable, status);
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("employee", pageEmployee))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("employee/email")
+    public ResponseEntity<ResponseDTO> getCusByCusId(@RequestParam(value = "email") String email) {
+        try {
+            Employee employee = this.employeeService.findByEmail(email);
+            return ResponseEntity.ok(
+                    ResponseDTO.builder()
+                            .status(OK)
+                            .data(Map.of("employee", employee))
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("employee/getAllEmp")
+    public ResponseEntity<ResponseDTO> getCustomers() {
+        List<Employee> employees = this.employeeRepository.findAll();
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .status(OK)
+                        .data(Map.of("employee", employees))
                         .statusCode(OK.value())
                         .timeStamp(LocalDateTime.now())
                         .build()
@@ -92,28 +146,22 @@ public class EmployeeController {
     @PostMapping("employee")
     public ResponseEntity<ResponseObject> insertEmployee(@RequestBody Employee employee){
         try {
-            Employee emp = this.employeeRepository.findEmployeeByEmailorPhone(employee.getEmail(), employee.getPhoneNumber());
-            if (emp != null) {
-                if (emp.getPhoneNumber().equalsIgnoreCase(employee.getPhoneNumber())) {
-                    System.out.println("Da co sdt");
+            Account acc = this.accountService.findAccountByEmailorPhone(employee.getEmail(), employee.getPhoneNumber());
+            if (acc != null) {
+                if (acc.getPhoneNumber().equalsIgnoreCase(employee.getPhoneNumber())) {
                     return ResponseEntity.status(BAD_REQUEST).body(
-                            new ResponseObject("false", "Số điện thoại đã tồn tại!", emp.getPhoneNumber())
+                            new ResponseObject("false", "Số điện thoại đã được đăng ký tài khoản!", acc.getPhoneNumber())
                     );
                 }
-                if (emp.getEmail().equalsIgnoreCase(employee.getEmail())) {
-                    System.out.println("Da co email");
+                if (acc.getEmail().equalsIgnoreCase(employee.getEmail())) {
                     return ResponseEntity.status(BAD_REQUEST).body(
-                            new ResponseObject("false", "Email đã tồn tại!", emp.getEmail())
+                            new ResponseObject("false", "Email đã được đăng ký tài khoản!", acc.getEmail())
                     );
                 }
-                return ResponseEntity.status(BAD_REQUEST).body(
-                        new ResponseObject("false", "Thêm tài khoản thất bại!", "")
-                );
-
             } else {
                 String password = passwordEncoder.encode("Employee@123");
                 Set<Role> roles = new HashSet<>();
-                Role role = this.roleService.getRoleById(3);
+                Role role = this.roleService.getRoleById(2);
                 roles.add(role);
                 Account account = new Account();
                 account.setEmail(employee.getEmail());
@@ -122,17 +170,20 @@ public class EmployeeController {
                 account.setRoles(roles);
                 account.setCtime(LocalDateTime.now());
                 account.setStatus(1);
-                AccountDTO accountDTO = this.accountService.add(account);
                 employee.setAccount(account);
-                EmployeeDto employeeDto =  this.employeeService.create(employee);
+                this.accountService.add(account);
+                EmployeeDto employeeDto = this.employeeService.create(employee);
                 return ResponseEntity.status(OK).body(
                         new ResponseObject("true", "Thêm nhân viên thành công!", employeeDto)
                 );
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+
         }
+        return ResponseEntity.status(OK).body(
+                new ResponseObject("true", "Thêm nhân viên thất bại!", "employeeDto")
+        );
     }
 
     @GetMapping("employee/{id}")
@@ -162,21 +213,28 @@ public class EmployeeController {
     @PutMapping("employee")
     public ResponseEntity<ResponseObject> updateEmployee(@RequestBody Employee employee) {
         try {
-            Optional<Employee> cus = this.employeeRepository.findById(employee.getId());
-            if (cus.isPresent()) {
-                Account account = cus.get().getAccount();
-                if(account != null){
-                    account.setCtime(LocalDateTime.now());
-                    account.setPhoneNumber(employee.getPhoneNumber());
-                    this.accountService.add(account);
-                    employee.setBirthday(employee.getBirthday());
-                    employee.setAccount(account);
-                }
-                this.employeeService.update(employee);
-                List<EmployeeDto> employeeDtoList = this.employeeService.getAllEmployee();
-                return ResponseEntity.status(OK).body(
-                        new ResponseObject("true", "Cập nhật thông tin nhân viên thành công!", employeeDtoList)
+            Employee emp = this.employeeRepository.checkEmployee(employee.getId(), employee.getPhoneNumber());
+            if (emp != null) {
+                return ResponseEntity.status(BAD_REQUEST).body(
+                        new ResponseObject("false", "Số điện thoại đã tồn tại!", emp.getPhoneNumber())
                 );
+            } else {
+                Optional<Employee> employee1 = this.employeeRepository.findById(employee.getId());
+                if (employee1.isPresent()) {
+                    Account account = employee1.get().getAccount();
+                    if (account != null) {
+                        account.setCtime(LocalDateTime.now());
+                        account.setPhoneNumber(employee.getPhoneNumber());
+                        this.accountService.add(account);
+                        employee.setBirthday(employee.getBirthday());
+                        employee.setAccount(account);
+                    }
+                    this.employeeService.update(employee);
+                    List<EmployeeDto> employeeDtoList = this.employeeService.getAllEmployee();
+                    return ResponseEntity.status(OK).body(
+                            new ResponseObject("true", "Cập nhật thông tin nhân viên thành công!", employeeDtoList)
+                    );
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

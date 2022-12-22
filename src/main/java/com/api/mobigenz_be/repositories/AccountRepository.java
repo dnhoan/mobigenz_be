@@ -41,6 +41,12 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("select acc from Account acc join Customer cus on acc = cus.account where cus.id =:customer")
     Account getAccountByCustomer(@Param("customer") Integer customer);
 
+    @Query("select acc from Account acc where  acc.status = :status ")
+    Page<Account> findAccountByStatus(Pageable pageable, @Param("status") int status);
+
+    @Query("select acc from Account acc where acc.id != :id and (acc.phoneNumber = :phoneNumber) ")
+    Account checkAccount(Integer id, String phoneNumber);
+
 
 
 
