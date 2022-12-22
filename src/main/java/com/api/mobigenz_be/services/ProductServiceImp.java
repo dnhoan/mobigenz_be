@@ -178,6 +178,7 @@ public class ProductServiceImp implements ProductService {
                     .sku(productDetailDto.getSku())
                     .image(productDetailDto.getImage())
                     .note(productDetailDto.getNote())
+                    .productName(productDetailDto.getProductName())
                     .product(product)
                     .build();
             productDetails.add(productDetail);

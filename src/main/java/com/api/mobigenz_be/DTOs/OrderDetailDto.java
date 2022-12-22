@@ -28,6 +28,8 @@ public class OrderDetailDto {
 
     private LocalDateTime mtime;
 
+    private String productName;
+
     private String note;
 
     private boolean expand;
