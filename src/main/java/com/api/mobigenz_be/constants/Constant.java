@@ -63,9 +63,9 @@ public final class Constant {
         public static final Integer CANCEL_ORDER = -1;
         public static final Integer PENDING = 0;
         public static final Integer CONFIRMED = 1;
-        public static final Integer PACKAGED = 3;
-        public static final Integer DELIVERING = 4;
-        public static final Integer COMPLETE = 5;
+        public static final Integer PACKAGED = 2;
+        public static final Integer DELIVERING = 3;
+        public static final Integer COMPLETE = 4;
     }
 //        -1	Hủy đơn hàng
 //1	Chưa tiếp nhận

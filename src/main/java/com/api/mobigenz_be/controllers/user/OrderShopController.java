@@ -3,6 +3,7 @@ package com.api.mobigenz_be.controllers.user;
 import com.api.mobigenz_be.DTOs.OrderDto;
 import com.api.mobigenz_be.DTOs.ResponseDTO;
 import com.api.mobigenz_be.DTOs.UserOrderDto;
+import com.api.mobigenz_be.constants.Constant;
 import com.api.mobigenz_be.constants.UrlConstant;
 import com.api.mobigenz_be.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,19 @@ public class OrderShopController {
     @PutMapping("cancelOrder/{order_id}")
     public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable("order_id") Integer order_id, @RequestBody String note) {
         this.orderService.cancelOrder(order_id, note);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("result", true))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PutMapping("receivedOrder/{order_id}")
+    public ResponseEntity<ResponseDTO> receivedOrder(@PathVariable("order_id") Integer order_id) {
+        this.orderService.updateOrderStatus(order_id, Constant.OrderStatus.COMPLETE, "");
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("result", true))

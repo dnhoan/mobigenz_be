@@ -10,4 +10,6 @@ public interface StatisticIncomeService {
     List<StatisticIncome> getStatisticIncomeByYear(Integer year);
 
     List<Integer> statisticOrderStatus(Date s_date, Date e_date);
+
+    List<StatisticIncome> getStatisticIncomeByDate(int s_day, int e_day, int s_month, int e_month, int s_year, int e_year);
 }
