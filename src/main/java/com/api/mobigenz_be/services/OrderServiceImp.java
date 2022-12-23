@@ -136,8 +136,15 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderDto> getOrdersByCustomerId(Integer customer_id) {
-        List<Order> orders = this.orderRepository.getOrdersByCustomerIdOrderByCtimeDesc(customer_id);
+    public List<OrderDto> getOrdersByCustomerId(String term, Integer order_status, Integer customer_id) {
+        List<Order> orders = this.orderRepository.searchOrderByCustomerId(term, order_status, customer_id);
+        return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<OrderDto> searchOrders(String term, Integer order_status) {
+        List<Order> orders = this.orderRepository.searchOrders(term, order_status);
         return orders.stream().map(this::mapOrderToCustomerOrderDto).collect(Collectors.toList());
     }
 

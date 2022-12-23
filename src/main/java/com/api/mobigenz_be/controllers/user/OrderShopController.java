@@ -98,8 +98,12 @@ public class OrderShopController {
     }
 
     @GetMapping("customerOrders/{customer_id}")
-    public ResponseEntity<ResponseDTO> getOrdersByCustomerId(@PathVariable("customer_id") Integer customer_id) {
-        List<OrderDto> orderDtos = this.orderService.getOrdersByCustomerId(customer_id);
+    public ResponseEntity<ResponseDTO> getOrdersByCustomerId(
+            @PathVariable("customer_id") Integer customer_id,
+            @RequestParam(value = "order_status", defaultValue = "999") Integer order_status,
+            @RequestParam(value = "term", defaultValue = "") String term
+    ) {
+        List<OrderDto> orderDtos = this.orderService.getOrdersByCustomerId(term, order_status, customer_id);
         return ResponseEntity.ok(
                 ResponseDTO.builder()
                         .data(Map.of("orders", orderDtos))

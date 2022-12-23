@@ -19,7 +19,9 @@ public interface OrderService {
 
     OrderDto getOrderById(Integer order_id);
 
-    List<OrderDto> getOrdersByCustomerId(Integer customer_id);
+    List<OrderDto> getOrdersByCustomerId(String term, Integer order_status, Integer customer_id);
+
+    List<OrderDto> searchOrders(String term, Integer order_status);
 
     List<OrderDto> getOrdersByOrderStatus(Integer orderStatus);
 
