@@ -77,5 +77,22 @@ public class OrderController {
                         .build()
         );
     }
+
+
+    @GetMapping("searchOrders")
+    public ResponseEntity<ResponseDTO> searchOrders(
+            @RequestParam(value = "order_status", defaultValue = "999") Integer order_status,
+            @RequestParam(value = "term", defaultValue = "") String term
+    ) {
+        List<OrderDto> orderDtos = this.orderService.searchOrders(term, order_status);
+        return ResponseEntity.ok(
+                ResponseDTO.builder()
+                        .data(Map.of("orders", orderDtos))
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .timeStamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 }
 

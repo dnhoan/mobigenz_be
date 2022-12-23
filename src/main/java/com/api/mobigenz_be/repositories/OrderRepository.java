@@ -15,7 +15,30 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    List<Order> getOrdersByCustomerIdOrderByCtimeDesc(Integer customer_id);
+    @Query("select o from Order o where o.customer.id = :customer_id and " +
+            "(:order_status = 999 or o.orderStatus = :order_status) and ( " +
+            "lower(o.address) like  lower(concat('%', :term,'%')) or " +
+            "lower(o.recipientName) like  lower(concat('%', :term,'%')) or " +
+            "lower(o.recipientPhone) like  lower(concat('%', :term,'%')) or " +
+            "lower(o.recipientEmail) like  lower(concat('%', :term,'%')) )" +
+            " order by o.ctime desc ")
+    List<Order> searchOrderByCustomerId(
+            @Param("term") String term,
+            @Param("order_status") Integer order_status,
+            @Param("customer_id") Integer customer_id
+    );
+
+    @Query("select o from Order o where " +
+            "(:order_status = 999 or o.orderStatus = :order_status) and ( " +
+            "lower(o.address) like  lower(concat('%', :term,'%')) or " +
+            "lower(o.recipientName) like  lower(concat('%', :term,'%')) or " +
+            "lower(o.recipientPhone) like  lower(concat('%', :term,'%')) or " +
+            "lower(o.recipientEmail) like  lower(concat('%', :term,'%')) )" +
+            " order by o.ctime desc ")
+    List<Order> searchOrders(
+            @Param("term") String term,
+            @Param("order_status") Integer order_status
+    );
 
     @Query("select o from Order o where (:orderStatus is null or o.orderStatus = :orderStatus) order by o.ctime desc ")
     List<Order> getOrderByOrderStatus(Integer orderStatus);
