@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p where  " +
             "lower(p.productName) like  lower(concat('%', :searchTerm,'%')) " +
             "and (:manufacturerId = 0 or p.productLine.manufacturer.id = :manufacturerId) " +
-            "and p.minPrice >= :min_price and p.maxPrice <= :max_price and p.status = 1 order by p.ctime")
+            "and p.minPrice >= :min_price and p.maxPrice <= :max_price and p.status = 1 ")
     List<Product> searchProductsShop(@Param("searchTerm") String searchTerm,
                                      @Param("manufacturerId") Integer manufacturerId,
                                      @Param("min_price") Float min_price,
