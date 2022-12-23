@@ -33,4 +33,6 @@ public interface StatisticIncome{
 
     Integer getThang();
 
+    Integer getNgay();
+
 }

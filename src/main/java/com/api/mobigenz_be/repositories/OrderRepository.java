@@ -36,11 +36,49 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             ") as o2 on o1.thang = o2.thang")
     List<StatisticIncome> getStatisticIncomeByYear(Integer year);
 
+    String STATISTIC_INCOME_DATE = "select  COALESCE(o1.DT_STORE, 0) as dt_store,\n" +
+            "        COALESCE(o2.DT_ONLINE, 0) as dt_online,\n" +
+            "        COALESCE(o1.ngay, o2.ngay) as ngay      \n" +
+            "    from\n" +
+            "        (select\n" +
+            "            sum(orders.goods_value) as DT_STORE,\n" +
+            "            EXTRACT(DAY from orders.ctime) as ngay             \n" +
+            "        from orders                  \n" +
+            "        where   orders.purchasetype = 0 \n" +
+            "                and ( orders.order_status = 4 or orders.order_status = -2) and\n" +
+            "                ((EXTRACT(MONTH from orders.ctime) = :s_month) or (EXTRACT(MONTH from orders.ctime) = :e_month)) and\n" +
+            "                ((EXTRACT(YEAR from orders.ctime) = :s_year) or (EXTRACT(YEAR from orders.ctime) = :e_year))               \n" +
+            "        group by\n" +
+            "            EXTRACT(DAY from orders.ctime)              \n" +
+            "        having\n" +
+            "            EXTRACT(DAY from orders.ctime) BETWEEN :s_day and :e_day\n" +
+            "        ) as o1\n" +
+            "    full join\n" +
+            "        (select\n" +
+            "            sum(orders.goods_value) as DT_ONLINE,\n" +
+            "            EXTRACT(DAY from orders.ctime) as ngay             \n" +
+            "        from orders                  \n" +
+            "        where   orders.purchasetype = 1 \n" +
+            "                and ( orders.order_status = 4 or orders.order_status = -2) and\n" +
+            "                ((EXTRACT(MONTH from orders.ctime) = :s_month) or (EXTRACT(MONTH from orders.ctime) = :e_month)) and\n" +
+            "                ((EXTRACT(YEAR from orders.ctime) = :s_year) or (EXTRACT(YEAR from orders.ctime) = :e_year))               \n" +
+            "        group by\n" +
+            "            EXTRACT(DAY from orders.ctime)              \n" +
+            "        having\n" +
+            "            EXTRACT(DAY from orders.ctime) BETWEEN :s_day and :e_day\n" +
+            "        ) as o2      \n" +
+            "   on o1.ngay = o2.ngay\n";
+    @Query(nativeQuery = true, value = STATISTIC_INCOME_DATE)
+    List<StatisticIncome> getStatisticIncomeByDate(@Param("s_day") int s_day,
+                                                   @Param("e_day")int e_day,
+                                                   @Param("s_month")int s_month,
+                                                   @Param("e_month")int e_month,
+                                                   @Param("s_year")int s_year,
+                                                   @Param("e_year")int e_year);
+
 
     @Query(nativeQuery = true,
-            value = "select count(order_status) from orders  where order_status = -2 and ctime between ?1 and ?2\n" +
-            "union all \n" +
-            "select count(order_status) from orders  where order_status = -1 and ctime between ?1 and ?2\n" +
+            value = "select count(order_status) from orders  where order_status = 0 and ctime between ?1 and ?2\n" +
             "union all \n" +
             "select count(order_status) from orders  where order_status = 1 and ctime between ?1 and ?2\n" +
             "union all \n" +
@@ -50,7 +88,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "union all \n" +
             "select count(order_status) from orders  where order_status = 4 and ctime between ?1 and ?2\n" +
             "union all \n" +
-            "select count(order_status) from orders  where order_status = 5 and ctime between ?1 and ?2")
+            "select count(order_status) from orders  where order_status = -2 and ctime between ?1 and ?2\n" +
+            "union all \n" +
+            "select count(order_status) from orders  where order_status = -1 and ctime between ?1 and ?2\n"
+
+    )
+
     List<Integer> statisticOrderStatus(Date s_date, Date e_date);
 
     @Modifying(clearAutomatically = true)

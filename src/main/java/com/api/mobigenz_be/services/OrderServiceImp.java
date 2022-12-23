@@ -40,6 +40,7 @@ public class OrderServiceImp implements OrderService {
         Customer customer = this.modelMapper.map(orderDto.getCustomerDTO(), Customer.class);
         Order order = this.modelMapper.map(orderDto, Order.class);
         order.setCustomer(customer);
+        order.setPurchaseType(0);
         order = this.orderRepository.saveAndFlush(order);
         Order finalOrder = order;
         List<OrderDetail> orderDetails = orderDto.getOrderDetailDtos().stream().map(orderDetailDto -> {
@@ -66,6 +67,7 @@ public class OrderServiceImp implements OrderService {
         Order order = Order
                 .builder()
                 .purchaseType(1)
+                .delivery(orderDto.getDelivery())
                 .address(orderDto.getAddress())
                 .carrier(orderDto.getCarrier())
                 .checkout(orderDto.getCheckout())

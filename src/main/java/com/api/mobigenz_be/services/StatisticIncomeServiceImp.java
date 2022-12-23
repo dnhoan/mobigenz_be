@@ -19,6 +19,11 @@ public class StatisticIncomeServiceImp implements StatisticIncomeService{
     }
 
     @Override
+    public List<StatisticIncome> getStatisticIncomeByDate(int s_day, int e_day, int s_month, int e_month, int s_year, int e_year) {
+        return this.orderRepository.getStatisticIncomeByDate( s_day,  e_day,  s_month,  e_month,  s_year,  e_year);
+    }
+
+    @Override
     public List<Integer> statisticOrderStatus(Date s_date, Date e_date) {
         return this.orderRepository.statisticOrderStatus(s_date, e_date);
     }

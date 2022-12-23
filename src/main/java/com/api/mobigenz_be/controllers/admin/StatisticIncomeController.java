@@ -46,6 +46,46 @@ public class StatisticIncomeController {
 
     }
 
+    @GetMapping("statisticIncome/date")
+    public ResponseEntity<ResponseDTO> getStatisticIncomeByDate(
+            @RequestParam("s_date") String s_date,
+            @RequestParam("e_date") String e_date
+    ) {
+        try {
+            Date sDate = new SimpleDateFormat("MM/dd/yyyy").parse(s_date);
+            Date eDate = new SimpleDateFormat("MM/dd/yyyy").parse(e_date);
+            int sDay = sDate.getDate();
+            int sMonth = sDate.getMonth() + 1;
+            int sYear = sDate.getYear() + 1900;
+
+            int eDay = eDate.getDate();
+            int eMonth = eDate.getMonth() + 1;
+            int eYear = eDate.getYear() + 1900;
+            List<StatisticIncome> statisticIncomes = this.statisticIncomeService
+                    .getStatisticIncomeByDate(sDay, eDay, sMonth, eMonth,sYear,eYear);
+            return ResponseEntity.ok(
+                    ResponseDTO
+                            .builder()
+                            .data(Map.of("statisticIncomes", statisticIncomes))
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(
+                    ResponseDTO
+                            .builder()
+                            .status(EXPECTATION_FAILED)
+                            .statusCode(EXPECTATION_FAILED.value())
+                            .timeStamp(LocalDateTime.now())
+                            .build());
+        }
+
+
+    }
+
     @GetMapping("statisticOrderStatus")
     public ResponseEntity<ResponseDTO> statisticOrderStatus(
             @RequestParam("s_date") String s_date,

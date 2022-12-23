@@ -58,6 +58,8 @@ public class OrderDto {
 
     private Integer delivery;
 
+    private Integer purchaseType;
+
     private String cancelNote;
 
 }
